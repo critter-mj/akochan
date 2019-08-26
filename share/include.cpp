@@ -1,0 +1,72 @@
+#include "include.hpp"
+
+void assert_with_out(const bool true_condition, const std::string& comment) {
+    if (!true_condition) {
+        std::cout << comment << std::endl;
+        assert(false);
+    }
+}
+
+bool str_starts_with(const std::string& str, const std::string& pre) {
+    return str.size() >= pre.size() && std::equal(std::begin(pre), std::end(pre), std::begin(str));
+}
+
+bool check_openable_file(const std::string& file_name) {
+    std::ifstream ifs(file_name);
+    return ifs.is_open();
+}
+
+json11::Json load_json_from_file(const std::string& file_name) {
+    std::ifstream ifs(file_name);
+    if (ifs.fail()) {
+        std::cerr << "error:load_json_from_file " + file_name << std::endl;
+        assert(false);
+    }
+    std::string str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    std::string err;
+    json11::Json ret_json = json11::Json::parse(str, err);
+    // err に関するassert
+    ifs.close();
+    return ret_json;
+}
+
+std::vector<json11::Json> load_json_vec_from_file(const std::string& file_name) {
+    std::vector<json11::Json> json_vec;
+    std::ifstream ifs(file_name);
+    std::string str;
+    if (ifs.fail()) {
+        std::cerr << "error:load_json_vec_from_file " + file_name << std::endl;
+        assert(false);
+    }
+    while (getline(ifs, str)) {
+        std::string err;
+        json11::Json json_elem = json11::Json::parse(str, err);
+        json_vec.push_back(json_elem);
+    }
+    ifs.close();
+    return json_vec;
+}
+
+void dump_json_to_file(const json11::Json& json, const std::string& file_name) {
+    std::ofstream outputfile(file_name);
+    outputfile << json.dump() << std::endl;
+    outputfile.close();
+}
+
+void dump_json_vec_to_file(const std::vector<json11::Json>& json_vec, const std::string& file_name) {
+	std::ofstream outputfile(file_name);
+	for (int i = 0; i < json_vec.size(); i++) {
+    	outputfile << json_vec[i].dump() << std::endl;
+	}
+    outputfile.close();
+}
+
+#ifdef WINSTD
+void make_dir(const std::string& dir_name) {
+    mkdir(dir_name.c_str());
+}
+#else
+void make_dir(const std::string& dir_name) {
+    mkdir(dir_name.c_str(), 0755);
+}
+#endif
