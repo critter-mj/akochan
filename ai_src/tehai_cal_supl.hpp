@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../share/include.hpp"
-#include <boost/algorithm/combination.hpp>
+
 
 #include "../share/calc_shanten.hpp"
+#include "combination.hpp"
 #include "tehai_group.hpp"
 #include "tehai_action.hpp"
 #include "tehai_cal_work.hpp"

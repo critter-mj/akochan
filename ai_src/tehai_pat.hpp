@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../share/include.hpp"
-#include <boost/algorithm/combination.hpp>
+#include "combination.hpp"
 
 #include "../share/calc_shanten.hpp"
 #include "tehai_state2.hpp"
