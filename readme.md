@@ -8,7 +8,8 @@ Windows環境では、ifdef WINSTDの下の定義が使われ、Linuxだとelse�
 と起動してHello Worldが出てきた個数にするとよい。
 
 ### system.exeコンパイル手順(linux)
-lboost_systemが利用可能か確認。（おそらく使えるはずで、使えない場合aptでlibboost-devをインストールすれば問題無いはず。）  
+以下のコマンドでboostをインストール  
+$ sudo apt-get install libboost-all-dev    
 ai_srcディレクトリで  
 $ make -f Makefile_Linux libai.so  
 としてAIをビルド。その後  
