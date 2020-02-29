@@ -11,6 +11,22 @@ bool str_starts_with(const std::string& str, const std::string& pre) {
     return str.size() >= pre.size() && std::equal(std::begin(pre), std::end(pre), std::begin(str));
 }
 
+std::vector<std::string> str_split(const std::string& str, const char del) {
+    int first = 0;
+    int last = str.find_first_of(del);
+    std::vector<std::string> result;
+    while (first < str.size()) {
+        std::string subStr(str, first, last - first); 
+        result.push_back(subStr);
+        first = last + 1;
+        last = str.find_first_of(del, first);
+        if (last == std::string::npos) {
+            last = str.size();
+        }
+    }
+    return result;
+}
+
 bool check_openable_file(const std::string& file_name) {
     std::ifstream ifs(file_name);
     return ifs.is_open();

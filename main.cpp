@@ -12,6 +12,9 @@ void usage() {
   printf("  > system.exe mjai_log <file> <id>\n");
   printf("     file: path of logfile\n");
   printf("     id: 0,1,2,3\n");
+  printf("  > system.exe full_analyze <file> <id>\n");
+  printf("     file: path of logfile\n");
+  printf("     id: 0,1,2,3\n");
   printf("  > system.exe para_check\n");
   printf("  > system.exe stats [<dir_name> [<chicha_num>]]\n");
   printf("     dir_name: default \"\"\n");
@@ -136,6 +139,16 @@ int main(int argc,char* argv[]) {
         for(const auto &json : best_moves) {
             std::cout << json.dump() << std::endl;
         }
+        return 0;
+    } else if (argc == 4 && strcmp(argv[1], "full_analyze") == 0) {
+        const json11::Json& setup_mjai_json = load_json_from_file("setup_mjai.json");
+        set_tactics_one(setup_mjai_json);
+        std::string file_name = argv[2];
+        const Moves game_record = load_json_vec_from_file(file_name);
+        int id = std::atoi(argv[3]);
+        std::vector<std::string> sp = str_split(file_name, '.');
+        const std::vector<json11::Json> ret = full_analyze(game_record, id);
+        dump_json_vec_to_file(ret, sp[0] + "_full_analyze." + sp[1]);
         return 0;
     } else if (argc == 2 && strcmp(argv[1], "para_check") == 0) {
         #pragma omp parallel 

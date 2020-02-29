@@ -76,6 +76,7 @@ namespace std {
 
 void assert_with_out(const bool true_condition, const std::string& comment);
 bool str_starts_with(const std::string& str, const std::string& pre);
+std::vector<std::string> str_split(const std::string& str, const char del);
 bool check_openable_file(const std::string& file_name);
 json11::Json load_json_from_file(const std::string& file_name);
 std::vector<json11::Json> load_json_vec_from_file(const std::string& file_name);

@@ -17,7 +17,7 @@ bool Hai_Choice::operator<(const Hai_Choice& rhs) const {
 	}
 }
 
-Moves Hai_Choice::out_moves(const Game_State& game_state, const int my_pid, const int tsumo_hai) {
+Moves Hai_Choice::out_moves(const Game_State& game_state, const int my_pid, const int tsumo_hai) const {
 	Moves moves;
 	if (action_type == AT_TSUMO_AGARI) {
 		moves.push_back(make_hora(my_pid, my_pid, tsumo_hai));
@@ -73,7 +73,7 @@ bool Fuuro_Choice::operator<(const Fuuro_Choice& rhs) const {
 	}
 }
 
-Moves Fuuro_Choice::out_moves(const int my_pid, const int target) {
+Moves Fuuro_Choice::out_moves(const int my_pid, const int target) const {
 	Moves moves;
 	if (fuuro_action_type == AT_RON_AGARI) {
 		moves.push_back(make_hora(my_pid, target, fuuro_hai));
@@ -951,6 +951,36 @@ Moves ai(const Moves& game_record, const int pid, const bool out_console_input) 
 	} else {
 		return {make_none(pid)};
 	}
+}
+
+#ifdef WINSTD
+__declspec(dllexport)
+#endif
+std::vector<std::pair<Moves, float>> calc_moves_score(const Moves& game_record, const int pid) {
+	assert(game_record.size() > 0);
+	out_console = false;
+	const json11::Json& last_action = game_record[game_record.size() - 1];
+    game_rule.set_self_match();
+	Tactics tactics;
+	if (tactics_json[pid]["base"] == "minimum") { tactics.set_zero_first(); }
+	else if (tactics_json[pid]["base"] == "light") { tactics.set_light(); }
+	else if (tactics_json[pid]["base"] == "default") { tactics.set_default(); }
+	else { assert_with_out(false, "tactics_json base error!"); }
+
+	std::vector<std::pair<Moves, float>> ret;
+	Selector selector;
+    selector.set_selector(game_record, pid, tactics);
+	if (selector.hai_choice.size() > 0) {
+		const Game_State game_state = get_game_state(game_record);
+		for (const Hai_Choice& choice : selector.hai_choice) {
+			ret.push_back(std::pair<Moves, float>({choice.out_moves(game_state, pid, hai_str_to_int(last_action["pai"].string_value())), choice.pt_exp_total}));
+		}
+	} else if (selector.fuuro_choice.size() > 0) {
+		for (const Fuuro_Choice& choice : selector.fuuro_choice) {
+			ret.push_back(std::pair<Moves, float>({choice.out_moves(pid, last_action["actor"].int_value()), choice.pt_exp_total}));
+		}
+	}
+	return ret;
 }
 
 #ifdef WINSTD

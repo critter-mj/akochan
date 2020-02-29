@@ -7,5 +7,6 @@
 #include "mjai_manager.hpp"
 #include "mjai_client.hpp"
 #include "stats.hpp"
+#include "analyze.hpp"
 #include "pseudo_game.hpp"
 #include "import.hpp"

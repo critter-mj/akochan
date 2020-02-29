@@ -24,7 +24,7 @@ class Hai_Choice {
 	Hai_Choice();
 	bool operator<(const Hai_Choice& rhs) const;
 	int is_choice_reach_declare();
-	Moves out_moves(const Game_State& game_state, const int my_pid, const int tsumo_hai);
+	Moves out_moves(const Game_State& game_state, const int my_pid, const int tsumo_hai) const;
 };
 
 class Fuuro_Choice {
@@ -43,7 +43,7 @@ class Fuuro_Choice {
 	Fuuro_Choice();
 	void reset();
 	bool operator<(const Fuuro_Choice& rhs) const;
-	Moves out_moves(const int my_pid, const int target);
+	Moves out_moves(const int my_pid, const int target) const;
 };
 
 std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode);
@@ -66,6 +66,11 @@ class Selector{
 __declspec(dllexport)
 #endif 
 Moves ai(const Moves& game_record, const int pid, const bool out_console_input);
+
+#ifdef WINSTD
+__declspec(dllexport)
+#endif
+std::vector<std::pair<Moves, float>> calc_moves_score(const Moves& game_record, const int pid);
 
 #ifdef WINSTD
 __declspec(dllexport)
