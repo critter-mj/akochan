@@ -5,6 +5,7 @@
 #include "share/agari_ten.hpp"
 #include "share/calc_shanten.hpp"
 #include "share/make_move.hpp"
+#include "import.hpp"
 
 class Game_Settings {
     public:
@@ -41,14 +42,6 @@ Moves ai_assign(const Moves& game_record, const int player_id);
 std::array<Moves, 4> require_moves_after_tsumo(const Moves& game_record, const int player_id);
 std::array<Moves, 4> require_moves_after_dahai(const Moves& game_record, const int player_id);
 std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record, const int player_id);
-
-#ifdef WINSTD
-__declspec(dllimport) std::vector<json11::Json> ai_tsumogiri(const Moves& game_record, const int pid);
-__declspec(dllimport) std::vector<json11::Json> ai_random(const Moves& game_record, const int pid);
-__declspec(dllimport) std::vector<json11::Json> ai(const Moves& game_record, const int pid, const bool out_console_input);
-#else
-std::vector<json11::Json> ai(const Moves& game_record, const int pid, const bool out_console_input);
-#endif
 
 void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, Moves players_moves, Game_Phase& game_phase);
 void do_game_one_player(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, Moves players_moves, Game_Phase& game_phase);

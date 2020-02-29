@@ -8,11 +8,4 @@
 #include "mjai_client.hpp"
 #include "stats.hpp"
 #include "pseudo_game.hpp"
-
-#ifdef WINSTD
-__declspec(dllimport) void set_tactics(const json11::Json& setup_match_json);
-__declspec(dllimport) void set_tactics_one(const json11::Json& setup_match_json);
-#else
-void set_tactics(const json11::Json& setup_match_json);
-void set_tactics_one(const json11::Json& setup_match_json);
-#endif
+#include "import.hpp"
