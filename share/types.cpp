@@ -597,6 +597,13 @@ int count_tsumo_num_all(const Moves& game_record) {
    return tsumo_num_pair.first + tsumo_num_pair.second;
 }
 
+int get_kyoku_first(const Moves& game_record) {
+    assert_with_out(0 < game_record.size(), "get_kyoku_first: game_record size error");
+    assert_with_out(game_record[0]["type"].string_value() == "start_game", "get_kyoku_first: type error");
+    assert_with_out(!game_record[0]["kyoku_first"].is_null(), "get_kyoku_first: kyoku_first is null");
+    return game_record[0]["kyoku_first"].int_value();
+}
+
 int get_bakaze(const Moves& game_record) {
     for (int i = game_record.size() - 1; 0 <= i; i--) {
         const json11::Json& action_json = game_record[i];

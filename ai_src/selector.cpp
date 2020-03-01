@@ -103,8 +103,7 @@ std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> cal_kyoku_en
         // リーチに関して、declared_flagを用いる。（宣言牌に対する副露判断を適切なものにするため）
 	    // 宣言牌に対するロンに関しては、個別に期待利得を計算する。
     }
-    const int game_rule_kyoku_first = 4; // 東風戦
-    const int kyoku_mod = game_rule_kyoku_first + game_state.bakaze*4 + game_state.kyoku - 1;
+	const int kyoku_mod = get_kyoku_first(game_record) + game_state.bakaze*4 + game_state.kyoku - 1;
     const int oyaid = get_oya(game_record);
 
 	std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> kyoku_end_pt_exp = {};
@@ -171,8 +170,7 @@ std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_
         // リーチに関して、declared_flagを用いる。（宣言牌に対する副露判断を適切なものにするため）
 	    // 宣言牌に対するロンに関しては、個別に期待利得を計算する。
     }
-    const int game_rule_kyoku_first = 4; // 東風戦
-    const int kyoku_mod = game_rule_kyoku_first + game_state.bakaze*4 + game_state.kyoku - 1;
+	const int kyoku_mod = get_kyoku_first(game_record) + game_state.bakaze*4 + game_state.kyoku - 1;
     const int oyaid = get_oya(game_record);
 
 	std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp = {};
