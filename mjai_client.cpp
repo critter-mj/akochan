@@ -46,6 +46,16 @@ void MJAI_Interface::push(const json11::Json &receive){
         scores_[i] = receive["scores"].array_items()[i].int_value();
 }
 
+void MJAI_Interface::push_start_game(const json11::Json &receive, const int kyoku_first, const bool aka_flag) {
+    assert_with_out(receive["type"].string_value() == "start_game", "push_start_game type error");
+    // kyoku_first: 4 -> tonpu match, 0 -> tonnan match
+    // aka_flag: true -> use akadora(5mr, 5pr, 5sr), false -> do not use akadora 
+    json11::Json::object obj = receive.object_items();
+    obj["kyoku_first"] = kyoku_first;
+    obj["aka_flag"] = aka_flag;
+    game_record.push_back(json11::Json(obj));
+}
+
 Moves MJAI_Interface::get_best_move(const int my_pid, const bool out_console_input) {
     if (out_console_input) {
         for (int i = 0; i < game_record.size(); i++) {

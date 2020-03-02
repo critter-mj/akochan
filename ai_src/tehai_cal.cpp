@@ -1,21 +1,21 @@
 #include "tehai_cal.hpp"
 
 extern const bool out_console;
-extern const Game_Rule game_rule;
 extern std::mutex mtx;
 
 extern Tehai_Calculator_Work tehai_calculator_work;
 
 Tehai_Calculator::Tehai_Calculator(){
-	reset(0);
+	reset(0, true);
 }
 
 Tehai_Calculator::Tehai_Calculator(int my_pid_in){
-	reset(my_pid_in);
+	reset(my_pid_in, true);
 }
 
-void Tehai_Calculator::reset(int my_pid_in){
+void Tehai_Calculator::reset(int my_pid_in, bool aka_flag_in){
 	my_pid = my_pid_in;
+	aka_flag = aka_flag_in;
 	for(int hai=0;hai<38;hai++){
 		in_flag[hai] = 0;
 		out_flag[hai] = 0;
@@ -592,7 +592,7 @@ void Tehai_Calculator::set_cand_graph_sub(const int cn1, const std::vector<std::
 
 		for(int hai=1;hai<38;hai++){
 			if(hai%10 != 0) {
-				if(game_rule.aka_flag==1 && hai<30 && hai%10==5){
+				if(aka_flag && hai<30 && hai%10==5){
 					if((get_const_ta_cgn(cn1, gn1).count_hai(hai)==2 && get_const_ta_cgn(cn1, gn1).count_hai(hai+5)==1) || get_const_ta_cgn(cn1, gn1).count_hai(hai)==3){
 						set_cand_graph_sub_child(cn1, gn1, cn1, hai, hai, AT_ANKAN, hai, hai, hai+5, ts_maps, thread_num);
 					}

@@ -2,7 +2,6 @@
 
 #include "../share/include.hpp"
 
-#include "game_rule.hpp"
 #include "tehai_group.hpp"
 #include "tehai_action.hpp"
 #include "tehai_cal_work.hpp"
@@ -15,7 +14,7 @@ class Tehai_Calculator{
 	Tehai_Calculator();
 	Tehai_Calculator(int my_pid_in);
 
-	void reset(int my_pid_in);
+	void reset(int my_pid_in, bool aka_flag_in);
 
 	//int group_size[MAX_CANDIDATES_NUM];
 	//std::pair<int, int> location[MAX_CANDIDATES_NUM][MAX_GROUP_NUM];
@@ -30,6 +29,7 @@ class Tehai_Calculator{
 	boost::unordered_set<Tehai_Change> tcs_sub;
 
 	int my_pid;
+	bool aka_flag;
 	int tehai_all_num;
 	Bit_Hai_Num bit_hai_num;
 	int in0num;

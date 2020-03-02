@@ -1,6 +1,5 @@
 #include "selector.hpp"
 
-Game_Rule game_rule;
 Tehai_Calculator_Work tehai_calculator_work;
 bool out_console;
 
@@ -214,7 +213,7 @@ int cal_tsumo_num_DP(const Moves& game_record, const int my_pid) {
 	const int result_tmp = (70 - tsumo_num_all) / 4;
 	const json11::Json& last_action = game_record[game_record.size()-1];
 
-	const int next_tsumo_player = last_action["type"] == "dahai" ? game_rule.next_player(last_action["actor"].int_value(), 1) : game_rule.next_player(my_pid, 1);
+	const int next_tsumo_player = last_action["type"] == "dahai" ? next_player(last_action["actor"].int_value(), 1) : next_player(my_pid, 1);
 	if ((70 - tsumo_num_all)%4 > (4 + my_pid - next_tsumo_player)%4) {
 		return result_tmp + 1;
 	} else {
@@ -468,7 +467,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			}
 			bool ori_flag = false;
 			for (int pid_add = 1; pid_add < 4; pid_add++) {
-				const int pid = game_rule.next_player(my_pid, pid_add);
+				const int pid = next_player(my_pid, pid_add);
 				if (game_state.player_state[pid].reach_declared || tenpai_estimator[pid].tenpai_prob > 0.5) {
 					ori_flag = true;
 				}
@@ -538,7 +537,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	}
 
 	Tehai_Calculator tehai_calculator;
-	tehai_calculator.reset(my_pid);
+	tehai_calculator.reset(my_pid, get_aka_flag(game_record));
 	tehai_calculator.fuuro_cand_hai = current_action["type"] == "dahai" ? current_hai : 0;
 	tehai_calculator.get_effective(game_state, tehai_analyzer);
 	tehai_calculator.tehai_all_num = tehai_analyzer.get_tehai_num() + tehai_analyzer.get_fuuro_num()*3;
@@ -702,7 +701,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					//ac_tmp.out_info();
 					if (ac_tmp.hai != current_hai) {
 						continue;
-					} else if (my_pid != game_rule.next_player(current_action["actor"].int_value(), 1) && is_chi(ac_tmp.action_type)) {
+					} else if (my_pid != next_player(current_action["actor"].int_value(), 1) && is_chi(ac_tmp.action_type)) {
 						continue;
 					} else {
 						//ac_tmp.out_info();
@@ -852,7 +851,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					if (ac_tmp.action_type != AT_TSUMO) {
 						if (ac_tmp.hai != current_hai) {
 							continue;
-						} else if (my_pid != game_rule.next_player(current_action["actor"].int_value(), 1) && is_chi(ac_tmp.action_type)){
+						} else if (my_pid != next_player(current_action["actor"].int_value(), 1) && is_chi(ac_tmp.action_type)){
 							continue;
 						} else {
 							//ac_tmp.out_info();
@@ -922,7 +921,6 @@ Moves ai(const Moves& game_record, const int pid, const bool out_console_input) 
 	assert(game_record.size() > 0);
     out_console = out_console_input;
 	const json11::Json& last_action = game_record[game_record.size() - 1];
-    game_rule.set_self_match();
 	Tactics tactics;
 	if (tactics_json[pid]["base"] == "minimum") { tactics.set_zero_first(); }
 	else if (tactics_json[pid]["base"] == "light") { tactics.set_light(); }
@@ -958,7 +956,6 @@ std::vector<std::pair<Moves, float>> calc_moves_score(const Moves& game_record, 
 	assert(game_record.size() > 0);
 	out_console = false;
 	const json11::Json& last_action = game_record[game_record.size() - 1];
-    game_rule.set_self_match();
 	Tactics tactics;
 	if (tactics_json[pid]["base"] == "minimum") { tactics.set_zero_first(); }
 	else if (tactics_json[pid]["base"] == "light") { tactics.set_light(); }

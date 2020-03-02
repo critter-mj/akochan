@@ -3,6 +3,8 @@
 json11::Json make_start_game() {
     json11::Json::object move;
     move["type"] = "start_game";
+    move["kyoku_first"] = 4;
+    move["aka_flag"] = true;
     // name
     return json11::Json(move);
 }

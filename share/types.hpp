@@ -2,6 +2,8 @@
 
 #include "include.hpp"
 
+int next_player(const int pid, const int arg);
+
 enum Color_Type {
     CT_MANZU = 0,
     CT_PINZU = 1,
@@ -164,6 +166,8 @@ std::pair<int, int> count_tsumo_num(const Moves& game_record);
 int count_tsumo_num_all(const Moves& game_record);
 
 int get_kyoku_first(const Moves& game_record);
+bool get_aka_flag(const Moves& game_record);
+
 int get_bakaze(const Moves& game_record);
 int get_kyoku(const Moves& game_record);
 int get_oya(const Moves& game_record);

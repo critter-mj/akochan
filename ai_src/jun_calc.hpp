@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../share/include.hpp"
-#include "game_rule.hpp"
+
 #include "mjutil.hpp"
 
 std::array<std::array<float, 4>, 4> calc_jun_prob_end(const std::array<int, 4>& ten, const int oya_first);

@@ -186,7 +186,11 @@ int main(int argc,char* argv[]) {
             json11::Json response;
             std::string type = recv["type"].string_value();
       
-            mjai_interface.push(recv);
+            if (type == "start_game") {
+                mjai_interface.push_start_game(recv, 4, true);
+            } else {
+                mjai_interface.push(recv);
+            }
 
             if (argc > 2)
                 ofs_log << recv.dump() << std::endl;

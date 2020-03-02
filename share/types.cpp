@@ -1,5 +1,9 @@
 #include "types.hpp"
 
+int next_player(const int pid, const int arg) {
+	return (pid + arg) % 4;
+}
+
 Color_Type hai_color(const int hai) {
 	return (Color_Type) ((hai - 1) / 10);
 }
@@ -602,6 +606,13 @@ int get_kyoku_first(const Moves& game_record) {
     assert_with_out(game_record[0]["type"].string_value() == "start_game", "get_kyoku_first: type error");
     assert_with_out(!game_record[0]["kyoku_first"].is_null(), "get_kyoku_first: kyoku_first is null");
     return game_record[0]["kyoku_first"].int_value();
+}
+
+bool get_aka_flag(const Moves& game_record) {
+    assert_with_out(0 < game_record.size(), "get_aka_flag: game_record size error");
+    assert_with_out(game_record[0]["type"].string_value() == "start_game", "get_aka_flag: type error");
+    assert_with_out(!game_record[0]["aka_flag"].is_null(), "get_aka_flag: aka_flag is null");
+    return game_record[0]["aka_flag"].bool_value();
 }
 
 int get_bakaze(const Moves& game_record) {
