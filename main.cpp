@@ -119,23 +119,16 @@ int main(int argc,char* argv[]) {
         proceed_game(haiyama, game_record, 0, -1, {}, game_phase);
         return 0;
     } else if (argc == 4 && strcmp(argv[1], "mjai_log") == 0) {
-        //const json11::Json& setup_match_json = load_json_from_file("setup_match.json");
-        //set_tactics(setup_match_json);
         const json11::Json& setup_mjai_json = load_json_from_file("setup_mjai.json");
         set_tactics_one(setup_mjai_json);
+        std::string file_name = argv[2];
+        const Moves game_record = load_json_vec_from_file(file_name);
         int id = std::atoi(argv[3]);
-        MJAI_Interface mjai_interface;
-        std::ifstream ifs(argv[2]);
-        std::string str;
-        std::string err; 
-        while (std::getline(ifs,str)) {
-            auto receive = json11::Json::parse(str, err);
-            if(receive["type"] != "error")
-                mjai_interface.push(receive);
-            std::cout << receive.dump() << std::endl;
+        for (const auto& action : game_record) {
+            std::cout << action.dump() << std::endl;
         }
         std::cout << "calculating best_moves" << std::endl;
-        auto best_moves = mjai_interface.get_best_move(id, false);
+        auto best_moves = ai(game_record, id, false);
         for(const auto &json : best_moves) {
             std::cout << json.dump() << std::endl;
         }
