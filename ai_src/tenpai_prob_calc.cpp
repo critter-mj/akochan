@@ -53,6 +53,7 @@ float infer_tenpai_prob_ako_old(const Kawa& kawa, const int fuuro_num) {
 
 float infer_tenpai_prob_ako(const Moves& game_record, const Game_State& game_state, const int target) {
     const int fn = game_state.player_state[target].fuuro.size();
+	if (fn == 4) { return 1.0; }
     const int kn = game_state.player_state[target].kawa.size();
     const int lb = [&] {
         if      (fn == 0) { return 2; }
