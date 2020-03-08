@@ -23,6 +23,9 @@ void usage() {
   printf("     dir_name: default \"\"\n");
   printf("     player_name_prefix: default \"Akochan\"\n");
   printf("  > system.exe mjai_client\n");
+  printf("  > system.exe pipe <file> <id>\n");
+  printf("     file: path of tactics json\n");
+  printf("     id: 0,1,2,3\n");
 }
 
 int main(int argc,char* argv[]) {
