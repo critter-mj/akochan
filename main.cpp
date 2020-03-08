@@ -118,12 +118,13 @@ int main(int argc,char* argv[]) {
         Game_Phase game_phase = GP_AI;
         proceed_game(haiyama, game_record, 0, -1, {}, game_phase);
         return 0;
-    } else if (argc == 4 && strcmp(argv[1], "mjai_log") == 0) {
+    } else if (4 <= argc && strcmp(argv[1], "mjai_log") == 0) {
         const json11::Json& setup_mjai_json = load_json_from_file("setup_mjai.json");
         set_tactics_one(setup_mjai_json);
         std::string file_name = argv[2];
-        const Moves game_record = load_json_vec_from_file(file_name);
         int id = std::atoi(argv[3]);
+        const int length = (5 <= argc) ? std::atoi(argv[4]) + 1 : -1;
+        const Moves game_record = load_game_record_from_file(file_name, length);
         for (const auto& action : game_record) {
             std::cout << action.dump() << std::endl;
         }

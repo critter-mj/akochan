@@ -836,3 +836,37 @@ std::array<bool, 38> get_furiten_flags(const Moves& game_record, const int pid) 
     }
     return furiten_flags;
 }
+
+std::vector<json11::Json> load_game_record_from_file(const std::string& file_name, int length) {
+    const Moves json_vec = load_json_vec_from_file(file_name);
+    assert_with_out(length <= int(json_vec.size()), "load_game_record_from_file: length error");
+    if (length < 0) {
+        length = json_vec.size();
+    }
+    Moves game_record;
+    std::array<int, 4> scores_ = {25000, 25000, 25000, 25000};
+    for (int i = 0; i < length; i++) {
+        if (json_vec[i]["type"] == "start_game" && (json_vec[i]["kyoku_first"].is_null() || json_vec[i]["aka_flag"].is_null())) {
+            json11::Json::object obj = json_vec[i].object_items();
+            if (json_vec[i]["kyoku_first"].is_null()) {
+                obj["kyoku_first"] = 4;
+            }
+            if (json_vec[i]["aka_flag"].is_null()) {
+                obj["aka_flag"] = true;
+            }
+            game_record.push_back(json11::Json(obj));
+        } else if (json_vec[i]["type"] == "start_kyoku" && json_vec[i]["scores"].is_null()) {
+            json11::Json::object obj = json_vec[i].object_items();
+            obj["scores"] = scores_;
+            game_record.push_back(json11::Json(obj));
+        } else {
+            game_record.push_back(json_vec[i]);
+        }
+        if (!json_vec[i]["scores"].is_null()) {
+            for (int pid = 0; pid < 4; pid++) {
+                scores_[pid] = json_vec[i]["scores"].array_items()[pid].int_value();
+            }
+        }
+    }
+    return game_record;
+}
