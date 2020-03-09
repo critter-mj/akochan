@@ -21,6 +21,8 @@ class Hai_Choice {
 	float pt_exp_total;
 	float pt_exp_after_ori;
 
+	json11::Json::object review;
+
 	Hai_Choice();
 	bool operator<(const Hai_Choice& rhs) const;
 	int is_choice_reach_declare();
@@ -39,6 +41,8 @@ class Fuuro_Choice {
 	float pt_exp_after_prev;
 	float pt_exp_total;
 	float pt_exp_total_prev;
+
+	json11::Json::object review;
 
 	Fuuro_Choice();
 	void reset();
@@ -71,6 +75,11 @@ Moves ai(const Moves& game_record, const int pid, const bool out_console_input);
 __declspec(dllexport)
 #endif
 std::vector<std::pair<Moves, float>> calc_moves_score(const Moves& game_record, const int pid);
+
+#ifdef WINSTD
+__declspec(dllexport)
+#endif
+json11::Json ai_review(const Moves& game_record, const int pid);
 
 #ifdef WINSTD
 __declspec(dllexport)

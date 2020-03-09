@@ -131,11 +131,9 @@ int main(int argc,char* argv[]) {
         for (const auto& action : game_record) {
             std::cout << action.dump() << std::endl;
         }
-        std::cout << "calculating best_moves" << std::endl;
-        auto best_moves = ai(game_record, id, false);
-        for(const auto &json : best_moves) {
-            std::cout << json.dump() << std::endl;
-        }
+        std::cout << "calculating review" << std::endl;
+        auto review = ai_review(game_record, id);
+        std::cout << review.dump() << std::endl;
         return 0;
     } else if (argc == 4 && strcmp(argv[1], "pipe") == 0) {
         const json11::Json& tactics = load_json_from_file(argv[2]);

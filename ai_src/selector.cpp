@@ -640,6 +640,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					const int hai_out = hai_choice[i].hai;
 					hai_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * hai_choice[i].pt_exp_after;
 				}
+				hai_choice[i].review["pt_exp_total"] = hai_choice[i].pt_exp_total;
 			}
 			if (out_console) {
 				for(int i=0;i<hai_choice.size();i++){
@@ -727,6 +728,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					fuuro_choice[i].pt_exp_total_prev = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out])*fuuro_choice[i].pt_exp_after_prev;
 					fuuro_choice[i].pt_exp_total = std::min(fuuro_choice[i].pt_exp_total, fuuro_choice[i].pt_exp_total_prev);
 				}
+				fuuro_choice[i].review["pt_exp_total"] = fuuro_choice[i].pt_exp_total;
 			}
 			if (out_console) {
 				for(int i=0;i<fuuro_choice.size();i++){
@@ -811,6 +813,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			for (int i = 0; i < hai_choice.size(); i++) {
 				const int hai_out = hai_choice[i].hai;
 				hai_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * hai_choice[i].pt_exp_after;
+				hai_choice[i].review["pt_exp_total"] = hai_choice[i].pt_exp_total;
 				if (out_console) {
 					std::cout << "hai_choice:" << hai_choice[i].hai << " " << hai_choice[i].pt_exp_total << " " << hai_choice[i].pt_exp_after_ori << " " << hai_choice[i].pt_exp_after << std::endl;
 					std::cout << total_houjuu_hai_prob_now[hai_choice[i].hai] << " " << total_houjuu_hai_value_now[hai_choice[i].hai] << std::endl;
@@ -900,6 +903,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					fuuro_choice[i].pt_exp_total_prev = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * fuuro_choice[i].pt_exp_after_prev;
 					fuuro_choice[i].pt_exp_total = std::min(fuuro_choice[i].pt_exp_total, fuuro_choice[i].pt_exp_total_prev);
 				}
+				fuuro_choice[i].review["pt_exp_total"] = fuuro_choice[i].pt_exp_total;
 				if (out_console) {
 					std::cout << "fuuro_choice:" << (int)fuuro_choice[i].fuuro_action_type << " " << fuuro_choice[i].hai_out << " " << fuuro_choice[i].pt_exp_total << " " << fuuro_choice[i].pt_exp_total_prev << " ";
 					if (fuuro_choice[i].fuuro_action_type != AT_FUURO_PASS && fuuro_choice[i].fuuro_action_type != AT_RON_AGARI) {
@@ -976,6 +980,43 @@ std::vector<std::pair<Moves, float>> calc_moves_score(const Moves& game_record, 
 		}
 	}
 	return ret;
+}
+
+#ifdef WINSTD
+__declspec(dllexport)
+#endif
+json11::Json ai_review(const Moves& game_record, const int pid) {
+	assert(game_record.size() > 0);
+	out_console = false;
+	const json11::Json& last_action = game_record[game_record.size() - 1];
+	Tactics tactics;
+	if (tactics_json[pid]["base"] == "minimum") { tactics.set_zero_first(); }
+	else if (tactics_json[pid]["base"] == "light") { tactics.set_light(); }
+	else if (tactics_json[pid]["base"] == "default") { tactics.set_default(); }
+	else { assert_with_out(false, "tactics_json base error!"); }
+
+	json11::Json::array actions_array;
+	Selector selector;
+    selector.set_selector(game_record, pid, tactics);
+	if (selector.hai_choice.size() > 0) {
+		const Game_State game_state = get_game_state(game_record);
+		for (const Hai_Choice& choice : selector.hai_choice) {
+			actions_array.push_back(json11::Json::object{
+				{"moves", choice.out_moves(game_state, pid, hai_str_to_int(last_action["pai"].string_value()))},
+				{"review", choice.review},
+			});
+		}
+	} else if (selector.fuuro_choice.size() > 0) {
+		for (const Fuuro_Choice& choice : selector.fuuro_choice) {
+			actions_array.push_back(json11::Json::object{
+				{"moves", choice.out_moves(pid, last_action["actor"].int_value())},
+				{"review", choice.review},
+			});
+		}
+	}
+	return json11::Json{
+		{"actions", actions_array}
+	};
 }
 
 #ifdef WINSTD
