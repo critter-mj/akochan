@@ -10,8 +10,14 @@ void usage() {
   printf("     seed_end: default 1001\n");
   printf("  > system.exe check\n");
   printf("  > system.exe mjai_log <file> <id>\n");
+  printf("     -- run AI at the final state specified by file, from the point of view specified by id --\n");
   printf("     file: path of logfile\n");
   printf("     id: 0,1,2,3\n");
+  printf("  > system.exe mjai_log <file> <id> <line_index>\n");
+  printf("     -- run AI at the state specified by file and line_index(0-indexed), from the point of view specified by id --\n");
+  printf("     file: path of logfile\n");
+  printf("     id: 0,1,2,3\n");
+  printf("     line_index: 0,1...\n");
   printf("  > system.exe full_analyze <file> <id>\n");
   printf("     file: path of logfile\n");
   printf("     id: 0,1,2,3\n");
