@@ -90,10 +90,7 @@ Moves Fuuro_Choice::out_moves(const int my_pid, const int target) const {
 	return moves;
 }
 
-std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode) {
-    const json11::Json::array pt_array = tactics_json[my_pid]["jun_pt"].array_items();
-	assert_with_out(pt_array.size() == 4, "jun_pt error");
-	
+std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode, const Tactics& tactics) {
 	int riibou = game_state.kyotaku;
     for (int pid = 0; pid < 4; pid++) {
         if (game_state.player_state[pid].reach_declared && !game_state.player_state[pid].reach_accepted) {
@@ -147,7 +144,7 @@ std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> cal_kyoku_en
 						const int oyaid_next = (pid1 == oyaid) ? oyaid : (oyaid + 1) % 4;
 						const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next, pid1 == oyaid, tactics_json[my_pid]);
                         for (int j = 0; j < 4; j++) {
-                            kyoku_end_pt_exp[pid1][pid2][han][fu] += jun_prob[my_pid][j] * pt_array[j].int_value();
+                            kyoku_end_pt_exp[pid1][pid2][han][fu] += jun_prob[my_pid][j] * tactics.jun_pt[j];
                         }
 					}
 				}
@@ -157,10 +154,7 @@ std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> cal_kyoku_en
     return kyoku_end_pt_exp;
 }
 
-std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode) {
-    const json11::Json::array pt_array = tactics_json[my_pid]["jun_pt"].array_items();
-	assert_with_out(pt_array.size() == 4, "jun_pt error");
-	
+std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode, const Tactics& tactics) {
 	int riibou = game_state.kyotaku;
     for (int pid = 0; pid < 4; pid++) {
         if (game_state.player_state[pid].reach_declared && !game_state.player_state[pid].reach_accepted) {
@@ -199,7 +193,7 @@ std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_
 					const int oyaid_next = tenpai_flag[oyaid] ? oyaid : (oyaid + 1) % 4;
 					const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next, tenpai_flag[oyaid], tactics_json[my_pid]);
 					for (int j = 0; j < 4; j++) {
-						ryuukyoku_pt_exp[t0][t1][t2][t3] += jun_prob[my_pid][j] * pt_array[j].int_value();
+						ryuukyoku_pt_exp[t0][t1][t2][t3] += jun_prob[my_pid][j] * tactics.jun_pt[j];
 					}
 				}
 			}
@@ -336,10 +330,10 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const Hai_Array hai_visible_all_kind = haikind(hai_visible_all);
 	const Hai_Array hai_visible_kind = sum_hai_array(hai_visible_all_kind, current_tehai_kind);
 
-	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> kyoku_end_pt_exp = cal_kyoku_end_pt_exp(game_record, game_state, my_pid, false);
-	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> kyoku_end_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? kyoku_end_pt_exp : cal_kyoku_end_pt_exp(game_record, game_state, my_pid, true);
-	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp = cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, false);
-	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? ryuukyoku_pt_exp : cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, true);
+	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> kyoku_end_pt_exp = cal_kyoku_end_pt_exp(game_record, game_state, my_pid, false, tactics);
+	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> kyoku_end_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? kyoku_end_pt_exp : cal_kyoku_end_pt_exp(game_record, game_state, my_pid, true, tactics);
+	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp = cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, false, tactics);
+	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? ryuukyoku_pt_exp : cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, true, tactics);
 
 	if (out_console) {
 		std::cout << "ryuukyoku_pt_exp:" << std::endl; 
@@ -500,6 +494,10 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 						hai_choice_tmp.pt_exp_after_ori = cal_betaori(tehai_tmp, betaori_houjuu_hai_prob, total_houjuu_hai_value, other_end_value, passive_ryuukyoku_value, tsumo_num_exp).betaori_exp;
 						hai_choice_tmp.pt_exp_total = total_houjuu_hai_prob_now[hai] * total_houjuu_hai_value_now[hai] + (1.0 - total_houjuu_hai_prob_now[hai]) * hai_choice_tmp.pt_exp_after_ori;
+						hai_choice_tmp.review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai];
+						hai_choice_tmp.review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai];
+						hai_choice_tmp.review["pt_exp_after"] = hai_choice_tmp.pt_exp_after_ori;
+						hai_choice_tmp.review["pt_exp_total"] = hai_choice_tmp.pt_exp_total;
 						hai_choice.push_back(hai_choice_tmp);
 					}
 				}
@@ -670,11 +668,14 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 				}
 			}
 			for(int i=0;i<hai_choice.size();i++){
-				if(is_ankan(hai_choice[i].action_type)){
+				if (is_ankan(hai_choice[i].action_type)){
 					hai_choice[i].pt_exp_total = hai_choice[i].pt_exp_after;
-				}else if(hai_choice[i].action_type != AT_TSUMO_AGARI){
+				} else if (hai_choice[i].action_type != AT_TSUMO_AGARI) {
 					const int hai_out = hai_choice[i].hai;
 					hai_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * hai_choice[i].pt_exp_after;
+					hai_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
+					hai_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+					hai_choice[i].review["pt_exp_after"] = hai_choice[i].pt_exp_after;
 				}
 				hai_choice[i].review["pt_exp_total"] = hai_choice[i].pt_exp_total;
 			}
@@ -726,7 +727,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			if (fuuro_choice_tmp.fuuro_action_type == AT_RON_AGARI && !doujun_furiten_flag) {
 				fuuro_choice.push_back(fuuro_choice_tmp);
 			}
-			
+
 			fuuro_choice_tmp.fuuro_action_type = AT_FUURO_PASS;
 			fuuro_choice_tmp.pt_exp_total = std::max(tehai_calculator.get_ten_exp(cn_fuuro_neg, gn_fuuro_neg, tsumo_num_DP), not_agari_value); // to do 元はnot_agari_valueのかわりにpassive_valueだった。
 			fuuro_choice.push_back(fuuro_choice_tmp);
@@ -763,6 +764,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					fuuro_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out])*fuuro_choice[i].pt_exp_after;
 					fuuro_choice[i].pt_exp_total_prev = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out])*fuuro_choice[i].pt_exp_after_prev;
 					fuuro_choice[i].pt_exp_total = std::min(fuuro_choice[i].pt_exp_total, fuuro_choice[i].pt_exp_total_prev);
+					fuuro_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
+					fuuro_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+					fuuro_choice[i].review["pt_exp_after"] = fuuro_choice[i].pt_exp_after;
 				}
 				fuuro_choice[i].review["pt_exp_total"] = fuuro_choice[i].pt_exp_total;
 			}
@@ -808,7 +812,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 						if (out_console) {
 							std::cout << cn << " " << gn << " " << hai_out << " " << tehai_calculator.get_agari_prob(cn, gn, tsumo_num_exp) << " " << hai_choice_tmp.pt_exp_after << std::endl;
 						}
-						
+
 						//Betaori betaori;
 						std::array<float, 38> betaori_houjuu_hai_prob = total_houjuu_hai_prob;
 						betaori_houjuu_hai_prob[hai_out] = 0.0;
@@ -849,6 +853,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			for (int i = 0; i < hai_choice.size(); i++) {
 				const int hai_out = hai_choice[i].hai;
 				hai_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * hai_choice[i].pt_exp_after;
+				hai_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
+				hai_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+				hai_choice[i].review["pt_exp_after"] = hai_choice[i].pt_exp_after;
 				hai_choice[i].review["pt_exp_total"] = hai_choice[i].pt_exp_total;
 				if (out_console) {
 					std::cout << "hai_choice:" << hai_choice[i].hai << " " << hai_choice[i].pt_exp_total << " " << hai_choice[i].pt_exp_after_ori << " " << hai_choice[i].pt_exp_after << std::endl;
@@ -938,6 +945,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					fuuro_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * fuuro_choice[i].pt_exp_after;
 					fuuro_choice[i].pt_exp_total_prev = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * fuuro_choice[i].pt_exp_after_prev;
 					fuuro_choice[i].pt_exp_total = std::min(fuuro_choice[i].pt_exp_total, fuuro_choice[i].pt_exp_total_prev);
+					fuuro_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
+					fuuro_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+					fuuro_choice[i].review["pt_exp_after"] = fuuro_choice[i].pt_exp_after;
 				}
 				fuuro_choice[i].review["pt_exp_total"] = fuuro_choice[i].pt_exp_total;
 				if (out_console) {
@@ -962,6 +972,14 @@ Moves ai(const Moves& game_record, const int pid, const bool out_console_input) 
     out_console = out_console_input;
 	const json11::Json& last_action = game_record[game_record.size() - 1];
 	Tactics tactics(tactics_json[pid]);
+
+	if (tactics_json[pid].object_items().count("jun_pt") > 0) {
+		json11::Json::array jun_pt = tactics_json[pid]["jun_pt"].array_items();
+		assert_with_out(jun_pt.size() == 4, "jun_pt must have 4 elements.");
+		for (auto i = 0; i < 4; i++) {
+			tactics.jun_pt[i] = jun_pt[i].int_value();
+		}
+	}
 
     Selector selector;
     selector.set_selector(game_record, pid, tactics);
@@ -994,6 +1012,14 @@ std::vector<std::pair<Moves, float>> calc_moves_score(const Moves& game_record, 
 	const json11::Json& last_action = game_record[game_record.size() - 1];
 	Tactics tactics(tactics_json[pid]);
 
+	if (tactics_json[pid].object_items().count("jun_pt") > 0) {
+		json11::Json::array jun_pt = tactics_json[pid]["jun_pt"].array_items();
+		assert_with_out(jun_pt.size() == 4, "jun_pt must have 4 elements.");
+		for (auto i = 0; i < 4; i++) {
+			tactics.jun_pt[i] = jun_pt[i].int_value();
+		}
+	}
+
 	std::vector<std::pair<Moves, float>> ret;
 	Selector selector;
     selector.set_selector(game_record, pid, tactics);
@@ -1019,6 +1045,14 @@ json11::Json ai_review(const Moves& game_record, const int pid) {
 	const json11::Json& last_action = game_record[game_record.size() - 1];
 	Tactics tactics(tactics_json[pid]);
 
+	if (tactics_json[pid].object_items().count("jun_pt") > 0) {
+		auto jun_pt = tactics_json[pid]["jun_pt"].array_items();
+		assert_with_out(jun_pt.size() == 4, "jun_pt must have 4 elements.");
+		for (auto i = 0; i < 4; i++) {
+			tactics.jun_pt[i] = jun_pt[i].int_value();
+		}
+	}
+
 	json11::Json::array actions_array;
 	Selector selector;
     selector.set_selector(game_record, pid, tactics);
@@ -1038,9 +1072,10 @@ json11::Json ai_review(const Moves& game_record, const int pid) {
 			});
 		}
 	}
-	return json11::Json{
-		{"actions", actions_array}
-	};
+
+    // json11::Json::object ret;
+	// ret["actions"] = actions_array;
+	return json11::Json(actions_array);
 }
 
 #ifdef WINSTD

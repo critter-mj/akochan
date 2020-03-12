@@ -32,6 +32,9 @@ void usage() {
   printf("  > system.exe pipe <file> <id>\n");
   printf("     file: path of tactics json\n");
   printf("     id: 0,1,2,3\n");
+  printf("  > system.exe pipe_detailed <file> <id>\n");
+  printf("     file: path of tactics json\n");
+  printf("     id: 0,1,2,3\n");
 }
 
 int main(int argc,char* argv[]) {
@@ -176,6 +179,41 @@ int main(int argc,char* argv[]) {
                 for (const auto &json : best_moves) {
                     std::cout << json.dump() << std::endl;
                 }
+            }
+        }
+    } else if (argc == 4 && strcmp(argv[1], "pipe_detailed") == 0) {
+        const json11::Json& tactics = load_json_from_file(argv[2]);
+        set_tactics_one(tactics);
+
+        std::vector<json11::Json> game_record;
+        int id = std::atoi(argv[3]);
+
+        std::string str;
+        std::string err;
+
+        while (std::getline(std::cin, str)) {
+            auto receive = json11::Json::parse(str, err);
+            auto type = receive["type"];
+            if (type == "error") {
+                continue;
+            }
+
+            if (type == "start_kyoku") {
+                // leaving start_game only, clear all the others
+                game_record = std::vector<json11::Json>(game_record.begin(), game_record.begin() + 1);
+            }
+
+            game_record.push_back(receive);
+
+            if (receive.object_items().count("actor") <= 0) {
+                continue;
+            }
+            auto actor = receive["actor"].int_value();
+
+            if ((actor == id && type == "tsumo") ||
+                (actor != id && type == "dahai")) {
+                auto best_moves = ai_review(game_record, id);
+                std::cout << best_moves.dump() << std::endl;
             }
         }
     } else if (argc == 4 && strcmp(argv[1], "full_analyze") == 0) {

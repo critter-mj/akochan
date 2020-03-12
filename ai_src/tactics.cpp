@@ -9,12 +9,16 @@ Tactics::Tactics(const json11::Json& tactics_json) {
 }
 
 void Tactics::set_common() {
+    jun_pt[0] = 90;
+    jun_pt[1] = 45;
+    jun_pt[2] = 0;
+    jun_pt[3] = -135;
     do_houjuu_discount = false;
     do_speed_modify = false;
     use_larger_at_cal_tenpai_after = false;
     betaori_compare_at_2fuuro = false;
     do_kan = true;
-    do_kyushukyuhai = false;
+    do_kyushukyuhai = true;
     use_nn_keiten_estimator = false;
     use_nn_kyoku_result_target_estimator = false;
     use_nn_kyoku_result_other_agari_estimator = false;
