@@ -496,9 +496,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 						hai_choice_tmp.pt_exp_total = total_houjuu_hai_prob_now[hai] * total_houjuu_hai_value_now[hai] + (1.0 - total_houjuu_hai_prob_now[hai]) * hai_choice_tmp.pt_exp_after_ori;
 						hai_choice_tmp.review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai];
 						if (total_houjuu_hai_prob_now[hai] != 0) {
-							fuuro_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+							hai_choice_tmp.review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai];
+							hai_choice_tmp.review["pt_exp_after"] = hai_choice_tmp.pt_exp_after_ori;
 						}
-						hai_choice_tmp.review["pt_exp_after"] = hai_choice_tmp.pt_exp_after_ori;
 						hai_choice_tmp.review["pt_exp_total"] = hai_choice_tmp.pt_exp_total;
 						hai_choice.push_back(hai_choice_tmp);
 					}
@@ -678,8 +678,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					hai_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
 					if (total_houjuu_hai_prob_now[hai_out] != 0) {
 						hai_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+						hai_choice[i].review["pt_exp_after"] = hai_choice[i].pt_exp_after;
 					}
-					hai_choice[i].review["pt_exp_after"] = hai_choice[i].pt_exp_after;
 				}
 				hai_choice[i].review["pt_exp_total"] = hai_choice[i].pt_exp_total;
 			}
@@ -771,8 +771,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					fuuro_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
 					if (total_houjuu_hai_prob_now[hai_out] != 0) {
 						fuuro_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+						fuuro_choice[i].review["pt_exp_after"] = fuuro_choice[i].pt_exp_after;
 					}
-					fuuro_choice[i].review["pt_exp_after"] = fuuro_choice[i].pt_exp_after;
 				}
 				fuuro_choice[i].review["pt_exp_total"] = fuuro_choice[i].pt_exp_total;
 			}
@@ -862,8 +862,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 				hai_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
 				if (total_houjuu_hai_prob_now[hai_out] != 0) {
 					hai_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+					hai_choice[i].review["pt_exp_after"] = hai_choice[i].pt_exp_after;
 				}
-				hai_choice[i].review["pt_exp_after"] = hai_choice[i].pt_exp_after;
 				hai_choice[i].review["pt_exp_total"] = hai_choice[i].pt_exp_total;
 				if (out_console) {
 					std::cout << "hai_choice:" << hai_choice[i].hai << " " << hai_choice[i].pt_exp_total << " " << hai_choice[i].pt_exp_after_ori << " " << hai_choice[i].pt_exp_after << std::endl;
@@ -956,8 +956,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					fuuro_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
 					if (total_houjuu_hai_prob_now[hai_out] != 0) {
 						fuuro_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];
+						fuuro_choice[i].review["pt_exp_after"] = fuuro_choice[i].pt_exp_after;
 					}
-					fuuro_choice[i].review["pt_exp_after"] = fuuro_choice[i].pt_exp_after;
 				}
 				fuuro_choice[i].review["pt_exp_total"] = fuuro_choice[i].pt_exp_total;
 				if (out_console) {
