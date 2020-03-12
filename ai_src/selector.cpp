@@ -596,7 +596,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 						Hai_Choice hai_choice_tmp;
 						hai_choice_tmp.action_type = AT_DAHAI;
 						hai_choice_tmp.hai = hai;
-						if (haikind(hai) == haikind(current_hai)) {
+						if (haikind(hai) == haikind(current_hai) &&
+							(tehai_calculator.get_const_ta_cgn(cn, gn).get_reach_flag() == 1) == game_state.player_state[my_pid].reach_accepted
+						) {
 							Hai_Choice tsumo_agari_choice;
 							tsumo_agari_choice.hai = current_hai;
 							tsumo_agari_choice.pt_exp_total = -200;
