@@ -9,12 +9,16 @@ Tactics::Tactics(const json11::Json& tactics_json) {
 }
 
 void Tactics::set_common() {
+    jun_pt[0] = 90;
+    jun_pt[1] = 30;
+    jun_pt[2] = -30;
+    jun_pt[3] = -90;
     do_houjuu_discount = false;
     do_speed_modify = false;
     use_larger_at_cal_tenpai_after = false;
     betaori_compare_at_2fuuro = false;
     do_kan = true;
-    do_kyushukyuhai = false;
+    do_kyushukyuhai = true;
     use_nn_keiten_estimator = false;
     use_nn_kyoku_result_target_estimator = false;
     use_nn_kyoku_result_other_agari_estimator = false;
@@ -148,6 +152,14 @@ void Tactics::set_from_json(const json11::Json& input_json) {
 
     if (!input_json["use_ori_exp_at_dp_fuuro"].is_null()) { use_ori_exp_at_dp_fuuro = input_json["use_ori_exp_at_dp_fuuro"].bool_value(); }
 
+    if (!input_json["jun_pt"].is_null()) {
+		json11::Json::array jun_pt_json = input_json["jun_pt"].array_items();
+		assert_with_out(jun_pt_json.size() == 4, "jun_pt must have 4 elements.");
+		for (int pid = 0; pid < 4; pid++) {
+			jun_pt[pid] = jun_pt_json[pid].int_value();
+		}
+	}
+    
     if (!input_json["han_shift_prob_kan"].is_null()) {
         const json11::Json::array han_shift_prob = input_json["han_shift_prob_kan"].array_items();
 	    assert_with_out(han_shift_prob.size() == 14, "tactics input_json han_shift_prob_kan error");

@@ -10,6 +10,7 @@ enum JUN_EST_TYPE {
 
 class Tactics{
 public:
+    std::array<int, 4> jun_pt;
     int tegawari_num[7]; // シャンテン数ごとに、手替わりを何枚まで考えるかを設定
     JUN_EST_TYPE jun_est_type; // 順位推定として何を使うか
     bool do_houjuu_discount; // 相手のテンパイ率が高くないの場合に、放銃確率を意図的に小さくするかどうか
