@@ -1083,8 +1083,6 @@ json11::Json ai_review(const Moves& game_record, const int pid) {
 		}
 	}
 
-    // json11::Json::object ret;
-	// ret["actions"] = actions_array;
 	return json11::Json(actions_array);
 }
 

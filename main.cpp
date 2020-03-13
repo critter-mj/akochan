@@ -176,9 +176,8 @@ int main(int argc,char* argv[]) {
             if ((actor == id && type == "tsumo") ||
                 (actor != id && type == "dahai")) {
                 auto best_moves = ai(game_record, id, false);
-                for (const auto &json : best_moves) {
-                    std::cout << json.dump() << std::endl;
-                }
+
+                std::cout << json11::Json(best_moves).dump() << std::endl;
             }
         }
     } else if (argc == 4 && strcmp(argv[1], "pipe_detailed") == 0) {
