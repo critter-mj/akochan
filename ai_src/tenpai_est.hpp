@@ -92,16 +92,15 @@ class Tehai_Estimator {
 
 std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_teev(const std::vector<Tehai_Estimator_Element>& teev, const bool is_tsumo, const bool is_now);
 
-class Machi_Coeff_Simple {
+class Machi_Coeff {
 	public:
-	Machi_Coeff_Simple();
-	double katachi_prob[4];
-	double tanki_coeff[38];
-	double syabo_coeff[38];
-	double ryanmen_coeff[3][7];
-	double kanchan_coeff[3][9];
-	double penchan_coeff[3][2];
-
+	Machi_Coeff();
+    std::array<float, 4> katachi_prob;
+    std::array<float, 38> tanki_coeff;
+	std::array<float, 38> syabo_coeff;
+    std::array<std::array<float, 7>, 3> ryanmen_coeff;
+    std::array<std::array<float, 9>, 3> kanchan_coeff;
+    std::array<std::array<float, 2>, 3> penchan_coeff;
     
 	void init_coeff(const int my_pid);
     void set_katachi_prob(const int my_pid);
@@ -113,7 +112,7 @@ class Machi_Coeff_Simple {
 };
 
 std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_machi_coeff(
-    const Game_State& game_state, const Machi_Coeff_Simple& machi_coeff, const std::array<std::array<double, 12>, 14>& hanfu_weight, const bool is_tsumo
+    const Game_State& game_state, const Machi_Coeff& machi_coeff, const std::array<std::array<double, 12>, 14>& hanfu_weight, const bool is_tsumo
 );
 
 std::array<std::array<float, 12>, 14> cal_agari_hanfu_prob(const std::array<std::array<std::array<float, 12>, 14>, 38>& hai_prob);

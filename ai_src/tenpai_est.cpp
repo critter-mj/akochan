@@ -905,9 +905,9 @@ std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_teev(con
 	return hai_prob;
 }
 
-Machi_Coeff_Simple::Machi_Coeff_Simple(){}
+Machi_Coeff::Machi_Coeff(){}
 
-void Machi_Coeff_Simple::init_coeff(const int my_pid) {
+void Machi_Coeff::init_coeff(const int my_pid) {
 	if (tactics_json[my_pid]["mc_init"] == "instant") {
 		for (int i = 0; i < 4;i++) {
 			katachi_prob[i] = 0.0;
@@ -962,7 +962,7 @@ void Machi_Coeff_Simple::init_coeff(const int my_pid) {
 	}
 }
 
-void Machi_Coeff_Simple::set_katachi_prob(const int my_pid) {
+void Machi_Coeff::set_katachi_prob(const int my_pid) {
 	if (tactics_json[my_pid]["katachi_est"] == "instant") {
 		katachi_prob[0] = 0.5;
 		katachi_prob[1] = 0.25;
@@ -996,7 +996,7 @@ void Machi_Coeff_Simple::set_katachi_prob(const int my_pid) {
 	}
 }
 
-void Machi_Coeff_Simple::safe_flag_to_coeff(const std::array<bool, 38>& safe_flag) {
+void Machi_Coeff::safe_flag_to_coeff(const std::array<bool, 38>& safe_flag) {
 	for (int hai = 1; hai < 38;hai++) {
 		if (safe_flag[hai]) {
 			tanki_coeff[hai] = 0;
@@ -1019,7 +1019,7 @@ void Machi_Coeff_Simple::safe_flag_to_coeff(const std::array<bool, 38>& safe_fla
 	}
 }
 
-void Machi_Coeff_Simple::visible_to_coeff(const Hai_Array& visible_all, const Hai_Array& visible) {
+void Machi_Coeff::visible_to_coeff(const Hai_Array& visible_all, const Hai_Array& visible) {
 	for (int hai = 0; hai < 38; hai++) {
 		if (visible_all[hai] >= 2) {
 			syabo_coeff[hai] = 0;
@@ -1074,7 +1074,7 @@ void Machi_Coeff_Simple::visible_to_coeff(const Hai_Array& visible_all, const Ha
 	}
 }
 
-void Machi_Coeff_Simple::sute_br_to_coeff(const Game_State& game_state, const int my_pid, const int target) {
+void Machi_Coeff::sute_br_to_coeff(const Game_State& game_state, const int my_pid, const int target) {
 	if (tactics_json[my_pid]["sbr_est"] == "instant") {
 		// nothing to do.
 	} else if (tactics_json[my_pid]["sbr_est"] == "ako") {
@@ -1104,7 +1104,7 @@ void Machi_Coeff_Simple::sute_br_to_coeff(const Game_State& game_state, const in
 	}
 }
 
-void Machi_Coeff_Simple::ratio_tas_to_coeff(const Game_State& game_state, const int my_pid, const int target) {
+void Machi_Coeff::ratio_tas_to_coeff(const Game_State& game_state, const int my_pid, const int target) {
 	if (tactics_json[my_pid]["tas_est"] == "instant") {
 		return;
 	} else if (tactics_json[my_pid]["tas_est"] == "ako") {
@@ -1198,7 +1198,7 @@ void Machi_Coeff_Simple::ratio_tas_to_coeff(const Game_State& game_state, const 
 	}
 }
 
-void Machi_Coeff_Simple::std_coeff(){
+void Machi_Coeff::std_coeff(){
 	double sum[4];
 	for (int i = 0; i < 4; i++) {
 		sum[i] = 0.0;
@@ -1244,7 +1244,7 @@ void Machi_Coeff_Simple::std_coeff(){
 }
 
 std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_machi_coeff(
-	const Game_State& game_state, const Machi_Coeff_Simple& machi_coeff, const std::array<std::array<double, 12>, 14>& hanfu_weight, const bool is_tsumo
+	const Game_State& game_state, const Machi_Coeff& machi_coeff, const std::array<std::array<double, 12>, 14>& hanfu_weight, const bool is_tsumo
 ) {
 	std::array<std::array<std::array<float, 12>, 14>, 38> hai_prob;
 	for (int hai = 0; hai < 38; hai++) {
@@ -1418,7 +1418,7 @@ void Tenpai_Estimator_Simple::set_tenpai_estimator(const Moves& game_record, con
 		
 	set_tenpai2(game_record, game_state, my_pid, target);
 	if (game_state.player_state[target].reach_declared || game_state.player_state[target].fuuro.size() == 0) {
-		Machi_Coeff_Simple machi_coeff;
+		Machi_Coeff machi_coeff;
 		machi_coeff.init_coeff(my_pid);
 		machi_coeff.safe_flag_to_coeff(sute_kind_flag);
 		machi_coeff.safe_flag_to_coeff(minogashi_ar_flag);
