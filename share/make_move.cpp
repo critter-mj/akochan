@@ -597,7 +597,7 @@ bool is_legal_hora(const Moves& game_record, const Game_State& game_state, const
             if (haikind(hai) == tenpai_info.agari_vec[i].hai &&
                 han_add + tenpai_info.agari_vec[i].han_ron > 0
             ) {
-                std::array<bool, 38> furiten_flags = get_furiten_flags(game_record, actor);
+                std::array<bool, 38> furiten_flags = get_furiten_flags(game_record, game_state, actor);
                 for (int j = 0; j < tenpai_info.agari_vec.size(); j++) {
                     if (furiten_flags[tenpai_info.agari_vec[j].hai]) {
                         return false;

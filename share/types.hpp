@@ -186,6 +186,6 @@ int cal_next_honba(const Moves& game_record);
 int cal_next_oya(const Moves& game_record);
 
 bool is_menzen(const Moves& game_record, const int pid);
-std::array<bool, 38> get_furiten_flags(const Moves& game_record, const int pid);
+std::array<bool, 38> get_furiten_flags(const Moves& game_record, const Game_State& game_state, const int pid);
 
 std::vector<json11::Json> load_game_record_from_file(const std::string& file_name, int length);

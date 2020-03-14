@@ -809,29 +809,30 @@ bool is_menzen(const Moves& game_record, const int pid) {
     return true;
 }
 
-std::array<bool, 38> get_furiten_flags(const Moves& game_record, const int pid) {
+std::array<bool, 38> get_furiten_flags(const Moves& game_record, const Game_State& game_state, const int pid) {
     // フリテンとなる牌のflagを取得。
-    // 最後が他家の打牌、カカンの時のみ呼ばれる想定。
     std::array<bool, 38> furiten_flags;
     std::fill(furiten_flags.begin(), furiten_flags.end(), false);
     bool once_dahai = false;
+    bool reach_flag = game_state.player_state[pid].reach_accepted;
     for (int i = game_record.size() - 1; 0 <= i; i--) {
         const json11::Json& action_json = game_record[i];
-        if (i == game_record.size() - 1) {
-            assert(action_json["type"].string_value() == "dahai" || action_json["type"].string_value() == "kakan");
-            assert(action_json["actor"].int_value() != pid);
-            continue;
-        }
         if (action_json["type"].string_value() == "start_kyoku") {
             break;
         }
         if (action_json["type"].string_value() == "dahai" || action_json["type"].string_value() == "kakan") {
+            if (i == game_record.size() - 1) {
+                continue;
+            }
             if (action_json["actor"].int_value() == pid) {
                 furiten_flags[haikind(hai_str_to_int(action_json["pai"].string_value()))] = true;
                 once_dahai = true;
-            } else if (!once_dahai) {
+            } else if (!once_dahai || reach_flag) {
                 furiten_flags[haikind(hai_str_to_int(action_json["pai"].string_value()))] = true;
             }
+        }
+        if (action_json["type"].string_value() == "reach_accepted" && action_json["actor"].int_value() == pid) {
+            reach_flag = false;
         }
     }
     return furiten_flags;
