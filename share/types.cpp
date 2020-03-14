@@ -809,7 +809,7 @@ bool is_menzen(const Moves& game_record, const int pid) {
     return true;
 }
 
-std::array<bool, 38> get_furiten_flags(const Moves& game_record, const Game_State& game_state, const int pid) {
+std::array<bool, 38> get_furiten_flags(const Moves& game_record, const Game_State& game_state, const int pid, const bool skip_latest) {
     // フリテンとなる牌のflagを取得。
     std::array<bool, 38> furiten_flags;
     std::fill(furiten_flags.begin(), furiten_flags.end(), false);
@@ -821,7 +821,7 @@ std::array<bool, 38> get_furiten_flags(const Moves& game_record, const Game_Stat
             break;
         }
         if (action_json["type"].string_value() == "dahai" || action_json["type"].string_value() == "kakan") {
-            if (i == game_record.size() - 1) {
+            if (skip_latest && i == game_record.size() - 1) {
                 continue;
             }
             if (action_json["actor"].int_value() == pid) {

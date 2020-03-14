@@ -685,7 +685,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 			double ron_pt_exp = -200.0;
 			bool doujun_furiten_flag = false;
-			const std::array<bool, 38> furiten_flags = get_furiten_flags(game_record, game_state, my_pid);
+			const std::array<bool, 38> furiten_flags = get_furiten_flags(game_record, game_state, my_pid, true);
 			if (tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).get_furiten_flag() == 0) {
 				const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn_fuuro_neg, gn_fuuro_neg);
 				for (int an = agari_loc[1]; an < agari_loc[2]; an++) {

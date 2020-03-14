@@ -1415,6 +1415,8 @@ void Tenpai_Estimator_Simple::set_tenpai_estimator(const Moves& game_record, con
 	const Hai_Array nokori_kind = cal_nokori_kind_array(visible_kind);
 	const std::array<bool, 38> sute_kind_flag = get_sute_kind_flag(game_state.player_state[target].kawa);
 	const std::array<bool, 38> minogashi_ar_flag = get_minogashi_ar_flag(game_record, game_state, target);
+	const std::array<bool, 38> furiten_flag = get_furiten_flags(game_record, game_state, target, false);
+	// 副露時は他家が見逃した前提で評価するためget_furiten_flagsのskip_latestはfalseにする。
 		
 	set_tenpai2(game_record, game_state, my_pid, target);
 	if (game_state.player_state[target].reach_declared || game_state.player_state[target].fuuro.size() == 0) {
@@ -1426,7 +1428,10 @@ void Tenpai_Estimator_Simple::set_tenpai_estimator(const Moves& game_record, con
 		machi_coeff.set_katachi_prob(my_pid);
 		machi_coeff.ratio_tas_to_coeff(game_state, my_pid, target);
 		machi_coeff.sute_br_to_coeff(game_state, my_pid, target);
+		Machi_Coeff machi_coeff_now = machi_coeff;
+		machi_coeff_now.safe_flag_to_coeff(furiten_flag);
 		machi_coeff.std_coeff();
+		machi_coeff_now.std_coeff();
 		// to do machi_coeffあたりの処理をmachi_coeff側に移動、sute_flag_to_coeffに関して複数のフラグを行う。
 		if (out_console) {
 			std::cout << "katachi_prob" << std::endl;
@@ -1435,8 +1440,7 @@ void Tenpai_Estimator_Simple::set_tenpai_estimator(const Moves& game_record, con
 
 		hai_ron_prob = cal_hai_prob_from_machi_coeff(game_state, machi_coeff, tactics.haufu_weight_ron, false);
 		hai_tsumo_prob = cal_hai_prob_from_machi_coeff(game_state, machi_coeff, tactics.haufu_weight_tsumo, true);
-		// to do hai_ron_prob_now の計算 見逃しなどの寄与をakoの方では計算している。
-		hai_ron_prob_now = hai_ron_prob;
+		hai_ron_prob_now = cal_hai_prob_from_machi_coeff(game_state, machi_coeff_now, tactics.haufu_weight_ron, false);
 		if (game_state.player_state[target].reach_declared && is_ippatsu_valid(game_record, target)) {
 			for (int hai = 1; hai < 38; hai++) {
 				hanfu_prob_han_shift(hai_ron_prob_now[hai], 1);
