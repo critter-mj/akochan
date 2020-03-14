@@ -631,7 +631,27 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 						hai_choice.push_back(hai_choice_tmp);
 
-						// to do カン
+						if (count_tsumo_num_all(game_record) < 70) {
+							const std::array<int, 3>& tsumo_edge_loc = tehai_calculator_work.get_const_tsumo_edge_loc(cn, gn);
+							for (int acn = tsumo_edge_loc[1]; acn < tsumo_edge_loc[2]; acn++) {
+								const Tehai_Action& ac_tmp = tehai_calculator_work.cand_graph_sub_tsumo_work[tsumo_edge_loc[0]][acn];
+								if (ac_tmp.hai_out == hai && ac_tmp.action_type == AT_ANKAN) {
+									if (game_state.player_state[my_pid].reach_accepted && !tehai_calculator.get_const_ta_cgn(cn, gn).can_ankan_after_reach(hai)) {
+										continue;
+									}
+									Hai_Choice kan_choice;
+									kan_choice.hai = hai;
+									kan_choice.action_type = ac_tmp.action_type;
+									// AT_ANKAN_AND_REACH_DECLARE かもしれないが、move出力時の処理が面倒なのでac_tmp.action_typeのままにしておく
+									// 結果的に、AT_ANKANの同じmovesが別スコアで出力される可能性がある点に注意。
+
+									kan_choice.pt_exp_after_ori = tehai_calculator.get_ori_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_DP);
+									kan_choice.pt_exp_after = tehai_calculator.get_ten_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_DP);
+									hai_choice.push_back(kan_choice);
+								}
+							}
+						}
+						// to do カカン
 					}
 				}
 			}
