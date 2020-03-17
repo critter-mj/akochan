@@ -84,3 +84,4 @@ public:
 
 int cal_titoi_change_num_max(const int titoi_shanten_num, const int mentu_shanten_num);
 bool cal_dp_flag(const int shanten_num, const int fuuro_agari_shanten_num, const bool is_other_reach_declared, const bool is_fuuro_phase, const Tactics& tactics);
+bool judge_kan(const int shanten_num, const bool is_other_reach_declared);

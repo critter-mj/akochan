@@ -657,7 +657,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 									kan_choice.pt_exp_after_ori = tehai_calculator.get_ori_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_DP);
 									kan_choice.pt_exp_after = tehai_calculator.get_ten_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_DP);
-									hai_choice.push_back(kan_choice);
+									if (judge_kan(tehai_analyzer.get_shanten_num(), get_other_reach_declared_num(my_pid, game_state) > 0)) {
+										hai_choice.push_back(kan_choice);
+									}
 								}
 							}
 						}

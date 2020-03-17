@@ -309,6 +309,11 @@ bool cal_dp_flag(const int shanten_num, const int fuuro_agari_shanten_num, const
     return false;
 }
 		
-		
+bool judge_kan(const int shanten_num, const bool is_other_reach_declared) {
+    if (is_other_reach_declared && 2 <= shanten_num) {
+        return false;
+    }
+    return true;
+}		
 
 		
