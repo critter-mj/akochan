@@ -264,7 +264,7 @@ int koritu_most_needless(const Hai_Array& tehai, const Hai_Array& visible, const
 		}
 	}
 	for(int h=31;h<38;h++){
-		if(tehai[h]==1 && visible[h]==1 && !(h==31+bakaze && h==31+jikaze) && std::count(dorav.begin(), dorav.end(), h) == 0){
+		if(tehai[h]==1 && visible[h]==1 && h!=31+jikaze && std::count(dorav.begin(), dorav.end(), h) == 0){
 			return h;
 		}
 	}
@@ -290,7 +290,7 @@ int koritu_most_needless(const Hai_Array& tehai, const Hai_Array& visible, const
 		}
 	}
 	for(int h=31;h<38;h++){
-		if(tehai[h]==1 && visible[h]==0 && !(h==31+bakaze && h==31+jikaze) && std::count(dorav.begin(), dorav.end(), h) == 0){
+		if(tehai[h]==1 && visible[h]==0 && h!=31+jikaze && std::count(dorav.begin(), dorav.end(), h) == 0){
 			return h;
 		}
 	}
