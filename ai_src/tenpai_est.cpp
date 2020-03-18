@@ -1438,9 +1438,9 @@ void Tenpai_Estimator_Simple::set_tenpai_estimator(const Moves& game_record, con
 			std::cout << machi_coeff.katachi_prob[0] << " " << machi_coeff.katachi_prob[1] << " " << machi_coeff.katachi_prob[2] << " " << machi_coeff.katachi_prob[3] << std::endl;
 		}
 
-		hai_ron_prob = cal_hai_prob_from_machi_coeff(game_state, machi_coeff, tactics.haufu_weight_ron, false);
-		hai_tsumo_prob = cal_hai_prob_from_machi_coeff(game_state, machi_coeff, tactics.haufu_weight_tsumo, true);
-		hai_ron_prob_now = cal_hai_prob_from_machi_coeff(game_state, machi_coeff_now, tactics.haufu_weight_ron, false);
+		hai_ron_prob = cal_hai_prob_from_machi_coeff(game_state, machi_coeff, tactics.hanfu_weight_ron, false);
+		hai_tsumo_prob = cal_hai_prob_from_machi_coeff(game_state, machi_coeff, tactics.hanfu_weight_tsumo, true);
+		hai_ron_prob_now = cal_hai_prob_from_machi_coeff(game_state, machi_coeff_now, tactics.hanfu_weight_ron, false);
 		if (game_state.player_state[target].reach_declared && is_ippatsu_valid(game_record, target)) {
 			for (int hai = 1; hai < 38; hai++) {
 				hanfu_prob_han_shift(hai_ron_prob_now[hai], 1);

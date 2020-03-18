@@ -74,8 +74,8 @@ public:
     int tsumo_enumerate_additional_minimum; // cn_max_additionの手牌を考える際の十分条件
     double tsumo_enumerate_additional_priority; // cn_max_additionの手牌を考える際のpriorityの閾値
 
-    std::array<std::array<double, 12>, 14> haufu_weight_tsumo;
-    std::array<std::array<double, 12>, 14> haufu_weight_ron;
+    std::array<std::array<double, 12>, 14> hanfu_weight_tsumo;
+    std::array<std::array<double, 12>, 14> hanfu_weight_ron;
 
     void set_default();
     void set_light();

@@ -75,17 +75,17 @@ void Tactics::set_default(){
 
     for (int han = 0; han < 14; han++) {
         for (int fu = 0; fu < 12; fu++) {
-            haufu_weight_tsumo[han][fu] = 0.0;
-            haufu_weight_ron[han][fu] = 0.0;
+            hanfu_weight_tsumo[han][fu] = 0.0;
+            hanfu_weight_ron[han][fu] = 0.0;
         }
     }
-    haufu_weight_tsumo[3][3] = 0.4;
-    haufu_weight_tsumo[4][3] = 0.5;
-    haufu_weight_tsumo[6][3] = 0.1;
+    hanfu_weight_tsumo[3][3] = 0.4;
+    hanfu_weight_tsumo[4][3] = 0.5;
+    hanfu_weight_tsumo[6][3] = 0.1;
 
-    haufu_weight_ron[2][3] = 0.1;
-    haufu_weight_ron[3][3] = 0.5;
-    haufu_weight_ron[4][3] = 0.4;
+    hanfu_weight_ron[2][3] = 0.1;
+    hanfu_weight_ron[3][3] = 0.5;
+    hanfu_weight_ron[4][3] = 0.4;
 }
 
 void Tactics::set_light(){
@@ -159,17 +159,17 @@ void Tactics::set_light(){
 
     for (int han = 0; han < 14; han++) {
         for (int fu = 0; fu < 12; fu++) {
-        haufu_weight_tsumo[han][fu] = 0.0;
-        haufu_weight_ron[han][fu] = 0.0;
+        hanfu_weight_tsumo[han][fu] = 0.0;
+        hanfu_weight_ron[han][fu] = 0.0;
         }
     }
-    haufu_weight_tsumo[3][3] = 0.4;
-    haufu_weight_tsumo[4][3] = 0.5;
-    haufu_weight_tsumo[6][3] = 0.1;
+    hanfu_weight_tsumo[3][3] = 0.4;
+    hanfu_weight_tsumo[4][3] = 0.5;
+    hanfu_weight_tsumo[6][3] = 0.1;
     
-    haufu_weight_ron[2][3] = 0.1;
-    haufu_weight_ron[3][3] = 0.5;
-    haufu_weight_ron[4][3] = 0.4;
+    hanfu_weight_ron[2][3] = 0.1;
+    hanfu_weight_ron[3][3] = 0.5;
+    hanfu_weight_ron[4][3] = 0.4;
 }
 
 void Tactics::set_zero_first(){
@@ -243,17 +243,17 @@ void Tactics::set_zero_first(){
 
     for (int han = 0; han < 14; han++) {
         for (int fu = 0; fu < 12; fu++) {
-        haufu_weight_tsumo[han][fu] = 0.0;
-        haufu_weight_ron[han][fu] = 0.0;
+        hanfu_weight_tsumo[han][fu] = 0.0;
+        hanfu_weight_ron[han][fu] = 0.0;
         }
     }
-    haufu_weight_tsumo[3][3] = 0.4;
-    haufu_weight_tsumo[4][3] = 0.5;
-    haufu_weight_tsumo[6][3] = 0.1;
+    hanfu_weight_tsumo[3][3] = 0.4;
+    hanfu_weight_tsumo[4][3] = 0.5;
+    hanfu_weight_tsumo[6][3] = 0.1;
     
-    haufu_weight_ron[2][3] = 0.1;
-    haufu_weight_ron[3][3] = 0.5;
-    haufu_weight_ron[4][3] = 0.4;
+    hanfu_weight_ron[2][3] = 0.1;
+    hanfu_weight_ron[3][3] = 0.5;
+    hanfu_weight_ron[4][3] = 0.4;
 }
 
 int cal_titoi_change_num_max(const int titoi_shanten_num, const int mentu_shanten_num) {
