@@ -78,6 +78,7 @@ public:
     std::array<std::array<double, 12>, 14> hanfu_weight_tsumo;
     std::array<std::array<double, 12>, 14> hanfu_weight_ron;
 
+    void set_common();
     void set_default();
     void set_light();
     void set_zero_first();
