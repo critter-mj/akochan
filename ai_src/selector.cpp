@@ -409,6 +409,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const std::array<std::array<float, 38>, 4>& houjuu_hai_value_now = houjuu_hai_prob_value_now.second;
 	const std::array<std::array<std::array<float, 12>, 14>, 4> tsumo_hanfu_prob = cal_agari_hanfu_prob_array(tenpai_estimator, true);
 	const std::array<std::array<std::array<float, 12>, 14>, 4> ron_hanfu_prob = cal_agari_hanfu_prob_array(tenpai_estimator, false);
+	const std::array<std::array<std::array<float, 12>, 14>, 4> tsumo_hanfu_prob_kan = cal_hanfu_prob_kan(tsumo_hanfu_prob, tactics.han_shift_prob_kan);
+	//const std::array<std::array<std::array<float, 12>, 14>, 4> ron_hanfu_prob_kan = cal_hanfu_prob_kan(ron_hanfu_prob, tactics.han_shift_prob_kan);
+
 
 	const std::pair<std::array<float, 38>, std::array<float, 38>> total_houjuu_hai_prob_value = cal_total_houjuu_hai_prob_value (
 		my_pid, tenpai_estimator, houjuu_hai_prob, houjuu_hai_value
@@ -454,13 +457,14 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	assert_with_out(!tactics_json[my_pid]["use_other_end_ar"].is_null(), "use_other_end_ar is null");
 	const double other_end_value_ar = tactics_json[my_pid]["use_other_end_ar"].bool_value() ?
 		cal_other_end_value(my_pid, game_state, tenpai_prob_array, tsumo_hanfu_prob, ron_hanfu_prob, kyoku_end_pt_exp_ar) : other_end_value;
+	const double other_end_value_kan = cal_other_end_value(my_pid, game_state, tenpai_prob_array, tsumo_hanfu_prob_kan, ron_hanfu_prob, kyoku_end_pt_exp);
 
 	const int tsumo_num_exp = std::min(cal_tsumo_num_exp(my_pid, game_state, 1, tenpai_prob_array), cal_tsumo_num_DP(game_record, my_pid)); // to do ツモの時と副露の時でdahai_incは異なると思われる。
 	assert(tsumo_num_exp >= 0);
 
 	if (out_console) {
 		std::cout << "passive_ryuukyoku_prob:" << passive_ryuukyoku_prob << std::endl;
-		std::cout << "other_end_value:" << other_end_value << " " << other_end_value_ar << std::endl;
+		std::cout << "other_end_value:" << other_end_value << " " << other_end_value_ar << " " << other_end_value_kan << std::endl;
 	}
 
 	if (rule_base_flag) {
@@ -585,13 +589,13 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 		if (game_state.player_state[0].reach_declared || game_state.player_state[1].reach_declared || game_state.player_state[2].reach_declared || game_state.player_state[3].reach_declared || mentu_shanten_num > 0) {
 			tehai_calculator.calc_DP(
-				game_state.player_state[my_pid].kawa.size(), tsumo_num_DP, other_end_value, other_end_value_ar, tenpai_prob_array, houjuu_hai_prob, houjuu_hai_value,
+				game_state.player_state[my_pid].kawa.size(), tsumo_num_DP, other_end_value, other_end_value_ar, other_end_value_kan, tenpai_prob_array, houjuu_hai_prob, houjuu_hai_value,
 				ori_choice_mode, 1.0, 0.0, passive_ryuukyoku_prob,
 				hai_visible_all_kind, game_state, kyoku_end_pt_exp, ryuukyoku_pt_exp, ryuukyoku_pt_exp_ar, tactics
 			);
 		} else {
 			tehai_calculator.calc_DP(
-				game_state.player_state[my_pid].kawa.size(), tsumo_num_DP, other_end_value, other_end_value_ar, tenpai_prob_array, houjuu_hai_prob, houjuu_hai_value,
+				game_state.player_state[my_pid].kawa.size(), tsumo_num_DP, other_end_value, other_end_value_ar, other_end_value_kan, tenpai_prob_array, houjuu_hai_prob, houjuu_hai_value,
 				ori_choice_mode, 1.0, tenpai_prob_array[my_pid], passive_ryuukyoku_prob,
 				hai_visible_all_kind, game_state, kyoku_end_pt_exp, ryuukyoku_pt_exp, ryuukyoku_pt_exp_ar, tactics
 			);

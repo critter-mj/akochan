@@ -135,7 +135,7 @@ class Tehai_Calculator{
 	);
 
 	void calc_DP(
-		const int act_num, const int tsumo_num, const double exp_other, const double exp_other_ar, const std::array<float, 4>& tenpai_prob_now,
+		const int act_num, const int tsumo_num, const double exp_other, const double exp_other_ar, const double exp_other_kan, const std::array<float, 4>& tenpai_prob_now,
 		const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_value,
 		const int ori_choice_mode,
 		const double reach_regression_coeff,

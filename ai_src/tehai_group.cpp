@@ -342,6 +342,7 @@ void Tehai_Group::add_ankan(
 					cal_tav[thread_num][loc_second_new].delete_hai(hai);
 					cal_tav[thread_num][loc_second_new].delete_hai(hai2);
 					cal_tav[thread_num][loc_second_new].add_ankan(hai, hai2);
+					cal_tav[thread_num][loc_second_new].set_kan_changed_flag(1);
 					ta_loc.push_back(Tehai_Location(thread_num, loc_second_new));
 
 					const int gn_new = ta_loc.size()-1;
@@ -400,6 +401,7 @@ void Tehai_Group::add_daiminkan(
 					cal_tav[thread_num][loc_second_new].delete_hai(hai);
 					cal_tav[thread_num][loc_second_new].delete_hai(hai2);
 					cal_tav[thread_num][loc_second_new].add_daiminkan(hai, hai2);
+					cal_tav[thread_num][loc_second_new].set_kan_changed_flag(1);
 					ta_loc.push_back(Tehai_Location(thread_num, loc_second_new));
 
 					const int gn_new = ta_loc.size()-1;
@@ -441,6 +443,7 @@ void Tehai_Group::add_kakan(
 					cal_tav[thread_num].push_back(cal_tav[ta_loc_gn_first][ta_loc_gn_second]);
 					const int loc_second_new = cal_tav[thread_num].size() - 1;
 					cal_tav[thread_num][loc_second_new].change_pon_to_kakan(hai, hai);
+					cal_tav[thread_num][loc_second_new].set_kan_changed_flag(1);
 					ta_loc.push_back(Tehai_Location(thread_num, loc_second_new));
 
 					const int gn_new = ta_loc.size()-1;

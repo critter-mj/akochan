@@ -46,10 +46,12 @@ public:
 	int get_tenpai_flag() const;
 	int get_furiten_flag() const;
 	int get_neg_flag() const;
+	int get_kan_changed_flag() const;
 
 	void set_tenpai_flag(const int flag);
 	void set_furiten_flag(const int flag);
 	void set_neg_flag(const int flag);
+	void set_kan_changed_flag(const int flag);
 
 	int get_tehai_num() const;
 	void set_tehai_num(const int num);

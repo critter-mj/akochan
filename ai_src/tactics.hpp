@@ -77,6 +77,7 @@ public:
 
     std::array<std::array<double, 12>, 14> hanfu_weight_tsumo;
     std::array<std::array<double, 12>, 14> hanfu_weight_ron;
+    std::array<float, 14> han_shift_prob_kan;
 
     void set_common();
     void set_default();

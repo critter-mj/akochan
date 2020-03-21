@@ -96,7 +96,7 @@ void exec_calc_DP(
     const double ryuukyoku_prob_now, const double exp_ryuukyoku[2], const double exp_ryuukyoku_ar,
     const double exp_ryuukyoku_if_fuuro[2], const bool is_last_mode,
     double **houjuu_p_hai, double **reach_houjuu_p_hai, double **houjuu_e_hai, double **reach_houjuu_e_hai,
-    double *other_end_prob, double *reach_other_end_prob, const double exp_other, const double exp_other_ar,
+    double *other_end_prob, double *reach_other_end_prob, const double exp_other, const double exp_other_ar, const double exp_other_kan,
     const double my_tenpai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, double** tenpai_prob_other,
     const Game_State& game_state, const Tactics& tactics
 );

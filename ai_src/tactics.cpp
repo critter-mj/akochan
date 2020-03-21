@@ -65,6 +65,7 @@ void Tactics::set_common() {
             hanfu_weight_tsumo[han][fu] = 0.0;
             hanfu_weight_ron[han][fu] = 0.0;
         }
+        han_shift_prob_kan[han] = 0.0;
     }
     hanfu_weight_tsumo[3][3] = 0.4;
     hanfu_weight_tsumo[4][3] = 0.5;
@@ -73,6 +74,9 @@ void Tactics::set_common() {
     hanfu_weight_ron[2][3] = 0.1;
     hanfu_weight_ron[3][3] = 0.5;
     hanfu_weight_ron[4][3] = 0.4;
+
+    han_shift_prob_kan[1] = 0.0;
+    han_shift_prob_kan[0] = 1.0;
 }
 
 void Tactics::set_default(){

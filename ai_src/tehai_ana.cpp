@@ -49,6 +49,7 @@ void Tehai_Analyzer_Basic::reset_tenpai(){
 
 void Tehai_Analyzer_Basic::reset_tehai_analyzer_basic(){
 	set_neg_flag(0);
+	set_kan_changed_flag(0);
 	set_tehai_num(0);
 
 	set_fuuro_num(0);
@@ -145,6 +146,10 @@ int Tehai_Analyzer_Basic::get_neg_flag() const {
 	return ( num_and_flags >> 2 ) & 1;
 }
 
+int Tehai_Analyzer_Basic::get_kan_changed_flag() const {
+	return ( num_and_flags >> 3 ) & 1;
+}
+
 void Tehai_Analyzer_Basic::set_tenpai_flag(const int flag) {
 	uint32_t bit = 1;
 	if (flag == 1) {
@@ -165,6 +170,15 @@ void Tehai_Analyzer_Basic::set_furiten_flag(const int flag) {
 
 void Tehai_Analyzer_Basic::set_neg_flag(const int flag) {
 	uint32_t bit = 1 << 2;
+	if (flag == 1) {
+		num_and_flags = num_and_flags | bit;
+	} else {
+		num_and_flags = num_and_flags & (~bit);
+	}
+}
+
+void Tehai_Analyzer_Basic::set_kan_changed_flag(const int flag) {
+	uint32_t bit = 1 << 3;
 	if (flag == 1) {
 		num_and_flags = num_and_flags | bit;
 	} else {

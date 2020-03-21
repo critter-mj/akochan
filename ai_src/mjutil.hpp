@@ -41,3 +41,8 @@ int hai_dora_han(const std::vector<int>& dora_markerv, int hai);
 void han_prob_shift(std::array<float, 14>& han_prob, const int shift_num);
 void hanfu_prob_han_shift(std::array<std::array<float, 12>, 14>& hanfu_prob, const int shift_num);
 void hanfu_prob_han_shift_with_prob(std::array<std::array<float, 12>, 14>& hanfu_prob, const std::array<float, 14>& shift_prob);
+
+std::array<std::array<std::array<float, 12>, 14>, 4> cal_hanfu_prob_kan(
+    const std::array<std::array<std::array<float, 12>, 14>, 4>& hanfu_prob,
+    const std::array<float, 14>& shift_prob
+);

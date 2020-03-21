@@ -483,3 +483,14 @@ void hanfu_prob_han_shift_with_prob(std::array<std::array<float, 12>, 14>& hanfu
 		}
 	}
 }
+
+std::array<std::array<std::array<float, 12>, 14>, 4> cal_hanfu_prob_kan(
+    const std::array<std::array<std::array<float, 12>, 14>, 4>& hanfu_prob,
+    const std::array<float, 14>& shift_prob
+) {
+	std::array<std::array<std::array<float, 12>, 14>, 4> hanfu_prob_kan = hanfu_prob;
+	for (int pid = 0; pid < 4; pid++) {
+		hanfu_prob_han_shift_with_prob(hanfu_prob_kan[pid], shift_prob);
+	}
+	return hanfu_prob_kan;
+}

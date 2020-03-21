@@ -1416,7 +1416,7 @@ void Tehai_Calculator::calc_agari_prob(
 void Tehai_Calculator::calc_DP(
 	const int act_num,
 	const int tsumo_num,
-	const double exp_other, const double exp_other_ar,
+	const double exp_other, const double exp_other_ar, const double exp_other_kan,
 	const std::array<float, 4>& tenpai_prob_now,
 	const std::array<std::array<float, 38>, 4>& houjuu_hai_prob,
 	const std::array<std::array<float, 38>, 4>& houjuu_hai_value,
@@ -1520,7 +1520,7 @@ void Tehai_Calculator::calc_DP(
 		ryuukyoku_prob_now, exp_ryuukyoku, exp_ryuukyoku_ar,
 		exp_ryuukyoku, false,
 		houjuu_p_hai, reach_houjuu_p_hai, houjuu_e_hai, reach_houjuu_e_hai,
-		other_end_prob, reach_other_end_prob, exp_other, exp_other_ar,
+		other_end_prob, reach_other_end_prob, exp_other, exp_other_ar, exp_other_kan,
 		my_tenpai_prob, houjuu_hai_prob, tenpai_prob_other, game_state, tactics
 	);
 
