@@ -138,13 +138,13 @@ class Tehai_Calculator{
 		const int act_num, const int tsumo_num, const double exp_other, const double exp_other_ar, const std::array<float, 4>& tenpai_prob_now,
 		const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_value,
 		const int ori_choice_mode,
-		const int reach_regression_mode,
 		const double reach_regression_coeff,
 		double my_tenpai_prob,
 		double ryuukyoku_prob_now,
 		const Hai_Array& hai_visible_kind, const Game_State& game_state,
     	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp,
 		const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& exp_ryuukyoku,
-		const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& exp_ryuukyoku_ar
+		const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& exp_ryuukyoku_ar,
+		const Tactics& tactics
 	);
 };

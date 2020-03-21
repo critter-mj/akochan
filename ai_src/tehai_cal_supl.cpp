@@ -394,14 +394,15 @@ float get_coeff_for_ron_DP(
 }
 
 void exec_calc_DP(
-    const int reach_regression_mode, const double reach_regression_coeff, const int ori_choice_mode,
+    const double reach_regression_coeff, const int ori_choice_mode,
     const int my_pid, const int tsumo_num,
 	Tehai_Calculator_Work& tehai_calculator_work,
     const double ryuukyoku_prob_now, const double exp_ryuukyoku[2], const double exp_ryuukyoku_ar,
 	const double exp_ryuukyoku_if_fuuro[2], const bool is_last_mode,
     double **houjuu_p_hai, double **reach_houjuu_p_hai, double **houjuu_e_hai, double **reach_houjuu_e_hai,
     double *other_end_prob, double *reach_other_end_prob, const double exp_other, const double exp_other_ar,
-    const double my_tenpai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, double** tenpai_prob_other, const Game_State& game_state
+    const double my_tenpai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, double** tenpai_prob_other,
+	const Game_State& game_state, const Tactics& tactics
 ) {
 	const std::array<boost::container::static_vector<Tehai_Analyzer_Basic, MAX_TA_NUM_PER_THREAD>, CAL_NUM_THREAD>& cal_tav = tehai_calculator_work.cal_tav_work;
 	const boost::container::static_vector<Tehai_Group, MAX_CANDIDATES_NUM>& candidates = tehai_calculator_work.candidates_work;
@@ -509,7 +510,7 @@ void exec_calc_DP(
 				double exp_tmpbest_initial[38];
 				for(int hai=0;hai<38;hai++){
 					if(hai%10!=0){
-						if(reach_regression_mode==1 && cal_tav[loc_first][loc_second].get_reach_flag()==1){
+						if(tactics.reach_regression_mode_default == 1 && cal_tav[loc_first][loc_second].get_reach_flag()==1){
 							prob_tmpbest[hai] = (1.0-reach_houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_prob_work[loc_first][loc_second][mod2tn_prev];
 							tenpai_tmpbest[hai] = (1.0-reach_houjuu_p_hai[tn-1][hai])*tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][mod2tn_prev];
 							agari_exp_tmpbest[hai] = (1.0-reach_houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_exp_work[loc_first][loc_second][mod2tn_prev];
@@ -751,7 +752,7 @@ void exec_calc_DP(
 								reach_ron_ratio_para, not_reach_ron_ratio_para, dama_ron_ratio
 							):
 							get_coeff_for_ron_DP(
-								hai, reach_regression_mode, reach_regression_coeff, my_pid, cal_tav[loc_first][loc_second], pon_ron_flag, ron_flag, 
+								hai, tactics.reach_regression_mode_default, reach_regression_coeff, my_pid, cal_tav[loc_first][loc_second], pon_ron_flag, ron_flag, 
 								my_tenpai_prob, houjuu_hai_prob, tenpai_prob_other, tn,
 								dama_ron_ratio, game_state
 							);
@@ -769,7 +770,7 @@ void exec_calc_DP(
 									reach_ron_ratio_para, not_reach_ron_ratio_para, dama_ron_ratio
 								):
 								get_coeff_for_ron_DP(
-									hai, reach_regression_mode, reach_regression_coeff, my_pid, cal_tav[loc_first][loc_second], pon_ron_flag_norisk, ron_flag_norisk, 
+									hai, tactics.reach_regression_mode_default, reach_regression_coeff, my_pid, cal_tav[loc_first][loc_second], pon_ron_flag_norisk, ron_flag_norisk, 
 									my_tenpai_prob, houjuu_hai_prob, tenpai_prob_other, tn,
 									dama_ron_ratio, game_state
 								);
@@ -783,7 +784,7 @@ void exec_calc_DP(
 				}
 
 				double other_end_prob_tmp, other_end_value_tmp;
-				if(reach_regression_mode==1 && cal_tav[loc_first][loc_second].get_reach_flag()==1){
+				if(tactics.reach_regression_mode_default==1 && cal_tav[loc_first][loc_second].get_reach_flag()==1){
 					other_end_prob_tmp = reach_other_end_prob[tn-1];
 					other_end_value_tmp = exp_other_ar;
 				} else {

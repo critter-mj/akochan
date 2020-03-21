@@ -1421,14 +1421,14 @@ void Tehai_Calculator::calc_DP(
 	const std::array<std::array<float, 38>, 4>& houjuu_hai_prob,
 	const std::array<std::array<float, 38>, 4>& houjuu_hai_value,
 	const int ori_choice_mode,
-	const int reach_regression_mode,
 	const double reach_regression_coeff,
 	double my_tenpai_prob,
 	double ryuukyoku_prob_now,
 	const Hai_Array& hai_visible_kind, const Game_State& game_state,
     const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp,
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp,
-	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp_ar
+	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp_ar,
+	const Tactics& tactics
 ){
 	clock_t check0 = clock();
 	set_agari_exp(game_state, kyoku_end_pt_exp);
@@ -1463,7 +1463,7 @@ void Tehai_Calculator::calc_DP(
 	double exp_ryuukyoku[2] = {};
 	double exp_ryuukyoku_ar = 0.0;
 
-	set_exp_ryuukyoku_DP(my_pid, reach_regression_mode, tenpai_prob_other, reach_tenpai_prob_other, ryuukyoku_pt_exp, ryuukyoku_pt_exp_ar, exp_ryuukyoku, exp_ryuukyoku_ar);
+	set_exp_ryuukyoku_DP(my_pid, tactics.reach_regression_mode_default, tenpai_prob_other, reach_tenpai_prob_other, ryuukyoku_pt_exp, ryuukyoku_pt_exp_ar, exp_ryuukyoku, exp_ryuukyoku_ar);
 
 	if (out_console) {
 		std::cout << "exp_ryuukyoku:" << exp_ryuukyoku[0] << " " << exp_ryuukyoku[1] << " " << exp_ryuukyoku_ar << std::endl;
@@ -1514,14 +1514,14 @@ void Tehai_Calculator::calc_DP(
 	}
 
 	exec_calc_DP(
-		reach_regression_mode, reach_regression_coeff, ori_choice_mode,
+		reach_regression_coeff, ori_choice_mode,
 		my_pid, tsumo_num,
 		tehai_calculator_work,
 		ryuukyoku_prob_now, exp_ryuukyoku, exp_ryuukyoku_ar,
 		exp_ryuukyoku, false,
 		houjuu_p_hai, reach_houjuu_p_hai, houjuu_e_hai, reach_houjuu_e_hai,
 		other_end_prob, reach_other_end_prob, exp_other, exp_other_ar,
-		my_tenpai_prob, houjuu_hai_prob, tenpai_prob_other, game_state
+		my_tenpai_prob, houjuu_hai_prob, tenpai_prob_other, game_state, tactics
 	);
 
 	for(int pid=0;pid<4;pid++){

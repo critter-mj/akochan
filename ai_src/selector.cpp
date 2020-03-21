@@ -586,14 +586,14 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 		if (game_state.player_state[0].reach_declared || game_state.player_state[1].reach_declared || game_state.player_state[2].reach_declared || game_state.player_state[3].reach_declared || mentu_shanten_num > 0) {
 			tehai_calculator.calc_DP(
 				game_state.player_state[my_pid].kawa.size(), tsumo_num_DP, other_end_value, other_end_value_ar, tenpai_prob_array, houjuu_hai_prob, houjuu_hai_value,
-				ori_choice_mode, tactics.reach_regression_mode_default, 1.0, 0.0, passive_ryuukyoku_prob,
-				hai_visible_all_kind, game_state, kyoku_end_pt_exp, ryuukyoku_pt_exp, ryuukyoku_pt_exp_ar
+				ori_choice_mode, 1.0, 0.0, passive_ryuukyoku_prob,
+				hai_visible_all_kind, game_state, kyoku_end_pt_exp, ryuukyoku_pt_exp, ryuukyoku_pt_exp_ar, tactics
 			);
 		} else {
 			tehai_calculator.calc_DP(
 				game_state.player_state[my_pid].kawa.size(), tsumo_num_DP, other_end_value, other_end_value_ar, tenpai_prob_array, houjuu_hai_prob, houjuu_hai_value,
-				ori_choice_mode, tactics.reach_regression_mode_default, 1.0, tenpai_prob_array[my_pid], passive_ryuukyoku_prob,
-				hai_visible_all_kind, game_state, kyoku_end_pt_exp, ryuukyoku_pt_exp, ryuukyoku_pt_exp_ar
+				ori_choice_mode, 1.0, tenpai_prob_array[my_pid], passive_ryuukyoku_prob,
+				hai_visible_all_kind, game_state, kyoku_end_pt_exp, ryuukyoku_pt_exp, ryuukyoku_pt_exp_ar, tactics
 			);
 		}
 
