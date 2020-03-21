@@ -41,6 +41,7 @@ void Tactics::set_default(){
     use_han_shift_at_fuuro_estimation2 = false;
     use_new_tenpai_est_tmp = false;
     use_ratio_tas_to_coeff = true;
+    use_ori_exp_at_dp_fuuro = true;
     jun_calc_bug = false;
     use_yama_ratio_kawa_num = 100;
     use_dp_last_tsumo_num = 0;
@@ -125,6 +126,7 @@ void Tactics::set_light(){
     use_han_shift_at_fuuro_estimation2 = false;
     use_new_tenpai_est_tmp = false;
     use_ratio_tas_to_coeff = true;
+    use_ori_exp_at_dp_fuuro = true;
     jun_calc_bug = false;
     use_yama_ratio_kawa_num = 100;
     use_dp_last_tsumo_num = 0;
@@ -209,6 +211,7 @@ void Tactics::set_zero_first(){
     use_han_shift_at_fuuro_estimation2 = false;
     use_new_tenpai_est_tmp = false;
     use_ratio_tas_to_coeff = true;
+    use_ori_exp_at_dp_fuuro = true;
     jun_calc_bug = false;
     use_yama_ratio_kawa_num = 100;
     use_dp_last_tsumo_num = 0;
