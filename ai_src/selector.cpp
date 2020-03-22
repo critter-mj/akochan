@@ -983,14 +983,6 @@ Moves ai(const Moves& game_record, const int pid, const bool out_console_input) 
 	const json11::Json& last_action = game_record[game_record.size() - 1];
 	Tactics tactics(tactics_json[pid]);
 
-	if (tactics_json[pid].object_items().count("jun_pt") > 0) {
-		json11::Json::array jun_pt = tactics_json[pid]["jun_pt"].array_items();
-		assert_with_out(jun_pt.size() == 4, "jun_pt must have 4 elements.");
-		for (auto i = 0; i < 4; i++) {
-			tactics.jun_pt[i] = jun_pt[i].int_value();
-		}
-	}
-
     Selector selector;
     selector.set_selector(game_record, pid, tactics);
 	if (out_console) {
@@ -1022,14 +1014,6 @@ std::vector<std::pair<Moves, float>> calc_moves_score(const Moves& game_record, 
 	const json11::Json& last_action = game_record[game_record.size() - 1];
 	Tactics tactics(tactics_json[pid]);
 
-	if (tactics_json[pid].object_items().count("jun_pt") > 0) {
-		json11::Json::array jun_pt = tactics_json[pid]["jun_pt"].array_items();
-		assert_with_out(jun_pt.size() == 4, "jun_pt must have 4 elements.");
-		for (auto i = 0; i < 4; i++) {
-			tactics.jun_pt[i] = jun_pt[i].int_value();
-		}
-	}
-
 	std::vector<std::pair<Moves, float>> ret;
 	Selector selector;
     selector.set_selector(game_record, pid, tactics);
@@ -1054,14 +1038,6 @@ json11::Json ai_review(const Moves& game_record, const int pid) {
 	out_console = false;
 	const json11::Json& last_action = game_record[game_record.size() - 1];
 	Tactics tactics(tactics_json[pid]);
-
-	if (tactics_json[pid].object_items().count("jun_pt") > 0) {
-		auto jun_pt = tactics_json[pid]["jun_pt"].array_items();
-		assert_with_out(jun_pt.size() == 4, "jun_pt must have 4 elements.");
-		for (auto i = 0; i < 4; i++) {
-			tactics.jun_pt[i] = jun_pt[i].int_value();
-		}
-	}
 
 	json11::Json::array actions_array;
 	Selector selector;

@@ -168,6 +168,10 @@ int main(int argc,char* argv[]) {
 
             game_record.push_back(receive);
 
+            if (receive.object_items().count("can_act") > 0 && !receive["can_act"].bool_value()) {
+                continue;
+            }
+
             if (receive.object_items().count("actor") <= 0) {
                 continue;
             }

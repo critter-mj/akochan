@@ -42,7 +42,7 @@ void Tactics::set_common() {
     use_han_shift_at_fuuro_estimation2 = false;
     use_new_tenpai_est_tmp = false;
     use_ratio_tas_to_coeff = true;
-    use_ori_exp_at_dp_fuuro = true;
+    use_ori_exp_at_dp_fuuro = false;
     jun_calc_bug = false;
     use_yama_ratio_kawa_num = 100;
     use_dp_last_tsumo_num = 0;
@@ -82,10 +82,12 @@ void Tactics::set_common() {
     hanfu_weight_ron[2][3] = 0.1;
     hanfu_weight_ron[3][3] = 0.4;
     hanfu_weight_ron[4][3] = 0.4;
-    hanfu_weight_ron[6][3] = 0.1;
+    hanfu_weight_ron[6][3] = 0.09;
+    hanfu_weight_ron[8][3] = 0.01;
 
-    han_shift_prob_kan[1] = 0.0;
-    han_shift_prob_kan[0] = 1.0;
+    han_shift_prob_kan[0] = 0.1;
+    han_shift_prob_kan[1] = 0.8;
+    han_shift_prob_kan[2] = 0.1;
 }
 
 void Tactics::set_default(){
@@ -160,6 +162,14 @@ void Tactics::set_from_json(const json11::Json& input_json) {
             han_shift_prob_kan[han] = han_shift_prob[han].number_value();
         }
     }
+
+    if (input_json.object_items().count("jun_pt") > 0) {
+		json11::Json::array jun_pt = input_json["jun_pt"].array_items();
+		assert_with_out(jun_pt.size() == 4, "jun_pt must have 4 elements.");
+		for (auto i = 0; i < 4; i++) {
+			tactics.jun_pt[i] = jun_pt[i].int_value();
+		}
+	}
 }
 
 int cal_titoi_change_num_max(const int titoi_shanten_num, const int mentu_shanten_num) {
