@@ -168,11 +168,11 @@ int main(int argc,char* argv[]) {
 
             game_record.push_back(receive);
 
-            if (receive.object_items().count("can_act") > 0 && !receive["can_act"].bool_value()) {
+            if (!receive["can_act"].is_null() && !receive["can_act"].bool_value()) {
                 continue;
             }
 
-            if (receive.object_items().count("actor") <= 0) {
+            if (receive["actor"].is_null()) {
                 continue;
             }
             auto actor = receive["actor"].int_value();
@@ -208,7 +208,7 @@ int main(int argc,char* argv[]) {
 
             game_record.push_back(receive);
 
-            if (receive.object_items().count("actor") <= 0) {
+            if (receive["actor"].is_null()) {
                 continue;
             }
             auto actor = receive["actor"].int_value();

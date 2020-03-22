@@ -42,7 +42,7 @@ void Tactics::set_common() {
     use_han_shift_at_fuuro_estimation2 = false;
     use_new_tenpai_est_tmp = false;
     use_ratio_tas_to_coeff = true;
-    use_ori_exp_at_dp_fuuro = false;
+    use_ori_exp_at_dp_fuuro = true;
     jun_calc_bug = false;
     use_yama_ratio_kawa_num = 100;
     use_dp_last_tsumo_num = 0;
@@ -163,7 +163,7 @@ void Tactics::set_from_json(const json11::Json& input_json) {
         }
     }
 
-    if (input_json.object_items().count("jun_pt") > 0) {
+    if (!input_json["jun_pt"].is_null()) {
 		json11::Json::array jun_pt_json = input_json["jun_pt"].array_items();
 		assert_with_out(jun_pt_json.size() == 4, "jun_pt must have 4 elements.");
 		for (auto i = 0; i < 4; i++) {
