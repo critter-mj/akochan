@@ -1,72 +1,60 @@
-## コンパイル方法
-tehai_group.hppの定数CAL_NUM_THREADをマシンに合わせた適切な数字で置き換える。
-Windows環境では、ifdef WINSTDの下の定義が使われ、Linuxだとelse以下の定義が使われるので、利用のOSに合わせて書き換える。
-4並列なら4、8並列なら8。よくわからない場合、一旦無視してコンパイルを進めて
+## Preparation for Building
 
-./system.exe para_check
+Replace CAL_NUM_THREAD in tehai_group.hpp with appropriate number of using CPU.
+Definition under "ifdef WINSTD" is used for Windows machine, and definition under "else" is used for Linux machine.
+Set it to 4 if the CPU is 4 parallel, and set it to 8 if the CPU is 8 parallel.
+If you don't understand, skip this and build it then check with the following command.
 
-と起動してHello Worldが出てきた個数にするとよい。
+```./system.exe para_check```
 
-### system.exeコンパイル手順(linux)
-以下のコマンドでboostをインストール  
-$ sudo apt-get install libboost-all-dev    
-ai_srcディレクトリで  
-$ make -f Makefile_Linux libai.so  
-としてAIをビルド。その後  
-$ make -f Makefile_Linux system.exe  
-とすると全システムのコンパイルができる。
-	
-### system.exeコンパイル手順(windows)
-lboost_systemがリンク可能か確認し、可能であれば Makefile（ai_srcディレクトリとルートディレクトリ両方）のLIBSの定義を書き換える。（boostをビルドすれば可能になるはず。）  
-製作者の環境では、"-lboost_system-mgw62-mt-x64-1_70" が利用可能であるが、この部分  
-LIBS = -lboost_system-mgw62-mt-x64-1_70  
-を自分の環境にあったものに書き換える。  
+The number you see "Hello World" is the number you should set to CAL_NUM_THREAD.  
 
-その後ai_srcディレクトリで  
-\> make ai.dll  
-としてAIをビルド。続けて  
-\> make system.exe  
-とすると全システムのコンパイルができる。
+## Build with Linux
+Check you can use lboost_system.
+If not, probably you can install libboost-dev with apt.
+Run following in "ai_src" directory.
 
-## 使用方法
+```$ make -f Makefile_Linux```
 
-AIを起動するときは、system.exeがあるディレクトリに、paramsディレクトリ、ai.dll(windows)、libai.so(Linux)、setup_mjai.json、setup_match.jsonが必要です。  
-牌譜の形式については、
-http://critter.sakura.ne.jp/mjai_protocol.html
-と付属しているhaifu_log_sample.jsonをご覧ください。
+You will see libai.so in parent directory.
+Then run following in root directory
 
-### system.exe test
-自動対局を走らせる。対局の結果は、setup_match.jsonのresult_dirで指定されているディレクトリに保存されます。
+```$ make -f Makefile_Linux```
 
-### system.exe mjai_client
-mjaiのクライアントとして起動します。
-manueがインストールされている場合、mjai.shを起動させると、このコマンドを経由してmanueとの対局を行います。
-インストール方法は
-http://critter.sakura.ne.jp/memo_tech/mjai_manue_install.html
-をご覧ください。
+Then you will see system.exe in root directory.  
 
-### system.exe stats dirname
-dirnameで指定されているディレクトリにある自動対局牌譜を走査し、各プレイヤの統計値を出力します。
+## Build with Windows
+Check you can link lboost_system, and rewrite LIBS of Makefile(both in ai_src and root directory).
+In the environment of the author, "-lboost_system-mgw62-mt-x64-1_70" is valid.
+Line should be rewriten is following.
 
-### system.exe stats_mjai dirname
-dirnameで指定されているディレクトリにある、manueサーバーで対局した牌譜を走査し、プレイヤの統計値を出力します。
+```LIBS = -lboost_system-mgw62-mt-x64-1_70```  
 
-### system.exe mjai_log filename id
-filenameで指定された牌譜が対局途中である場合、idのプレイヤの最善手を返します。
-東1局の、東、南、西、北家がそれぞれ、0、1、2、3に対応します。例えば  
-./system.exe mjai_log haifu_log_sample.json 2  
-とすると、サンプル牌譜の局面での最善手が表示されます。
+Then run following in "ai_src" directory.
 
-### system.exe para_check
-利用しているマシンの並列数をチェックします。
+```> make```
 
-### system.exe initial_condition_match
-開始状態を指定して自己対局を行う想定ですが準備中です。
+Next, run following in root directory.
 
-## お問い合わせ
-以下で受け付けておりますので、お気軽にお問い合わせください。atmarkは@に変えてください。  
-メール:mkmjai1[atmark]gmail.com  
-twitter:https://twitter.com/critter_Eng  
-質問箱:https://peing.net/ja/critter_eng  
-製作者サイト:http://critter.sakura.ne.jp/
+```> make```
+
+Then you will see system.exe in root directory.
+
+## Selfmatch
+Selfmatch will be executed by following command
+
+```./system.exe test "begin(int)" "end(int)"```
+
+Self-matches will be executed with random seed of begin to end - 1.
+Game record will be saved in a directory specified by "result_dir" of setup_match.json.
+Chicha of self-matches are those specified in "chicha" of setup_match.json.
+For example, when begin=100, end=102 and "chicha" is [0, 1], following 4 mathces will be executed.
+
+random seed = 100, chicha = 0  
+random seed = 100, chicha = 1  
+random seed = 101, chicha = 0  
+random seed = 101, chicha = 1  
+
+This is efficient when you want to update AI strategy and play against previous version.
+Tactics of each player can be set with "tactics" of setup_match.json.
 
