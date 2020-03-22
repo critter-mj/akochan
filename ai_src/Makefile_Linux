@@ -26,10 +26,7 @@ HEADERS = $(SOURCES:.cpp=.hpp)
 SHARE_HEADERS = $(SHARE_SOURCES:.cpp=.hpp)
 LEARN_HEADERS = $(LEARN_SOURCES:.cpp=.hpp)
 
-TARGET = a.exe
-
-$(TARGET): $(OBJECTS) $(SHARE_OBJECTS)
-	$(COMPILER) $(OBJECTS) $(SHARE_OBJECTS) $(CFLAGS) $(LIBS) -o $@
+TARGET = libai.so
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
 	$(COMPILER) $< -c $(CFLAGS) $(LIBS) -o $@
@@ -40,9 +37,9 @@ $(SHARE_OBJDIR)/%.o: $(SHARE_DIR)/%.cpp $(SHARE_DIR)/%.hpp
 $(LEARN_OBJDIR)/%.o: $(LEARN_DIR)/%.cpp $(LEARN_DIR)/%.hpp
 	$(COMPILER) $< -c $(CFLAGS) $(LIBS) -o $@
 	
-libai.so: $(OBJECTS) $(SHARE_OBJECTS) $(LEARN_OBJECTS)
+$(TARGET): $(OBJECTS) $(SHARE_OBJECTS) $(LEARN_OBJECTS)
 	$(COMPILER) -shared $(OBJECTS) $(SHARE_OBJECTS) $(LEARN_OBJECTS) $(CFLAGS) $(LIBS) -o $@
-	cp libai.so ../
+	cp $(TARGET) ../
 
 all: clean $(TARGET) copy
 	
