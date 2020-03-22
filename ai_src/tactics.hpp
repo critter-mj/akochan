@@ -10,8 +10,6 @@ enum JUN_EST_TYPE {
 
 class Tactics{
 public:
-    Tactics();
-
     int jun_pt[4];
     int tegawari_num[7]; // シャンテン数ごとに、手替わりを何枚まで考えるかを設定
     JUN_EST_TYPE jun_est_type; // 順位推定として何を使うか

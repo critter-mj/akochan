@@ -164,10 +164,10 @@ void Tactics::set_from_json(const json11::Json& input_json) {
     }
 
     if (input_json.object_items().count("jun_pt") > 0) {
-		json11::Json::array jun_pt = input_json["jun_pt"].array_items();
-		assert_with_out(jun_pt.size() == 4, "jun_pt must have 4 elements.");
+		json11::Json::array jun_pt_json = input_json["jun_pt"].array_items();
+		assert_with_out(jun_pt_json.size() == 4, "jun_pt must have 4 elements.");
 		for (auto i = 0; i < 4; i++) {
-			tactics.jun_pt[i] = jun_pt[i].int_value();
+			jun_pt[i] = jun_pt_json[i].int_value();
 		}
 	}
 }
