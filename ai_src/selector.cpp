@@ -961,11 +961,7 @@ Moves ai(const Moves& game_record, const int pid, const bool out_console_input) 
 	assert(game_record.size() > 0);
     out_console = out_console_input;
 	const json11::Json& last_action = game_record[game_record.size() - 1];
-	Tactics tactics;
-	if (tactics_json[pid]["base"] == "minimum") { tactics.set_zero_first(); }
-	else if (tactics_json[pid]["base"] == "light") { tactics.set_light(); }
-	else if (tactics_json[pid]["base"] == "default") { tactics.set_default(); }
-	else { assert_with_out(false, "tactics_json base error!"); }
+	Tactics tactics(tactics_json[pid]);
 
     Selector selector;
     selector.set_selector(game_record, pid, tactics);
@@ -996,11 +992,7 @@ std::vector<std::pair<Moves, float>> calc_moves_score(const Moves& game_record, 
 	assert(game_record.size() > 0);
 	out_console = false;
 	const json11::Json& last_action = game_record[game_record.size() - 1];
-	Tactics tactics;
-	if (tactics_json[pid]["base"] == "minimum") { tactics.set_zero_first(); }
-	else if (tactics_json[pid]["base"] == "light") { tactics.set_light(); }
-	else if (tactics_json[pid]["base"] == "default") { tactics.set_default(); }
-	else { assert_with_out(false, "tactics_json base error!"); }
+	Tactics tactics(tactics_json[pid]);
 
 	std::vector<std::pair<Moves, float>> ret;
 	Selector selector;
@@ -1025,11 +1017,7 @@ json11::Json ai_review(const Moves& game_record, const int pid) {
 	assert(game_record.size() > 0);
 	out_console = false;
 	const json11::Json& last_action = game_record[game_record.size() - 1];
-	Tactics tactics;
-	if (tactics_json[pid]["base"] == "minimum") { tactics.set_zero_first(); }
-	else if (tactics_json[pid]["base"] == "light") { tactics.set_light(); }
-	else if (tactics_json[pid]["base"] == "default") { tactics.set_default(); }
-	else { assert_with_out(false, "tactics_json base error!"); }
+	Tactics tactics(tactics_json[pid]);
 
 	json11::Json::array actions_array;
 	Selector selector;

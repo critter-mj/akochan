@@ -4,6 +4,10 @@ Tactics::Tactics(){
     set_default();
 }
 
+Tactics::Tactics(const json11::Json& tactics_json) {
+    set_from_json(tactics_json);
+}
+
 void Tactics::set_common() {
     do_houjuu_discount = false;
     do_speed_modify = false;
@@ -134,6 +138,23 @@ void Tactics::set_zero_first(){
     tsumo_enumerate_always = 2000;
     tsumo_enumerate_fuuro_restriction = 20000;
     tsumo_enumerate_restriction = 10000;
+}
+
+void Tactics::set_from_json(const json11::Json& input_json) {
+         if (input_json["base"] == "minimum") { set_zero_first(); }
+	else if (input_json["base"] == "light") { set_light(); }
+	else if (input_json["base"] == "default") { set_default(); }
+	else { assert_with_out(false, "tactics input_json base error!"); }
+
+    if (!input_json["use_ori_exp_at_dp_fuuro"].is_null()) { use_ori_exp_at_dp_fuuro = input_json["use_ori_exp_at_dp_fuuro"].bool_value(); }
+
+    if (!input_json["han_shift_prob_kan"].is_null()) {
+        const json11::Json::array han_shift_prob = input_json["han_shift_prob_kan"].array_items();
+	    assert_with_out(han_shift_prob.size() == 14, "tactics input_json han_shift_prob_kan error");
+        for (int han = 0; han < 14; han++) {
+            han_shift_prob_kan[han] = han_shift_prob[han].number_value();
+        }
+    }
 }
 
 int cal_titoi_change_num_max(const int titoi_shanten_num, const int mentu_shanten_num) {

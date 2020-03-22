@@ -10,8 +10,6 @@ enum JUN_EST_TYPE {
 
 class Tactics{
 public:
-    Tactics();
-
     int tegawari_num[7]; // シャンテン数ごとに、手替わりを何枚まで考えるかを設定
     JUN_EST_TYPE jun_est_type; // 順位推定として何を使うか
     bool do_houjuu_discount; // 相手のテンパイ率が高くないの場合に、放銃確率を意図的に小さくするかどうか
@@ -79,10 +77,15 @@ public:
     std::array<std::array<double, 12>, 14> hanfu_weight_ron;
     std::array<float, 14> han_shift_prob_kan;
 
+    Tactics();
+    Tactics(const json11::Json& tactics_input_json);
+
     void set_common();
     void set_default();
     void set_light();
     void set_zero_first();
+
+    void set_from_json(const json11::Json& tactics_json);
 };
 
 int cal_titoi_change_num_max(const int titoi_shanten_num, const int mentu_shanten_num);
