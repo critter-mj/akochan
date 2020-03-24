@@ -837,7 +837,38 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 							tsumo_num_exp, tactics
 						);
 						hai_choice.push_back(hai_choice_tmp);
-						// to do カン
+
+						if (tactics.do_kan_ordinary && count_tsumo_num_all(game_record) < 70) {
+							const std::array<int, 3>& tsumo_edge_loc = tehai_calculator_work.get_const_tsumo_edge_loc(cn, gn);
+							for (int acn = tsumo_edge_loc[1]; acn < tsumo_edge_loc[2]; acn++) {
+								const Tehai_Action& ac_tmp = tehai_calculator_work.cand_graph_sub_tsumo_work[tsumo_edge_loc[0]][acn];
+								if (ac_tmp.hai_out == hai_out && (ac_tmp.action_type == AT_ANKAN || ac_tmp.action_type == AT_KAKAN)) {
+									if (game_state.player_state[my_pid].reach_accepted && !tehai_calculator.get_const_ta_cgn(cn, gn).can_ankan_after_reach(hai_out)) {
+										continue;
+									}
+									Hai_Choice kan_choice;
+									kan_choice.hai = hai_out;
+									kan_choice.action_type = ac_tmp.action_type;
+									Hai_Array kan_tehai = tehai_tmp;
+									kan_tehai[hai_out] = 0;
+									kan_tehai[haikind(hai_out)] = 0;
+									// other_end_value は後退解析の基準値として用いるものなので、other_end_value_kanに変えないほうがよいはず。
+									// dahai_inc を0にすべきかは要検討。
+									kan_choice.pt_exp_after = cal_exp(
+										my_pid, game_record, game_state, kan_tehai, tehai_calculator.get_agari_prob(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp), tehai_calculator.get_ten_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp),
+										other_end_value, tehai_calculator.get_tenpai_prob(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp),
+										tenpai_prob_array, houjuu_hai_prob, tsumo_hanfu_prob_kan, ron_hanfu_prob,
+										kyoku_end_pt_exp_tmp, ryuukyoku_pt_exp_tmp, 0, 0
+									);
+									kan_choice.pt_exp_after_ori = cal_betaori_exp(
+										my_pid, game_state, kan_tehai, betaori_houjuu_hai_prob, total_houjuu_hai_value,
+										not_agari_value, other_end_value, passive_ryuukyoku_value, passive_ryuukyoku_prob,
+										tsumo_num_exp, tactics
+									);
+									hai_choice.push_back(kan_choice);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -853,7 +884,14 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 			for (int i = 0; i < hai_choice.size(); i++) {
 				const int hai_out = hai_choice[i].hai;
-				hai_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * hai_choice[i].pt_exp_after;
+				if (hai_choice[i].action_type == AT_DAHAI || hai_choice[i].action_type == AT_REACH_DECLARE || hai_choice[i].action_type == AT_KAKAN) {
+					hai_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * hai_choice[i].pt_exp_after;
+				} else if (hai_choice[i].action_type == AT_ANKAN) {
+					hai_choice[i].pt_exp_total = hai_choice[i].pt_exp_after;
+				} else {
+					assert_with_out(false, "selector hai_choice action_type error");
+				}
+				
 				hai_choice[i].review["total_houjuu_hai_prob_now"] = total_houjuu_hai_prob_now[hai_out];
 				if (total_houjuu_hai_prob_now[hai_out] != 0) {
 					hai_choice[i].review["total_houjuu_hai_value_now"] = total_houjuu_hai_value_now[hai_out];

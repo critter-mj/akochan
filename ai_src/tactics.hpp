@@ -43,6 +43,7 @@ public:
     bool use_new_tenpai_est_tmp; // テンパイ推定
     bool use_ratio_tas_to_coeff; // メンツごとの待ちの回帰分析
     bool use_ori_exp_at_dp_fuuro; // calc_DPでori_expをfuuroが増えるときにも使うか。
+    bool do_kan_ordinary; // DP_flag = false でカンをするか。
     bool jun_calc_bug; 
     int use_yama_ratio_kawa_num; // 山読みをはじめる河の枚数。
     int use_dp_last_tsumo_num; // tsumo_num_DPがこの値より小さい時、邪魔ポンなどを考慮。
