@@ -146,26 +146,6 @@ void set_tenpai_prob_other(const int my_pid, const Game_State& game_state, const
 	}
 }
 
-Hai_Array cal_nokori_hai_array(const Hai_Array& tehai, const Hai_Array& hai_visible) {
-	Hai_Array nokori_hai_array = {};
-	for (int hai = 1; hai < 38; hai++) {
-		if(hai%10!=0){
-			nokori_hai_array[hai] = 4 - tehai[hai] - hai_visible[hai]; // 従来のset_nokori_hai_arrayと形式が違うので注意。
-		}
-	}
-	return nokori_hai_array;
-}
-
-/*
-void set_nokori_hai_array(const int my_pid, const int hai_visible[38], int nokori_hai_array[38]) {
-	for(int hai=1;hai<38;hai++){
-		if(hai%10!=0){
-			nokori_hai_array[hai] = 4 - hai_num_kind(field.player[my_pid].tehai, field.player[my_pid].fuuro, hai) - hai_visible[hai];
-		}
-	}
-}
-*/
-
 float cal_other_end_prob_ako(const bool my_reach, const int act_num1, const int act_num2, const int other_reach_num, const float other_end_prob_input) {
 	const int lb = my_reach ? 7 : 6;
 	const int ub = my_reach ? 15 : 16;
@@ -507,7 +487,6 @@ void exec_calc_DP(
 
 				double prob_tmpbest[38], tenpai_tmpbest[38], agari_exp_tmpbest[38], exp_tmpbest[38];
 				double prob_tmpbest_norisk[38], tenpai_tmpbest_norisk[38], agari_exp_tmpbest_norisk[38], exp_tmpbest_norisk[38];
-				double exp_tmpbest_initial[38];
 				for(int hai=0;hai<38;hai++){
 					if(hai%10!=0){
 						if(tactics.reach_regression_mode_default == 1 && cal_tav[loc_first][loc_second].get_reach_flag()==1){
@@ -521,7 +500,6 @@ void exec_calc_DP(
 							agari_exp_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_exp_work[loc_first][loc_second][mod2tn_prev];
 							exp_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn_prev] + houjuu_e_hai[tn-1][hai];
 						}
-						exp_tmpbest_initial[hai] = exp_tmpbest[hai];
 						if (norisk_ratio > 0.0) {
 							prob_tmpbest_norisk[hai] = tehai_calculator_work.agari_prob_work[loc_first][loc_second][mod2tn_prev];
 							tenpai_tmpbest_norisk[hai] = tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][mod2tn_prev];
@@ -636,9 +614,9 @@ void exec_calc_DP(
 				tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn] = tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn];
 
 				double prob_tmpbest[38], tenpai_tmpbest[38], agari_exp_tmpbest[38], exp_tmpbest[38];
-				int pon_ten_flag[38], pon_ron_flag[38], ron_flag[38];
+				int pon_ron_flag[38], ron_flag[38];
 				double prob_tmpbest_norisk[38], tenpai_tmpbest_norisk[38], agari_exp_tmpbest_norisk[38], exp_tmpbest_norisk[38];
-				int pon_ten_flag_norisk[38], pon_ron_flag_norisk[38], ron_flag_norisk[38];
+				int pon_ron_flag_norisk[38], ron_flag_norisk[38];
 				for(int hai=0;hai<38;hai++){
 					if(hai%10!=0){
 						prob_tmpbest[hai] = tehai_calculator_work.agari_prob_to_work[loc_first][loc_second][mod2tn];
@@ -646,7 +624,6 @@ void exec_calc_DP(
 						agari_exp_tmpbest[hai] = tehai_calculator_work.agari_exp_to_work[loc_first][loc_second][mod2tn];
 						exp_tmpbest[hai] = tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn];
 
-						pon_ten_flag[hai] = 0;
 						pon_ron_flag[hai] = 0;
 						ron_flag[hai] = 0;
 
@@ -656,7 +633,6 @@ void exec_calc_DP(
 							agari_exp_tmpbest_norisk[hai] = tehai_calculator_work.agari_exp_to_work[loc_first][loc_second][mod2tn];
 							exp_tmpbest_norisk[hai] = tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn];
 
-							pon_ten_flag_norisk[hai] = 0.0;
 							pon_ron_flag_norisk[hai] = 0.0;
 							ron_flag_norisk[hai] = 0.0;
 						}

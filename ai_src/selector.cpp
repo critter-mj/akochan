@@ -611,7 +611,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 		}
 
 		if (current_action["type"] == "tsumo") {
-			bool tsumo_agari_possible_flag = false;
 			for (int cn = 0; cn < tehai_calculator.in0num; cn++) {
 				for (int gn = 0; gn < tehai_calculator.group_size(cn); gn++) {
 					if (is_same_fuuro(tehai_calculator.get_const_ta_cgn(cn, gn).tehai_state, tehai_calculator.get_const_ta_cgn(cn, 0).tehai_state)) {
@@ -629,7 +628,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 							for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
 								const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
 								if(haikind(current_hai) == agari.agari_info.get_hai() && agari.agari_info.get_han_tsumo() > 0){
-									tsumo_agari_possible_flag = true;
 									tsumo_agari_choice.action_type = AT_TSUMO_AGARI;
 									const std::array<double, 4> ten_exp = agari.get_ten_exp(
 										my_pid, tehai_calculator.get_const_ta_cgn(cn, gn).tehai_bit, tehai_calculator.get_const_ta_cgn(cn, gn).tehai_state,
