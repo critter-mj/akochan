@@ -2,7 +2,7 @@
 
 Tehai_Calculator_Work::Tehai_Calculator_Work() {
 	candidates_work.clear();
-};
+}
 
 const std::array<int, 3>& Tehai_Calculator_Work::get_const_tsumo_edge_loc(const int cn, const int gn) const {
     const Tehai_Location& ta_loc = candidates_work[cn].ta_loc[gn];

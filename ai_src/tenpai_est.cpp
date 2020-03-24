@@ -350,7 +350,7 @@ int kan_num_count_est (const Fuuro_Vector& fuuro) {
 	return kan_num;
 }
 
-Agari_Estimate_Info::Agari_Estimate_Info(){};
+Agari_Estimate_Info::Agari_Estimate_Info(){}
 
 Agari_Estimate_Info yaku_check(
 	const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector fuuro, const int visible_dora_num,
@@ -526,7 +526,7 @@ Agari_Estimate_Info yaku_check(
 	return agari;
 }
 
-Tehai_Estimator_Element::Tehai_Estimator_Element (){};
+Tehai_Estimator_Element::Tehai_Estimator_Element (){}
 
 Tehai_Estimator_Element::Tehai_Estimator_Element (Hai_Array tehai_in) {
 	reset(tehai_in);
@@ -556,7 +556,7 @@ Color_Type Tehai_Estimator_Element::get_somete_color(const Fuuro_Vector& fuuro) 
 	return CT_NUM;
 }
 
-Tehai_Estimator::Tehai_Estimator(){};
+Tehai_Estimator::Tehai_Estimator(){}
 
 void Tehai_Estimator::tenpai_check (
 	const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
@@ -1384,7 +1384,7 @@ std::array<std::array<float, 12>, 14> cal_agari_hanfu_prob(const std::array<std:
 	return agari_prob;
 }
 
-Tenpai_Estimator_Simple::Tenpai_Estimator_Simple(){};
+Tenpai_Estimator_Simple::Tenpai_Estimator_Simple(){}
 
 void Tenpai_Estimator_Simple::set_tenpai2(const Moves& game_record, const Game_State& game_state, const int my_pid, const int target) {
 	if (game_state.player_state[target].reach_declared) {
