@@ -26,7 +26,7 @@ Moves Hai_Choice::out_moves(const Game_State& game_state, const int my_pid, cons
 		moves.push_back(make_kyushukyuhai(my_pid));
 		return moves;
 	}
-	if (action_type == AT_ANKAN || action_type == AT_KAKAN) {
+	if (action_type == AT_ANKAN) {
 		if (haikind(hai) < 30 && haikind(hai)%10 == 5) {
 			moves.push_back(make_ankan_aka(my_pid, hai));
 		} else {
@@ -34,6 +34,15 @@ Moves Hai_Choice::out_moves(const Game_State& game_state, const int my_pid, cons
 		}
 		return moves;
 	}
+	if (action_type == AT_KAKAN) {
+		if (hai < 30 && hai % 10 == 5) {
+			moves.push_back(make_kakan_aka(my_pid, hai));
+		} else {
+			moves.push_back(make_kakan_default(my_pid, hai));
+		}
+		return moves;
+	}
+
 	if (action_type == AT_REACH_DECLARE) {
 		if (!game_state.player_state[my_pid].reach_declared) {
 			moves.push_back(make_reach(my_pid));
