@@ -251,7 +251,7 @@ int main(int argc,char* argv[]) {
         set_tactics_one(setup_mjai_json);
         const int port = (argc >= 3) ? std::atoi(argv[2]) : 11600;
         TcpClient tcp_client("127.0.0.1", port);
-        int id;
+        int id = -1;
         MJAI_Interface mjai_interface;
 
         std::ofstream ofs_log;

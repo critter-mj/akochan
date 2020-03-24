@@ -13,7 +13,7 @@ Agari_Info calc_agari(
     Agari_Info agari_info;
     agari_info.hai = machi_hai;
 
-    int peko_num, kan_num, anko_num, anko3_flag, anko4_flag; // 暗刻役はツモかロンかで変わりうるので、フラグを整数で持つ。0 : 役にならない、1 : ツモなら役になる。2 : 必ず役になる。
+    int peko_num, kan_num; 
     bool menzen_flag, bakaze_flag, jikaze_flag, sangen_flag[3], kaze_flag[4], pinfu_flag;
     bool chinitsu_flag, honitsu_flag, tanyao_flag, junchan_flag, chanta_flag, toitoi_flag;
     bool peko1_flag, peko2_flag, kan3_flag, kan4_flag, sanshikidoujun_flag, sanshikidoukou_flag, ittsuu_flag; // to do doukou
@@ -25,6 +25,8 @@ Agari_Info calc_agari(
     tanyao_flag = tanyao_check(tehai, fuuro, machi_hai);
     honrou_flag = honrou_check(tehai, fuuro, machi_hai);
     suitsu_flag = suitsu_check(tehai, fuuro);
+    int anko3_flag = 0; // 暗刻役はツモかロンかで変わりうるので、フラグを整数で持つ。0 : 役にならない、1 : ツモなら役になる。2 : 必ず役になる。
+    int anko4_flag = 0;
 
     if (titoi_flag) {
         bakaze_flag = false;
@@ -41,8 +43,6 @@ Agari_Info calc_agari(
         sanshikidoujun_flag = false;
         sanshikidoukou_flag = false;
         ittsuu_flag = false;
-        anko3_flag = 0;
-        anko4_flag = 0;
         kan3_flag = false;
         kan4_flag = false;
         daisangen_flag = false;
@@ -75,27 +75,18 @@ Agari_Info calc_agari(
         sanshikidoukou_flag = sanshikidoukou_check(tehai_tate, fuuro, machi_hai, machi_type);
         ittsuu_flag = ittsuu_check(tehai_tate_cut, fuuro, tehai_tmp, machi_hai, machi_type);
 
-        anko_num = anko_num_count(tehai_tate, fuuro);
-        if (anko_num < 2) {
-            anko4_flag = 0;
-            anko3_flag = 0;
-        } else if (anko_num == 2) {
-            anko4_flag = 0;
+        const int anko_num = anko_num_count(tehai_tate, fuuro);
+        if (anko_num == 2) {
             if (machi_type == MT_SHABO) {
                 anko3_flag = 1;
-            } else {
-                anko3_flag = 0;
             }
         } else if (anko_num == 3) {
             anko3_flag = 2;
             if (machi_type == MT_SHABO) {
                 anko4_flag = 1;
-            } else {
-                anko4_flag = 0;
             }
         } else if(anko_num == 4) {
             anko4_flag = 2;
-            anko3_flag = 0;
         }
 
         kan_num = kan_num_count(fuuro);
