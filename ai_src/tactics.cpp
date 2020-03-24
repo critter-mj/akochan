@@ -43,6 +43,8 @@ void Tactics::set_common() {
     use_new_tenpai_est_tmp = false;
     use_ratio_tas_to_coeff = true;
     use_ori_exp_at_dp_fuuro = true;
+    do_ankan_inclusive = true;
+    do_kakan_inclusive = false;
     do_kan_ordinary = false;
     jun_calc_bug = false;
     use_yama_ratio_kawa_num = 100;
@@ -154,6 +156,8 @@ void Tactics::set_from_json(const json11::Json& input_json) {
 	else { assert_with_out(false, "tactics input_json base error!"); }
 
     if (!input_json["use_ori_exp_at_dp_fuuro"].is_null()) { use_ori_exp_at_dp_fuuro = input_json["use_ori_exp_at_dp_fuuro"].bool_value(); }
+    if (!input_json["do_ankan_inclusive"].is_null()) { do_ankan_inclusive = input_json["do_ankan_inclusive"].bool_value(); }
+    if (!input_json["do_kakan_inclusive"].is_null()) { do_kakan_inclusive = input_json["do_kakan_inclusive"].bool_value(); }
     if (!input_json["do_kan_ordinary"].is_null()) { do_kan_ordinary = input_json["do_kan_ordinary"].bool_value(); }
 
     if (!input_json["jun_pt"].is_null()) {
