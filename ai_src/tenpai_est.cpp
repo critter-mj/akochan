@@ -1108,7 +1108,7 @@ void Machi_Coeff::ratio_tas_to_coeff(const Game_State& game_state, const int my_
 	if (tactics_json[my_pid]["tas_est"] == "instant") {
 		return;
 	} else if (tactics_json[my_pid]["tas_est"] == "ako") {
-		int widx, sute_kind[6], sute_flag[38];
+		int widx, sute_flag[38]; // sute_kind[6] 現状使っていないが何のためにあったか要確認(?)
 		float init;
 
 		float wr[3][7];

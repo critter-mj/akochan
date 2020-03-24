@@ -411,7 +411,7 @@ std::array<float, 4> cal_risk_array(const int my_pid, const Game_State& game_sta
 	}
 	const Hai_Array& tehai_kind = haikind(tehai);
 	for (int pid = 0; pid < 4; pid++) {
-		Betaori betaori = cal_betaori(tehai, houjuu_hai_prob[pid], houjuu_hai_value_tmp, 0.0, 0.0, tsumo_num_exp);
+		Betaori betaori = cal_betaori(tehai_kind, houjuu_hai_prob[pid], houjuu_hai_value_tmp, 0.0, 0.0, tsumo_num_exp);
 		risk_array[pid] = betaori.betaori_houjuu_prob;
 	}
 	return risk_array;
@@ -423,8 +423,6 @@ float cal_exp(
 	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp, const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp,
 	const int dahai_inc, const int fuuro_inc
 ) {
-	const int act_num = game_state.player_state[my_pid].kawa.size();
-
 	const float my_agari_prob = cal_my_agari_prob(my_pid, game_record, agari_prob_sol, game_state, dahai_inc, tenpai_prob);
 	const float my_agari_value = cal_my_agari_value(agari_prob_sol, value_sol, value_not_agari);
 
