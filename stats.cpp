@@ -2,7 +2,11 @@
 
 void show_stats_mjai(const std::string& dir_name, const std::string& player_name_prefix) {
     std::string ls_command = "ls -1 ./" + dir_name + "/*.mjson > tmp.txt"; // 指定したディレクトリ内のmjsonファイルを一旦tmp.txtに書き出す。
-    system(ls_command.c_str());
+    const int system_result = system(ls_command.c_str());
+    if (system_result == -1) {
+        std::cout << "system_result == -1 failed" << std::endl;
+        return;
+    }
 
     std::ifstream ifs_tmptxt("tmp.txt");
     assert_with_out(!ifs_tmptxt.fail(), "tmp.txt not generated");
