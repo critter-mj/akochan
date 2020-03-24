@@ -107,7 +107,7 @@ Agari_Info calc_agari(
 
         daisushi_flag = false;
         syousushi_flag = false;
-        if (kaze_flag[0] && kaze_flag[1] && kaze_flag[2] && kaze_flag[3] == 4) {
+        if (kaze_flag[0] && kaze_flag[1] && kaze_flag[2] && kaze_flag[3]) {
             daisushi_flag = true;
         } else {
             for (int i = 0; i < 4; i++) {
