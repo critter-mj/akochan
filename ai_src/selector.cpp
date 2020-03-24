@@ -148,7 +148,6 @@ std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> cal_kyoku_en
                         }
 
 						assert(oyaid - kyoku_mod + 12 >= 0);
-						const int oya_first = (oyaid - kyoku_mod + 12) % 4;
 						const int kyoku_mod_next = (pid1 == oyaid) ? kyoku_mod : kyoku_mod + 1;
 						const int oyaid_next = (pid1 == oyaid) ? oyaid : (oyaid + 1) % 4;
 						const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next, pid1 == oyaid, tactics_json[my_pid]);
@@ -197,7 +196,6 @@ std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_
 					}
 
 					assert(oyaid - kyoku_mod + 12 >= 0);
-					const int oya_first = (oyaid - kyoku_mod + 12) % 4;
 					const int kyoku_mod_next = tenpai_flag[oyaid] ? kyoku_mod : kyoku_mod + 1;
 					const int oyaid_next = tenpai_flag[oyaid] ? oyaid : (oyaid + 1) % 4;
 					const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next, tenpai_flag[oyaid], tactics_json[my_pid]);
@@ -930,7 +928,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 			fuuro_choice.push_back(pass_choice);
 
-			clock_t check2 = clock();
 			if (count_tsumo_num_all(game_record) < 70) { // ハイテイ牌をフーロしないための処理		
 				const std::array<int, 3>& fuuro_edge_loc = tehai_calculator_work.get_const_fuuro_edge_loc(cn_fuuro_neg, gn_fuuro_neg);
 				for (int acn = fuuro_edge_loc[1]; acn < fuuro_edge_loc[2]; acn++) {

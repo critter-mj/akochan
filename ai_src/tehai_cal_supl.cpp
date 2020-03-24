@@ -87,7 +87,6 @@ void set_tsumo_node_mentu(
 	boost::unordered_set<Tehai_Change>& tcs,
 	int& in0num
 ){
-	clock_t check1 = clock();
 	for(int nin=1;nin<=in_num_end;nin++){
 		// ここのfor文を並列化する際には、必ずset_tsumo_node_execでmtxをロックする必要がある。
 		//#pragma omp parallel
@@ -110,7 +109,6 @@ void set_tsumo_node_mentu(
 			}
 		}
 	}
-	clock_t check2 = clock();
 }
 
 void set_tenpai_prob_other(const int my_pid, const Game_State& game_state, const int tsumo_num, const std::array<float, 4>& tenpai_prob_now, double **tenpai_prob_other, double **reach_tenpai_prob_other) {
@@ -422,7 +420,7 @@ void exec_calc_DP(
 	float reach_ron_ratio_para[5] = {};
 	float not_reach_ron_ratio_para[5] = {};
 	float dama_ron_ratio[6] = {};
-	double yama_ratio_para[2] = {};
+	//double yama_ratio_para[2] = {};
 	float wa[MAX_TSUMO_NUM][3];
 
 	if (tactics_json[my_pid]["ron_ratio_est"] == "ako") {
