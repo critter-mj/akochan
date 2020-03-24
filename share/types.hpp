@@ -11,14 +11,14 @@ enum Color_Type {
     CT_JIHAI = 3,
     CT_NUM = 4,
 };
-ENABLE_ENUM_OPERATORS(Color_Type);
+ENABLE_ENUM_OPERATORS(Color_Type)
 
 enum Num_Type {
     NT_CHUJAN = 0,
     NT_SUYAO = 1,
     NT_JIHAI = 2,
 };
-ENABLE_ENUM_OPERATORS(Num_Type);
+ENABLE_ENUM_OPERATORS(Num_Type)
 
 enum Fuuro_Type {
 	FT_CHI = 1,

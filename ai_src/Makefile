@@ -1,6 +1,7 @@
 COMPILER = g++
 NPROCS = 4
 CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -DWINSTD -DNPROCS=$(NPROCS)
+WFLAGS = -pedantic
 LIBS	= -lboost_system-mgw62-mt-x64-1_70 -lws2_32
 
 SRCDIR = .
@@ -30,16 +31,16 @@ LEARN_HEADERS = $(LEARN_SOURCES:.cpp=.hpp)
 TARGET = ai.dll
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(LIBS) -o $@
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
 	
 $(SHARE_OBJDIR)/%.o: $(SHARE_DIR)/%.cpp $(SHARE_DIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(LIBS) -o $@
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
 	
 $(LEARN_OBJDIR)/%.o: $(LEARN_DIR)/%.cpp $(LEARN_DIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(LIBS) -o $@
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
 	
 $(TARGET): $(OBJECTS) $(SHARE_OBJECTS) $(LEARN_OBJECTS)
-	$(COMPILER) -shared $(OBJECTS) $(SHARE_OBJECTS) $(LEARN_OBJECTS) $(CFLAGS) $(LIBS) -o $@
+	$(COMPILER) -shared $(OBJECTS) $(SHARE_OBJECTS) $(LEARN_OBJECTS) $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
 	cp $(TARGET) ../
 	
 test:

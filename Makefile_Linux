@@ -1,5 +1,6 @@
 COMPILER = g++
 CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -pthread 
+WFLAGS = -pedantic
 
 OPTGTK = 
 
@@ -26,13 +27,13 @@ SHARE_HEADERS = $(SHARE_SOURCES:.cpp=.hpp)
 TARGET = system.exe
 	
 $(TARGET):  $(OBJECTS) $(SHARE_OBJECTS)
-	$(COMPILER) $(OBJECTS) $(SHARE_OBJECTS) $(CFLAGS) $(LIBS) -o $@
+	$(COMPILER) $(OBJECTS) $(SHARE_OBJECTS) $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(OPTGTK) $(LIBS) -o $@
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(OPTGTK) $(LIBS) -o $@
 	
 $(SHARE_OBJDIR)/%.o: $(SHARE_DIR)/%.cpp $(SHARE_DIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(LIBS) -o $@
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
 	
 test:
 	echo $(SHARE_OBJECTS)
