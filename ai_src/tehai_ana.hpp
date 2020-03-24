@@ -97,15 +97,15 @@ public:
 
 	template <class Agari_Vector> void agari_push_func_child(const Agari_Info agari, const int pid, const Game_State& game_state, Agari_Vector& agariv);
 	template <class Agari_Vector> void agari_push_func(
-		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt, const Tehai_State2& tehai_state,
+		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
 		const int mh, const Machi_Type mt, const bool ttf, Agari_Vector& agariv	
 	);
 	void agari_push_func(
-		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt, const Tehai_State2& tehai_state,
+		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
 		const int mh, const Machi_Type mt, const bool ttf, bool flag
 	);
 	void agari_push_func(
-		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt, const Tehai_State2& tehai_state,
+		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
 		const int mh, const Machi_Type mt, const bool ttf, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv
 	);
 

@@ -874,11 +874,11 @@ std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_teev(con
 			}
 		}
 	}
-	int han,fu;
 	for (int i = 0; i < teev.size(); i++) {
 		for (int an = 0; an < teev[i].agariv.size(); an++) {
-			han = teev[i].agariv[an].han;
+			const int han = teev[i].agariv[an].han;
 			if (han > 0) {
+				int fu;
 				if (is_tsumo) {
 					fu = (teev[i].agariv[an].fu + 2 + 9) / 10;
 				} else {

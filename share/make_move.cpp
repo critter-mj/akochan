@@ -230,21 +230,21 @@ json11::Json make_chi_high_aka(const int actor, const int target, const int hai)
     }
 }
 
-json11::Json make_hora(const int actor, const int target, const int hai) {
+json11::Json make_hora(const int actor, const int target, const int hai_hora) {
     json11::Json::object move;
     move["type"] = "hora";
     move["actor"] = actor;
     move["target"] = target;
-    move["pai"] = hai_int_to_str(hai);
+    move["pai"] = hai_int_to_str(hai_hora);
     return json11::Json(move);
 }
 
-json11::Json make_hora(const int actor, const int target, const int hai, const Hai_Array& tehai, const int han, const int fu, const std::vector<int>& uradora_markers, const std::array<int, 4>& scores) {
+json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const int fu, const std::vector<int>& uradora_markers, const std::array<int, 4>& scores) {
     json11::Json::object move;
     move["type"] = "hora";
     move["actor"] = actor;
     move["target"] = target;
-    move["pai"] = hai_int_to_str(hai);
+    move["pai"] = hai_int_to_str(hai_hora);
 
     json11::Json::array hora_tehais;
     for (int hai = 0; hai < 38; hai++) {
