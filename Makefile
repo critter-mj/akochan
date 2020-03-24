@@ -1,6 +1,6 @@
 COMPILER = g++
 CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -DWINSTD
-WFLAGS = -pedantic
+WFLAGS = -pedantic -Wignored-qualifiers
 
 OPTGTK = 
 LIBS = -lboost_system-mgw62-mt-x64-1_70 -lws2_32 -L./ -lai
