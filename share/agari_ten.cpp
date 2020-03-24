@@ -158,6 +158,8 @@ int ron_agari(const int han, const int fu, const bool oya_flag){
 			}
 		}
 	}
+	assert_with_out(false, "ron_agari error");
+	return 0;
 }
 
 int tsumo_agari_loss(const int han, const int fu, const bool oya_flag){
@@ -328,6 +330,8 @@ int tsumo_agari_loss(const int han, const int fu, const bool oya_flag){
 			}
 		}
 	}
+	assert_with_out(false, "tsumo_agari_loss error");
+	return 0;
 }
 
 int tsumo_agari(const int han, const int fu, const bool oya_flag){

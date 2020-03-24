@@ -272,7 +272,8 @@ int kaze_str_to_int(const std::string kaze_str) {
 	else if(kaze_str == "W") { return 2; }
 	else if(kaze_str == "N") { return 3; }
 	else {
-		assert(false);
+		assert_with_out(false, "kaze_str_to_int invalid input");
+        return -1;
 	}
 }
 
@@ -283,7 +284,7 @@ std::string kaze_int_to_str(const int kaze) {
 	else if (kaze == 2) { kaze_str = "W"; }
 	else if (kaze == 3) { kaze_str = "N"; }
 	else {
-		assert(false);
+		assert_with_out(false, "kaze_int_to_str invalid input");
 	}
 	return kaze_str;
 }
@@ -332,7 +333,8 @@ int hai_str_to_int(const std::string hai_str){
 	else if(hai_str == "C"){ return 37;}
     else if(hai_str == "?"){ return -1;}
 	else{
-		assert(false);
+		assert_with_out(false, "hai_str_to_int invalid input");
+        return 0;
 	}
 }
 
@@ -376,7 +378,7 @@ std::string hai_int_to_str(int hai_int){
 	else if(hai_int == 36){ hai_str = "F";}
 	else if(hai_int == 37){ hai_str = "C";}
 	else{
-		assert(false);
+		assert_with_out(false, "hai_int_to_str invalid_input");
 	}
 	return hai_str;
 }

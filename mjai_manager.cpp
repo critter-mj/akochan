@@ -383,7 +383,9 @@ std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record
     } else if (current_move["type"] == "dahai" || current_move["type"] == "kakan") {
         return require_moves_after_dahai(game_record, player_id);
     } else {
-        assert(false);
+        assert_with_out(false, "require_moves_after_tsumo_or_dahai error");
+        std::array<Moves, 4> result;
+        return result;
     }
 }
 

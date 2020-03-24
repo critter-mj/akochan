@@ -48,6 +48,7 @@ int cal_tsumo_num_exp(const int my_pid, const Game_State& game_state, const int 
 		return ceil(logistic(w, x, 4) * (18 - acn));
 	} else {
 		assert_with_out(false, "tsumo_num_est error!");
+		return 0;
 	}
 }
 
@@ -143,8 +144,8 @@ float cal_ryuukyoku_prob(const int my_pid, const Game_State& game_state, const f
 		x[3] = 1.0 - tmp;
 		return logistic(w, x, 4);
 	} else {
-		std::cout << "ryukyoku_prob_est_error" << std::endl;
-		assert(false);
+		assert_with_out(false, "ryukyoku_prob_est_error");
+		return 0.0;
 	}
 }
 
@@ -171,6 +172,7 @@ float cal_my_keiten_prob(const int my_pid, const Game_State& game_state,  const 
 			return logistic(w, x, 3);
 		} else {
 			assert_with_out(false, "my_keiten_prob_est error!");
+			return 0.0;
 		}
 	}
 }
@@ -191,6 +193,7 @@ float cal_other_keiten_prob(const int my_pid, const int target_pid, const Game_S
 			return logistic(w, x, 2);
 		} else {
 			assert_with_out(false, "other_keiten_prob_est error!");
+			return 0.0;
 		}
 	}
 }

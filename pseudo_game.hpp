@@ -31,7 +31,6 @@ PG_Kyoku_Result make_pg_kyoku_result_hora(const int hora_player, const int targe
 PG_Kyoku_Result make_pg_kyoku_result_ryukyoku(const std::array<bool, 4>& tenpai, const std::array<bool, 4>& reach_accepted);
 
 std::vector<float> read_acc_vec(const std::string& file_name);
-bool is_valid_acc_vec(const std::vector<float>& acc_vec);
 int random_int_from_acc_vec(const std::vector<float>& acc_vec);
 int random_int_uniform(const int size);
 
