@@ -475,3 +475,30 @@ float cal_other_end_value(
 	}
 	return exp_value;
 }
+
+float cal_betaori_exp(
+	const int my_pid, const Game_State& game_state,
+	const Hai_Array& tehai_tmp, const std::array<float, 38>& betaori_houjuu_hai_prob, const std::array<float, 38>& total_houjuu_hai_value,
+	const float not_agari_value, const float other_end_value, const float passive_ryuukyoku_value, const float passive_ryuukyoku_prob,
+	const int tsumo_num_exp, const Tactics& tactics
+) {
+	// ここのbetaoriのデフォルト値を、not_agari_valueにするのは、other_end_valueだと、other_end_value が not_agari_valueよりかなり大きい場合に、
+	// 望ましくない状況で、calc_agari_probの結果を無視することが起こるため。このようにしたほうが実際に強いかは未検証。
+	// 求めるべきは、降りを選択した際に、流局も含めて放銃とならない確率なので、モデルはinclusive_foldの方が正しいと思われる。
+	if (tactics.betaori_est == "instant") {
+		Betaori betaori = cal_betaori(tehai_tmp, betaori_houjuu_hai_prob, total_houjuu_hai_value, not_agari_value, not_agari_value, tsumo_num_exp);
+		return betaori.betaori_exp;
+	} else if (tactics.betaori_est == "ako") {
+		// to do betaori に関して入力が一致しているか未確認
+		Betaori betaori = cal_betaori(tehai_tmp, betaori_houjuu_hai_prob, total_houjuu_hai_value, other_end_value, passive_ryuukyoku_value, tsumo_num_exp);
+		float w[3];
+		const int act_num = std::min(std::max(2, (int)game_state.player_state[my_pid].kawa.size()), 18); // akoの方はkawa.size()+1になっていないのでそうする。
+		const std::string file_name = "params/betaori/ako/betaori_houjuu_para" + std::to_string(act_num) + "_3000.txt";
+		read_parameters(w, 3, file_name);
+		betaori.modify_betaori_value_with_ryuukyoku_ako(game_state.player_state[my_pid].fuuro.size(), w, passive_ryuukyoku_prob);
+		return betaori.betaori_exp;
+	} else {
+		assert_with_out(false, "cal_betaori_exp invalid tactics.betaori_est");
+		return 0.0;
+	}
+}

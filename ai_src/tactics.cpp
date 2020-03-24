@@ -85,6 +85,8 @@ void Tactics::set_common() {
 
     han_shift_prob_kan[1] = 0.0;
     han_shift_prob_kan[0] = 1.0;
+
+    betaori_est = "ako";
 }
 
 void Tactics::set_default(){
@@ -227,6 +229,11 @@ void Tactics::set_from_json(const json11::Json& input_json) {
         }
         assert_with_out(fabs(sum - 1.0) < eps, "tactics input_json hanfu_weight_ron error sum != 1.0");
     }
+
+    if (!input_json["betaori_est"].is_null()) {
+        betaori_est = input_json["betaori_est"].string_value();
+    }
+
 }
 
 int cal_titoi_change_num_max(const int titoi_shanten_num, const int mentu_shanten_num) {

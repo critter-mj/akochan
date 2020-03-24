@@ -78,6 +78,8 @@ public:
     std::array<std::array<double, 12>, 14> hanfu_weight_ron;
     std::array<float, 14> han_shift_prob_kan;
 
+    std::string betaori_est;
+
     Tactics();
     Tactics(const json11::Json& tactics_input_json);
 

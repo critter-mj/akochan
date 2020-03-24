@@ -55,3 +55,10 @@ float cal_other_end_value(
 	const std::array<std::array<std::array<float, 12>, 14>, 4>& tsumo_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& ron_prob,
 	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
 );
+
+float cal_betaori_exp(
+	const int my_pid, const Game_State& game_state,
+	const Hai_Array& tehai_tmp, const std::array<float, 38>& betaori_houjuu_hai_prob, const std::array<float, 38>& total_houjuu_hai_value,
+	const float not_agari_value, const float other_end_value, const float passive_ryuukyoku_value, const float passive_ryuukyoku_prob,
+	const int tsumo_num_exp, const Tactics& tactics
+);
