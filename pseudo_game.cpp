@@ -83,14 +83,6 @@ PG_Kyoku_Result make_pg_kyoku_result_ryukyoku(const std::array<bool, 4>& tenpai,
     return kyoku_result;
 }
 
-bool is_valid_acc_vec(const std::vector<float>& acc_vec) {
-    assert(0 < acc_vec.size());
-    assert(0.9999 < acc_vec[acc_vec.size()-1]);
-    for (int i = 1; i < acc_vec.size(); i++) {
-        assert(acc_vec[i-1] <= acc_vec[i]);
-    }
-}
-
 std::vector<float> read_acc_vec(const std::string& file_name) {
 	FILE *fp;
 	fp = fopen(file_name.c_str(), "r");

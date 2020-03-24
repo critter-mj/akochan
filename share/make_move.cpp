@@ -832,6 +832,7 @@ std::vector<Moves> get_legal_chi_dahai_move(const Moves& game_record) {
             }
         }
     }
+    return result;
 }
 
 std::vector<Moves> get_legal_daiminkan_move(const Moves& game_record) {

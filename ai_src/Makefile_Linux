@@ -1,6 +1,6 @@
 COMPILER = g++
 CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -pthread -fPIC
-WFLAGS = -pedantic -Wignored-qualifiers
+WFLAGS = -pedantic -Wignored-qualifiers -Wreturn-type
 LIBS = -lboost_system
 
 SRCDIR = .
