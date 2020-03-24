@@ -159,7 +159,7 @@ Hai_Array get_hai_visible_all(const Game_State& game_state) {
 	return hai_visible_all;
 }
 
-const int get_nokori_hai_num(const int my_pid, const Game_State& game_state) {
+int get_nokori_hai_num(const int my_pid, const Game_State& game_state) {
 	Hai_Array hai_visible_all = get_hai_visible_all(game_state);
 	int res = 136 - std::accumulate(hai_visible_all.begin(), hai_visible_all.end(), 0);
 	return res - std::accumulate(game_state.player_state[my_pid].tehai.begin(), game_state.player_state[my_pid].tehai.end(), 0);

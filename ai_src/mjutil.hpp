@@ -21,7 +21,7 @@ int get_other_fuuro_num_max(const int my_pid, const Game_State& game_state);
 
 std::array<bool, 4> get_reach_declared_array(const Game_State& game_state);
 Hai_Array get_hai_visible_all(const Game_State& game_state);
-const int get_nokori_hai_num(const int my_pid, const Game_State& game_state);
+int get_nokori_hai_num(const int my_pid, const Game_State& game_state);
 Hai_Array get_hai_visible_wo_tehai(const int my_pid, const Game_State& game_state);
 Hai_Array get_hai_visible_me(const int my_pid, const Game_State& game_state);
 

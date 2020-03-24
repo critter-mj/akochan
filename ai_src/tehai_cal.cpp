@@ -50,11 +50,11 @@ Tehai_Analyzer_Basic& Tehai_Calculator::get_ref_ta_cgn(const int cn, const int g
 	return tehai_calculator_work.cal_tav_work[tehai_calculator_work.candidates_work[cn].ta_loc[gn].get_first()][tehai_calculator_work.candidates_work[cn].ta_loc[gn].get_second()];
 }
 
-const size_t Tehai_Calculator::candidates_size() const {
+size_t Tehai_Calculator::candidates_size() const {
 	return tehai_calculator_work.candidates_work.size();
 }
 
-const size_t Tehai_Calculator::group_size(const int cn) const {
+size_t Tehai_Calculator::group_size(const int cn) const {
 	return tehai_calculator_work.candidates_work[cn].ta_loc.size();
 }
 

@@ -47,8 +47,8 @@ class Tehai_Calculator{
 	const Tehai_Analyzer_Basic& get_const_ta_cgn(const int cn, const int gn) const;
 	Tehai_Analyzer_Basic& get_ref_ta_cgn(const int cn, const int gn);
 
-	const size_t candidates_size() const;
-	const size_t group_size(const int cn) const;
+	size_t candidates_size() const;
+	size_t group_size(const int cn) const;
 
 	double get_agari_prob(const int cn, const int gn, const int tn) const;
 	std::array<double, 5> get_agari_han_prob(const int cn, const int gn, const int tn) const;
