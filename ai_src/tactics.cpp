@@ -17,7 +17,7 @@ void Tactics::set_common() {
     do_speed_modify = false;
     use_larger_at_cal_tenpai_after = false;
     betaori_compare_at_2fuuro = false;
-    do_kan = true;
+    consider_kan = true;
     do_kyushukyuhai = true;
     use_nn_keiten_estimator = false;
     use_nn_kyoku_result_target_estimator = false;

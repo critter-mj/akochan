@@ -784,7 +784,7 @@ void Tehai_Calculator::set_candidates3_multi_thread(const Moves& game_record, co
 		}
 	}
 
-	if (tactics.do_kan) {
+	if (tactics.consider_kan) {
 
 		// 暗槓の追加をadd_fuuro_nodeを後に持ってくると、fuuro_maxより大きい回数のフーロ回数を持つ手牌が現れるが、実装都合でこのようにする。
 		int ankan_cand[38] = {};

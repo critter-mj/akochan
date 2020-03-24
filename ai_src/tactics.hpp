@@ -17,7 +17,7 @@ public:
     bool do_speed_modify; // 早い手の評価値を意図的に上げるかどうか
     bool use_larger_at_cal_tenpai_after; // cal_tenpai_afterにおいて、推定値が元のテンパイ率を下回った場合に、元のテンパイ率を用いるかどうか
     bool betaori_compare_at_2fuuro; // べた降りの判定を相手が2フーロ以上の時に行うかどうか。
-    bool do_kan; // カンをするかどうか
+    bool consider_kan; // tehai_calでカンを考えるかどうか
     bool do_kyushukyuhai; // 九種九牌をするかどうか
     bool use_nn_keiten_estimator; // 形式テンパイ確率の推定にchainerモデルを使うかどうか。
     bool use_nn_kyoku_result_target_estimator; // 誰からあがるかの推定にchainerモデルを使うかどうか。
