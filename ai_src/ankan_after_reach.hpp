@@ -14,6 +14,6 @@ private:
 	int tumo_syurui;
 	bool taatu;
 	bool jyantou;
-	void chk_kousei(int kouseichk[], int i, int *work, int *arg);
+	void chk_kousei(int i, int *work, int *arg); // 元々先頭の引数が int kouseichk[] であったが、private変数のkouseichk[38]しか入っておらず、Wshadowに引っ掛かるので削除した。
 	bool riichi_tyuuren_kinsi(int tumohai);
 };

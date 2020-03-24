@@ -910,7 +910,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			std::sort(hai_choice.rbegin(), hai_choice.rend());
 		} else {
 			fuuro_choice.erase(fuuro_choice.begin(), fuuro_choice.end());
-			Fuuro_Choice fuuro_choice_tmp;
 
 			int cn_fuuro_neg = 0;
 			int gn_fuuro_neg = 0;

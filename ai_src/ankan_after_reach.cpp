@@ -47,14 +47,14 @@ bool Ankan_After_Reach::check(Hai_Array& tehai, int tumohai) {
 
 	//カンしないでの構成
 	taatu=jyantou=0;
-	chk_kousei(kouseichk,1,&work,&befor);
+	chk_kousei(1,&work,&befor);
 
     work=1+tumohai;
     kouseichk[tumohai]-=3;
 
 	//カンしての構成
 	taatu=jyantou=0;
-	chk_kousei(kouseichk,1,&work,&after);
+	chk_kousei(1,&work,&after);
 
 	//同じなら
 	if(after==befor){
@@ -92,7 +92,7 @@ bool Ankan_After_Reach::riichi_tyuuren_kinsi(int tumohai)
 }
 
 //構成不変なら可
-void Ankan_After_Reach::chk_kousei(int kouseichk[],int i,int *work,int *arg)
+void Ankan_After_Reach::chk_kousei(int i,int *work,int *arg)
 {
 	for(;!kouseichk[i];i++);
     if(i>=38){
@@ -106,7 +106,7 @@ void Ankan_After_Reach::chk_kousei(int kouseichk[],int i,int *work,int *arg)
 	{
 		*work+=1+i;
 		kouseichk[i]-=3;
-		chk_kousei(kouseichk,i,work,arg);
+		chk_kousei(i,work,arg);
 		kouseichk[i]+=3;
 		*work-=1+i;
 	}
@@ -115,7 +115,7 @@ void Ankan_After_Reach::chk_kousei(int kouseichk[],int i,int *work,int *arg)
 	{
 		*work+=2+i;
 		kouseichk[i]--,kouseichk[i+1]--,kouseichk[i+2]--;
-		chk_kousei(kouseichk,i,work,arg);
+		chk_kousei(i,work,arg);
 		kouseichk[i]++,kouseichk[i+1]++,kouseichk[i+2]++;
 		*work-=2+i;
 	}
@@ -127,7 +127,7 @@ void Ankan_After_Reach::chk_kousei(int kouseichk[],int i,int *work,int *arg)
 		jyantou=1;
 		*work+=3+i;
 		kouseichk[i]-=2;
-		chk_kousei(kouseichk,i,work,arg);
+		chk_kousei(i,work,arg);
 		kouseichk[i]+=2;
 		*work-=3+i;
 		jyantou=0;
@@ -138,7 +138,7 @@ void Ankan_After_Reach::chk_kousei(int kouseichk[],int i,int *work,int *arg)
 		taatu=1;
 		*work+=4+i;
 		kouseichk[i]--,kouseichk[i+1]--;
-		chk_kousei(kouseichk,i,work,arg);
+		chk_kousei(i,work,arg);
 		kouseichk[i]++,kouseichk[i+1]++;
 		*work-=4+i;
 		taatu=0;
@@ -149,10 +149,10 @@ void Ankan_After_Reach::chk_kousei(int kouseichk[],int i,int *work,int *arg)
 		taatu=1;
 		*work+=5+i;
 		kouseichk[i]--,kouseichk[i+2]--;
-		chk_kousei(kouseichk,i,work,arg);
+		chk_kousei(i,work,arg);
 		kouseichk[i]++,kouseichk[i+2]++;
 		*work-=5+i;
 		taatu=0;
 	}
-	chk_kousei(kouseichk,i+1,work,arg);
+	chk_kousei(i+1,work,arg);
 }

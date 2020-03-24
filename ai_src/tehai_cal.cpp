@@ -508,8 +508,8 @@ void Tehai_Calculator::set_cand_graph_sub(const int cn1, const std::vector<std::
 			}else{
 				aka_choice = 1;
 			}
-			for(int i=0;i<aka_choice;i++){
-				hai_out_tmp += 5*i;
+			for (int j = 0; j < aka_choice; j++) {
+				hai_out_tmp += 5*j;
 
 				if(get_const_ta_cgn(cn1, gn1).count_hai(hai_out_tmp)==0){
 					continue;
