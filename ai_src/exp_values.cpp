@@ -424,7 +424,6 @@ float cal_exp(
 	const int dahai_inc, const int fuuro_inc
 ) {
 	const int act_num = game_state.player_state[my_pid].kawa.size();
-	const std::array<bool, 4> reach_flag = get_reach_declared_array(game_state);
 
 	const float my_agari_prob = cal_my_agari_prob(my_pid, game_record, agari_prob_sol, game_state, dahai_inc, tenpai_prob);
 	const float my_agari_value = cal_my_agari_value(agari_prob_sol, value_sol, value_not_agari);
@@ -456,8 +455,7 @@ float cal_passive_ryuukyoku_value(
 	const int my_pid, const Game_State& game_state, const std::array<float, 4>& tenpai_prob, 
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp
 ) {
-	const std::array<bool, 4> reach_declared_array = get_reach_declared_array(game_state);
-	std::array<float, 4> keiten_prob = cal_keiten_prob(my_pid, game_state, 0, reach_declared_array[my_pid] ? 1.0 : 0.0, tenpai_prob); // to do tenpai_probの反映
+	std::array<float, 4> keiten_prob = cal_keiten_prob(my_pid, game_state, 0, game_state.player_state[my_pid].reach_declared ? 1.0 : 0.0, tenpai_prob); // to do tenpai_probの反映
 	keiten_prob[my_pid] = 0.0; // 本来cal_keiten_probの内部で、keiten_prob_sol = 0.0の時は、keiten_prob[my_pid]が0になるようにすべきと思われるが、akoの方がそのようになっていないため、passive_ryuukyoku_valueの途中で0にする。
 	return cal_ryuukyoku_value(keiten_prob, ryuukyoku_pt_exp);
 }

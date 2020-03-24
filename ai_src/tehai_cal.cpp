@@ -1293,7 +1293,6 @@ void Tehai_Calculator::calc_agari_prob(
 
 					double prob_tmpbest[38], han_prob_tmpbest[5][38], tenpai_tmpbest[38], exp_tmpbest[38];
 					int hai_effective_flag[38], pon_ten_flag[38], pon_ron_flag[38];
-					int best_action_type[38] = {};
 					for(int hai=0;hai<38;hai++){
 						hai_effective_flag[hai] = 0;
 						prob_tmpbest[hai] = tehai_calculator_work.agari_prob_to_work[loc_first][loc_second][mod2tn];
@@ -1317,7 +1316,6 @@ void Tehai_Calculator::calc_agari_prob(
 								if (agari.get_ten_ron(my_pid, game_state) > 0) {
 									if (using_haikind_array[agari.agari_info.get_hai()] - get_const_ta_cgn(cn, gn).using_haikind_num(agari.agari_info.get_hai()) < 1) {
 										if (agari.ron_exp > exp_tmpbest[agari.agari_info.get_hai()]){
-											best_action_type[agari.agari_info.get_hai()] = 3;
 											hai_effective_flag[agari.agari_info.get_hai()] = 1;
 											prob_tmpbest[agari.agari_info.get_hai()] = 1.0;
 											exp_tmpbest[agari.agari_info.get_hai()] = agari.ron_exp;
@@ -1370,10 +1368,8 @@ void Tehai_Calculator::calc_agari_prob(
 
 								//if(cand_graph_sub[1][cn][gn][acn].action==2){
 								if(fuuro_edge.action_type==AT_PON || fuuro_edge.action_type==AT_DAIMINKAN){
-									best_action_type[hai] = 2;
 									pon_ron_flag[hai] = 1;
 								}else{
-									best_action_type[hai] = 1;
 									//pon_ron_flag[hai] = 0;
 								}
 							}
@@ -1487,10 +1483,6 @@ void Tehai_Calculator::calc_DP(
 			}
 		}
 	}
-
-	const int nokori_hai_num = 136 - std::accumulate(hai_visible_kind.begin(), hai_visible_kind.end(), 0);
-	// to do 赤牌などチェック
-	Hai_Array nokori_hai_array = cal_nokori_hai_array(game_state.player_state[my_pid].tehai, hai_visible_kind);
 
 	set_other_end_prob(my_pid, tsumo_num, act_num, tenpai_prob_now, other_end_prob, reach_other_end_prob, game_state);
 

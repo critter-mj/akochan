@@ -122,14 +122,6 @@ int get_other_fuuro_num_max(const int my_pid, const Game_State& game_state) {
 	return ret;
 }
 
-std::array<bool, 4> get_reach_declared_array(const Game_State& game_state) {
-	std::array<bool, 4> reach_declared_array;
-	for (int pid = 0; pid < 4; pid++) {
-		reach_declared_array[pid] = game_state.player_state[pid].reach_declared;
-	}
-	return reach_declared_array;
-}
-
 Hai_Array get_hai_visible_all(const Game_State& game_state) {
 	Hai_Array hai_visible_all;
 	for (int hai = 0; hai < 38; hai++) {
