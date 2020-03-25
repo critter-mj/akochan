@@ -7,11 +7,7 @@
 
 #include "tehai_state2.hpp"
 
-#ifdef WINSTD
-const int CAL_NUM_THREAD = 4;
-#else
-const int CAL_NUM_THREAD = 8;
-#endif
+const int CAL_NUM_THREAD = NPROCS;
 
 const int MAX_CANDIDATES_NUM = 200000;
 const int MAX_TA_NUM_PER_THREAD = 100000;

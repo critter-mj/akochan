@@ -1,22 +1,15 @@
-## Preparation for Building
-
-Replace CAL_NUM_THREAD in tehai_group.hpp with appropriate number of using CPU.
-Definition under "ifdef WINSTD" is used for Windows machine, and definition under "else" is used for Linux machine.
-Set it to 4 if the CPU is 4 parallel, and set it to 8 if the CPU is 8 parallel.
-If you don't understand, skip this and build it then check with the following command.
-
-```./system.exe para_check```
-
-The number you see "Hello World" is the number you should set to CAL_NUM_THREAD.  
-
 ## Build with Linux
 Check you can use lboost_system.
-If not, probably you can install libboost-dev with apt.
+If not, probably you can install it with
+
+```$ sudo apt-get install libboost-all-dev```
+
 Run following in "ai_src" directory.
 
 ```$ make -f Makefile_Linux```
 
-You will see libai.so in parent directory.
+You will see libai.so in root directory.
+
 Then run following in root directory
 
 ```$ make -f Makefile_Linux```
@@ -26,13 +19,17 @@ Then you will see system.exe in root directory.
 ## Build with Windows
 Check you can link lboost_system, and rewrite LIBS of Makefile(both in ai_src and root directory).
 In the environment of the author, "-lboost_system-mgw62-mt-x64-1_70" is valid.
-Line should be rewriten is following.
 
-```LIBS = -lboost_system-mgw62-mt-x64-1_70```  
+Check the number of logical processors of your machine and rewrite NPROCS value of ai_src/Makefile.
+You can check the number by
+
+```> $cs = Get-WmiObject -class Win32_ComputerSystem; $cs.numberoflogicalprocessors```
 
 Then run following in "ai_src" directory.
 
 ```> make```
+
+You will see ai.dll in root directory.
 
 Next, run following in root directory.
 

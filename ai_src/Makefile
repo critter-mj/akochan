@@ -1,5 +1,6 @@
 COMPILER = g++
-CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -DWINSTD
+NPROCS = 4
+CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -DWINSTD -DNPROCS=$(NPROCS)
 LIBS	= -lboost_system-mgw62-mt-x64-1_70 -lws2_32
 
 SRCDIR = .
