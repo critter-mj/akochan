@@ -654,7 +654,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 							const std::array<int, 3>& tsumo_edge_loc = tehai_calculator_work.get_const_tsumo_edge_loc(cn, gn);
 							for (int acn = tsumo_edge_loc[1]; acn < tsumo_edge_loc[2]; acn++) {
 								const Tehai_Action& ac_tmp = tehai_calculator_work.cand_graph_sub_tsumo_work[tsumo_edge_loc[0]][acn];
-								if (ac_tmp.hai_out == hai) {
+								if (ac_tmp.hai_out == hai && (ac_tmp.action_type == AT_ANKAN || ac_tmp.action_type == AT_KAKAN)) {
 									if ((!tactics.do_ankan_inclusive && ac_tmp.action_type == AT_ANKAN) ||
 										(!tactics.do_kakan_inclusive && ac_tmp.action_type == AT_KAKAN)
 									) {
