@@ -414,7 +414,7 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
     }
 }
 
-void do_game_one_player(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id) {
+void game_loop(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id) {
     while (game_record.size() == 0 || game_record.back()["type"] != "end_game") {
         proceed_game(haiyama, game_record, chicha, player_id);
     }

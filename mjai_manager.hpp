@@ -44,4 +44,4 @@ std::array<Moves, 4> require_moves_after_dahai(const Moves& game_record, const i
 std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record, const int player_id);
 
 void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id);
-void do_game_one_player(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id);
+void game_loop(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id);
