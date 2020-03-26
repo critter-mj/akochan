@@ -45,3 +45,5 @@ std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record
 
 void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id);
 void game_loop(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id);
+
+json11::Json game_server(Moves& game_record, const json11::Json& request);

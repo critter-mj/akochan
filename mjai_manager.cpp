@@ -419,3 +419,22 @@ void game_loop(std::vector<int>& haiyama, Moves& game_record, const int chicha, 
         proceed_game(haiyama, game_record, chicha, player_id);
     }
 }
+
+json11::Json game_server(Moves& game_record, const json11::Json& request) {
+    json11::Json::object ret;
+    size_t current_size = game_record.size();
+    const int chicha = !request["chicha"].is_null() ? request["chicha"].int_value() : -1;
+    std::vector<int> haiyama;
+    if (!request["haiyama"].is_null()) {
+        for (const auto& hai : request["haiyama"].array_items()) {
+            haiyama.push_back(hai_str_to_int(hai.string_value()));
+        }
+    }
+    proceed_game(haiyama, game_record, chicha, 0);
+    json11::Json::array new_moves;
+    for (size_t i = current_size; i < game_record.size(); i++) {
+        new_moves.push_back(game_record[i]);
+    }
+    ret["new_moves"] = new_moves;
+    return json11::Json(ret);
+}
