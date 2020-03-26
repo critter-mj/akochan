@@ -389,7 +389,7 @@ std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record
     }
 }
 
-void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, Game_Phase& game_phase) {
+void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id) {
     if (game_record.size() == 0) {
         add_start_game(game_record);
     } else {
@@ -400,10 +400,6 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
             assert(haiyama.size() == 136);
         } else if (current_move["type"] == "hora" || current_move["type"] == "ryukyoku") {
             add_next_kyoku_or_end_game(game_record, haiyama);
-            if (game_record[game_record.size() - 1]["type"] == "end_game") {
-                game_phase = GP_END;
-                return;
-            }
             assert(haiyama.size() == 136);
         } else if (current_move["type"] == "start_kyoku") {
             add_tsumo(haiyama, game_record, get_oya(game_record));
@@ -418,8 +414,8 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
     }
 }
 
-void do_game_one_player(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, Game_Phase& game_phase) {
-    while (game_phase == GP_AI) {
-        proceed_game(haiyama, game_record, chicha, player_id, game_phase);
+void do_game_one_player(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id) {
+    while (game_record.size() == 0 || game_record.back()["type"] != "end_game") {
+        proceed_game(haiyama, game_record, chicha, player_id);
     }
 }
