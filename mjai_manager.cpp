@@ -389,7 +389,7 @@ std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record
     }
 }
 
-void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, Moves players_moves, Game_Phase& game_phase) {
+void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, Game_Phase& game_phase) {
     if (game_record.size() == 0) {
         add_start_game(game_record);
     } else {
@@ -408,17 +408,7 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
         } else if (current_move["type"] == "start_kyoku") {
             add_tsumo(haiyama, game_record, get_oya(game_record));
         } else if (current_move["type"] == "tsumo" || current_move["type"] == "dahai" || current_move["type"] == "kakan") {
-            std::array<std::vector<Moves>, 4> all_legal_moves = get_all_legal_moves(game_record);
-            if (is_valid_player(player_id) && all_legal_moves[player_id].size() > 0 && players_moves.size() == 0) {
-                game_phase = GP_PLAYER;
-                return; // moveの入力を行う。
-            }
             std::array<Moves, 4> candidate_moves = require_moves_after_tsumo_or_dahai(game_record, player_id);
-            if (is_valid_player(player_id) && all_legal_moves[player_id].size() > 0) {
-                assert(players_moves.size() != 0);
-                candidate_moves[player_id] = players_moves;
-                players_moves.clear();
-            }
             add_move_after_tsumo_or_dahai(haiyama, game_record, candidate_moves);
         } else if (current_move["type"] == "ankan") {
             add_after_ankan(haiyama, game_record, current_move["actor"].int_value());
@@ -428,8 +418,8 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
     }
 }
 
-void do_game_one_player(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, Moves players_moves, Game_Phase& game_phase) {
+void do_game_one_player(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, Game_Phase& game_phase) {
     while (game_phase == GP_AI) {
-        proceed_game(haiyama, game_record, chicha, player_id, players_moves, game_phase);
+        proceed_game(haiyama, game_record, chicha, player_id, game_phase);
     }
 }

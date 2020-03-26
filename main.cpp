@@ -62,7 +62,7 @@ int main(int argc,char* argv[]) {
                 game_settings.chicha = chicha.int_value();
                 assert(is_valid_player(game_settings.chicha));
                 game_settings.player_id = -1;
-                do_game_one_player(haiyama, game_record, game_settings.chicha, game_settings.player_id, {}, game_phase);
+                do_game_one_player(haiyama, game_record, game_settings.chicha, game_settings.player_id, game_phase);
                 dump_json_vec_to_file(game_record, match_dir_name + "/haifu_log_" + std::to_string(seed) + "_" + std::to_string(game_settings.chicha) + ".json");
             }
         }
@@ -106,7 +106,7 @@ int main(int argc,char* argv[]) {
                 }
             }
 
-            do_game_one_player(haiyama, game_record, game_settings.chicha, game_settings.player_id, {}, game_phase);
+            do_game_one_player(haiyama, game_record, game_settings.chicha, game_settings.player_id, game_phase);
             dump_json_vec_to_file(game_record, match_dir_name + "/haifu_log_" + std::to_string(seed) + "_" + std::to_string(game_settings.chicha) + ".json");
         }
         return 0;
@@ -128,7 +128,7 @@ int main(int argc,char* argv[]) {
         }
         std::vector<int> haiyama;
         Game_Phase game_phase = GP_AI;
-        proceed_game(haiyama, game_record, 0, -1, {}, game_phase);
+        proceed_game(haiyama, game_record, 0, -1, game_phase);
         return 0;
     } else if (4 <= argc && strcmp(argv[1], "mjai_log") == 0) {
         const json11::Json& setup_mjai_json = load_json_from_file("setup_mjai.json");
