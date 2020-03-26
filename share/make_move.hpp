@@ -83,6 +83,11 @@ bool is_legal_chi_and_dahai(const Moves& game_record, const Game_State& game_sta
 
 bool is_legal_kyushukyuhai(const Moves& game_record, const Game_State& game_state, const json11::Json& action_json);
 
+bool is_legal_none(const Moves& game_record, const json11::Json& action_json);
+bool is_legal_reach(const Moves& game_record, const Game_State& game_state, const json11::Json& action_json);
+bool is_legal_single_move(const Moves& game_record, const json11::Json& action_json);
+bool is_legal_dahai_after_reach_or_fuuro(const Moves& game_record, const json11::Json& action_json);
+
 std::vector<Moves> get_legal_tsumogiri_move(const Moves& game_record);
 std::vector<Moves> get_legal_tedashi_move(const Moves& game_record);
 std::vector<Moves> get_legal_pon_dahai_move(const Moves& game_record);
