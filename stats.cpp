@@ -90,7 +90,7 @@ void show_stats_mjai(const std::string& dir_name, const std::string& player_name
     //system("rm ./tmp.txt");
 }
 
-void show_stats(const std::string& dir_name, const int chicha_num) {
+void show_stats(const std::string& dir_name) {
     int result_num[4][4] = {};
     int kyoku_num = 0;
     int reach_num[4] = {};
@@ -99,51 +99,52 @@ void show_stats(const std::string& dir_name, const int chicha_num) {
     int fuuro_flag[4] = {};
     int hora_num[4] = {};
     int houjuu_num[4] = {};
-    bool file_not_found = false;
-    for (int rand_seed = 1000; rand_seed < 2000; rand_seed++) {
-        for (int oya_first = 0; oya_first < chicha_num; oya_first++) {
-            std::ifstream ifs(dir_name + "haifu_log_" + std::to_string(rand_seed) + "_" + std::to_string(oya_first) + ".json");
-            std::string str;
-            std::string err;
-            if (ifs.fail()) {
-                file_not_found = true;
+    std::vector<std::string> files_path = get_files_path(dir_name);
+    for (const std::string& path : files_path) {
+        if (str_split(path, '/').back() == "setup_match.json") {
+            continue;
+        }
+        std::ifstream ifs(path);
+        std::string str;
+        std::string err;
+        int oya_first = -1;
+        while (getline(ifs, str)) {
+            json11::Json action_json = json11::Json::parse(str, err);
+            if (action_json["type"].string_value() == "start_kyoku") {
+                kyoku_num++;
+                for (int i = 0; i < 4; i++) {
+                    fuuro_flag[i] = 0;
+                }
+                if (oya_first == -1) {
+                    oya_first = action_json["oya"].int_value();
+                }
+            } else if (action_json["type"].string_value() == "reach") {
+                reach_num[action_json["actor"].int_value()]++;
+            } else if (action_json["type"].string_value() == "chi" || action_json["type"].string_value() == "pon") {
+                fuuro_num[action_json["actor"].int_value()]++;
+                fuuro_flag[action_json["actor"].int_value()] = 1;
+            } else if (action_json["type"].string_value() == "hora") {
+                hora_num[action_json["actor"].int_value()]++;
+                if (action_json["actor"].int_value() != action_json["target"].int_value()) {
+                    houjuu_num[action_json["target"].int_value()]++;
+                }
+            } else if (action_json["type"].string_value() == "end_kyoku") {
+                for (int i = 0; i < 4; i++) {
+                    fuuro_prob[i] += fuuro_flag[i];
+                }
+            } else if (action_json["type"].string_value() == "end_game") {
+                std::vector<Player_Result> results;
+                for (int j = 0; j < action_json["scores"].array_items().size(); j++ ) {
+                    results.push_back(Player_Result(j, action_json["scores"].array_items()[j].int_value(), (4 + j - oya_first)%4 ));
+                }
+                std::sort(results.begin(), results.end());
+                for (int j = 0; j < results.size(); j++) {
+                    result_num[results[j].pid][j]++;
+                }
                 break;
             }
-            while (getline(ifs, str)) {
-                json11::Json action_json = json11::Json::parse(str, err);
-                if (action_json["type"].string_value() == "start_kyoku") {
-                    kyoku_num++;
-                    for (int i = 0; i < 4; i++) {
-                        fuuro_flag[i] = 0;
-                    }
-                } else if (action_json["type"].string_value() == "reach") {
-                    reach_num[action_json["actor"].int_value()]++;
-                } else if (action_json["type"].string_value() == "chi" || action_json["type"].string_value() == "pon") {
-                    fuuro_num[action_json["actor"].int_value()]++;
-                    fuuro_flag[action_json["actor"].int_value()] = 1;
-                } else if (action_json["type"].string_value() == "hora") {
-                    hora_num[action_json["actor"].int_value()]++;
-                    if (action_json["actor"].int_value() != action_json["target"].int_value()) {
-                        houjuu_num[action_json["target"].int_value()]++;
-                    }
-                } else if (action_json["type"].string_value() == "end_kyoku") {
-                    for (int i = 0; i < 4; i++) {
-                        fuuro_prob[i] += fuuro_flag[i];
-                    }
-                } else if (action_json["type"].string_value() == "end_game") {
-                    std::vector<Player_Result> results;
-                    for (int j = 0; j < action_json["scores"].array_items().size(); j++ ) {
-                        results.push_back(Player_Result(j, action_json["scores"].array_items()[j].int_value(), (4 + j - oya_first)%4 ));
-                    }
-                    std::sort(results.begin(), results.end());
-                    for (int j = 0; j < results.size(); j++) {
-                        result_num[results[j].pid][j]++;
-                    }
-                    break;
-                }
-            }
         }
-        if (file_not_found) { break; }
+        ifs.close();
     }
     std::cout << std::endl;
     for (int i = 0; i < 4; i++) {

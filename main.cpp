@@ -22,9 +22,8 @@ void usage() {
   printf("     file: path of logfile\n");
   printf("     id: 0,1,2,3\n");
   printf("  > system.exe para_check\n");
-  printf("  > system.exe stats [<dir_name> [<chicha_num>]]\n");
-  printf("     dir_name: default \"\"\n");
-  printf("     chicha_num: default 2\n");
+  printf("  > system.exe stats <dir_name>\n");
+  printf("     dir_name: relative path of directory contains haifu_log json files\n");
   printf("  > system.exe stats_mjai [<dir_name> [player_name_prefix]\n");
   printf("     dir_name: default \"\"\n");
   printf("     player_name_prefix: default \"Akochan\"\n");
@@ -231,11 +230,9 @@ int main(int argc,char* argv[]) {
         { 
             printf("Hello World from %d\n", omp_get_thread_num()); 
         }
-    } else if (argc >= 2 && strcmp(argv[1], "stats") == 0) {
-        std::string dir_name = argc >= 3 ? argv[2] : "";
-        const int chicha_num = argc >= 4 ? atoi(argv[3]) : 2;
-        if (dir_name != "") { dir_name += "/"; }
-        show_stats(dir_name, chicha_num);
+    } else if (argc == 3 && strcmp(argv[1], "stats") == 0) {
+        std::string dir_name = argv[2];
+        show_stats(dir_name);
         return 0;
     } else if (argc >= 2 && strcmp(argv[1], "stats_mjai") == 0) {
         std::string dir_name = argc >= 3 ? argv[2] : "";

@@ -82,4 +82,5 @@ json11::Json load_json_from_file(const std::string& file_name);
 std::vector<json11::Json> load_json_vec_from_file(const std::string& file_name);
 void dump_json_to_file(const json11::Json& json, const std::string& file_name);
 void dump_json_vec_to_file(const std::vector<json11::Json>& json_vec, const std::string& file_name);
+std::vector<std::string> get_files_path(const std::string& dir_name);
 void make_dir(const std::string& dir_name);

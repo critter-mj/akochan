@@ -77,6 +77,24 @@ void dump_json_vec_to_file(const std::vector<json11::Json>& json_vec, const std:
     outputfile.close();
 }
 
+std::vector<std::string> get_files_path(const std::string& dir_name) {
+    std::string ls_command = "ls -1 ./" + dir_name + "/* > tmp.txt"; // 指定したディレクトリ内のmjsonファイルを一旦tmp.txtに書き出す。
+    int system_result = system(ls_command.c_str());
+    assert_with_out(system_result != -1, "get_files_path error: system_result == -1, command:" + ls_command);
+    std::ifstream ifs_tmptxt("tmp.txt");
+    assert_with_out(!ifs_tmptxt.fail(), "tmp.txt not generated");
+    std::string file_path;
+    std::vector<std::string> ret;
+    while (getline(ifs_tmptxt, file_path)) {
+        ret.push_back(file_path);
+    }
+    ifs_tmptxt.close();
+    ls_command = "rm ./tmp.txt";
+    system_result = system(ls_command.c_str());
+    assert_with_out(system_result != -1, "get_files_path error: system_result == -1, command:" + ls_command);
+    return ret;
+}
+
 #ifdef WINSTD
 void make_dir(const std::string& dir_name) {
     mkdir(dir_name.c_str());
