@@ -401,13 +401,15 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
         add_start_game(game_record);
     } else {
         const json11::Json& current_move = game_record[game_record.size() - 1];
-        std::cout << game_record.size() - 1 << " " << current_move.dump() << std::endl;
+        if (player_id == -1) {
+            std::cout << game_record.size() - 1 << " " << current_move.dump() << std::endl;
+        }
         if (current_move["type"] == "start_game") {
             add_first_kyoku(game_record, haiyama, chicha, request);
-            assert(haiyama.size() == 136);
+            assert_with_out(haiyama.size() == 136, "proceed_game_error: haiyama.size() != 136");
         } else if (current_move["type"] == "hora" || current_move["type"] == "ryukyoku") {
             add_next_kyoku_or_end_game(game_record, haiyama, request);
-            assert(haiyama.size() == 136);
+            assert_with_out(haiyama.size() == 136, "proceed_game_error: haiyama.size() != 136");
         } else if (current_move["type"] == "start_kyoku") {
             add_tsumo(haiyama, game_record, get_oya(game_record));
         } else if (current_move["type"] == "tsumo" || current_move["type"] == "dahai" || current_move["type"] == "kakan") {
@@ -437,8 +439,9 @@ void game_loop(std::vector<int>& haiyama, Moves& game_record, const int chicha, 
 
 json11::Json game_server(Moves& game_record, const json11::Json& request) {
     json11::Json::object ret;
-    size_t current_size = game_record.size();
+    size_t prev_size = game_record.size();
     const int chicha = !request["chicha"].is_null() ? request["chicha"].int_value() : -1;
+    const int my_pid = 0;
     std::vector<int> haiyama;
     if (!request["haiyama"].is_null()) {
         for (const auto& hai : request["haiyama"].array_items()) {
@@ -449,18 +452,45 @@ json11::Json game_server(Moves& game_record, const json11::Json& request) {
             const json11::Json& action_json = game_record[i];
             if (action_json["type"] == "start_kyoku") {
                 assert_with_out(!action_json["haiyama"].is_null(), "game_server_error: haiyama is null");
-                for (const auto& hai : request["haiyama"].array_items()) {
+                for (const auto& hai : action_json["haiyama"].array_items()) {
                     haiyama.push_back(hai_str_to_int(hai.string_value()));
                 }
                 break;
             }
         }
     }
-    proceed_game(haiyama, game_record, chicha, 0, request);
+    proceed_game(haiyama, game_record, chicha, my_pid, request);
+    assert_with_out(0 < game_record.size(), "game_server_error: game_record.size() == 0");
     json11::Json::array new_moves;
-    for (size_t i = current_size; i < game_record.size(); i++) {
+    for (size_t i = prev_size; i < game_record.size(); i++) {
         new_moves.push_back(game_record[i]);
     }
     ret["new_moves"] = new_moves;
+
+    const json11::Json& last_action = game_record.back();
+    if (prev_size < game_record.size()) {
+        if (last_action["type"] == "reach" || last_action["type"] == "pon" || last_action["type"] == "chi") {
+            assert_with_out(last_action["actor"] == my_pid, "game_server_error: last_action is unexpected"); // プレイヤーのリーチ、副露が受理された場合のみの想定。
+            ret["msg_type"] = "update_and_dahai";
+        } else {
+            const std::vector<Moves> legal_moves = get_all_legal_moves(game_record)[my_pid];
+            if (0 < legal_moves.size()) {
+                ret["msg_type"] = last_action["type"] == "tsumo" ? "update_and_dahai" : "update_and_fuuro";
+                ret["legal_moves"] = legal_moves;
+            } else {
+                ret["msg_type"] = "update";
+            }
+        }
+    } else {
+        // クライアントが合法でないmoveを送信した場合のみの想定
+        // assert(0 < get_all_legal_moves(game_record)[player_id].size()); 副露した牌を捨てた場合などは、get_all_legal_movesが0になる。
+        if (last_action["type"] == "reach" || last_action["type"] == "pon" || last_action["type"] == "chi" ||
+            (last_action["type"] == "tsumo" && last_action["actor"] == my_pid)
+        ) {
+            ret["msg_type"] = "dahai_again";
+        } else {
+            ret["msg_type"] = "fuuro_again";
+        }
+    }
     return json11::Json(ret);
 }
