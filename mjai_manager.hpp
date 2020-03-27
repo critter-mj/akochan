@@ -25,8 +25,8 @@ Moves get_masked_log(Moves game_record, const int pid);
 void add_start_game(Moves& game_record);
 void prepare_haiyama(std::vector<int>& haiyama);
 std::array<std::array<int, 13>, 4> get_haipai(const std::vector<int>& haiyama, const int oya);
-void add_first_kyoku(Moves& game_record, std::vector<int>& haiyama, const int chicha);
-void add_next_kyoku_or_end_game(Moves& game_record, std::vector<int>& haiyama);
+void add_first_kyoku(Moves& game_record, std::vector<int>& haiyama, const int chicha, const json11::Json& request);
+void add_next_kyoku_or_end_game(Moves& game_record, std::vector<int>& haiyama, const json11::Json& request);
 
 void add_tsumo(const std::vector<int>& haiyama, Moves& game_record, const int pid);
 void add_rinshan_tsumo(const std::vector<int>& haiyama, Moves& game_record, const int pid);
