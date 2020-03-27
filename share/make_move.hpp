@@ -9,7 +9,7 @@ json11::Json make_start_game();
 json11::Json make_start_game_with_initial_condition(const int kyoku, const std::array<int, 4>& scores);
 json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba, const int kyotaku, const std::array<int, 4>& scores); // pseudo game 用
 json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba, const int kyotaku, const int oya, const int dora_marker,
-                              const std::array<std::array<int, 13>, 4>& tehais, const std::array<int, 4>& scores);
+                              const std::array<std::array<int, 13>, 4>& tehais, const std::array<int, 4>& scores, const std::vector<int>& haiyama);
 json11::Json make_dora(const int dora_marker);
 json11::Json make_none(const int actor);
 json11::Json make_tsumo(const int actor, const int hai);

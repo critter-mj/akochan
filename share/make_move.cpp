@@ -30,7 +30,7 @@ json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba
 }
 
 json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba, const int kyotaku, const int oya, const int dora_marker,
-                              const std::array<std::array<int, 13>, 4>& tehais, const std::array<int, 4>& scores)
+                              const std::array<std::array<int, 13>, 4>& tehais, const std::array<int, 4>& scores, const std::vector<int>& haiyama)
 {
     json11::Json::object move;
     move["type"] = "start_kyoku";
@@ -51,6 +51,11 @@ json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba
 	}
 	move["tehais"] = haipai_arrays;
     move["scores"] = json11::Json(scores);
+    json11::Json::array haiyama_arrays;
+    for (const int hai : haiyama) {
+        haiyama_arrays.push_back(hai_int_to_str(hai));
+    }
+    move["haiyama"] = json11::Json(haiyama_arrays);
     return json11::Json(move);
 }
 

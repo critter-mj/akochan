@@ -50,11 +50,13 @@ std::array<std::array<int, 13>, 4> get_haipai(const std::vector<int>& haiyama, c
     return haipai;
 }
 
-void add_first_kyoku(Moves& game_record, std::vector<int>& haiyama, const int chicha) {
+void add_first_kyoku(Moves& game_record, std::vector<int>& haiyama, const int chicha, const json11::Json& request) {
     assert(0 < game_record.size());
     const json11::Json& prev = game_record[game_record.size() - 1];
     assert(prev["type"].string_value() == "start_game");
-    prepare_haiyama(haiyama);
+    if (request["haiyama"].is_null()) {
+        prepare_haiyama(haiyama);
+    }
     const std::array<std::array<int, 13>, 4> haipai = get_haipai(haiyama, chicha);
     const int dora_marker = haiyama[haiyama.size() - 6];
     if (!prev["first_kyoku"].is_null()) {
@@ -65,13 +67,13 @@ void add_first_kyoku(Moves& game_record, std::vector<int>& haiyama, const int ch
         for (int i = 0; i < 4; i++) {
             scores[i] = prev["first_kyoku"]["scores"][i].int_value();
         }
-        game_record.push_back(make_start_kyoku(0, first_kyoku, 0, 0, chicha, dora_marker, haipai, scores));
+        game_record.push_back(make_start_kyoku(0, first_kyoku, 0, 0, chicha, dora_marker, haipai, scores, haiyama));
     } else {
-        game_record.push_back(make_start_kyoku(0, 1, 0, 0, chicha, dora_marker, haipai, {25000, 25000, 25000, 25000}));
+        game_record.push_back(make_start_kyoku(0, 1, 0, 0, chicha, dora_marker, haipai, {25000, 25000, 25000, 25000}, haiyama));
     }
 }
 
-void add_next_kyoku_or_end_game(Moves& game_record, std::vector<int>& haiyama) {
+void add_next_kyoku_or_end_game(Moves& game_record, std::vector<int>& haiyama, const json11::Json& request) {
     assert(0 < game_record.size());
     const json11::Json& prev = game_record[game_record.size() - 1];
     assert(prev["type"].string_value() == "hora" || prev["type"].string_value() == "ryukyoku");
@@ -87,14 +89,16 @@ void add_next_kyoku_or_end_game(Moves& game_record, std::vector<int>& haiyama) {
         const int next_honba = cal_next_honba(game_record);
         const int next_oya = cal_next_oya(game_record);
         game_record.push_back(make_end_kyoku());
-        prepare_haiyama(haiyama);
+        if (request["haiyama"].is_null()) {
+            prepare_haiyama(haiyama);
+        }
         const std::array<std::array<int, 13>, 4> haipai = get_haipai(haiyama, next_oya);
         const int dora_marker = haiyama[haiyama.size() - 6];
 
         game_record.push_back(make_start_kyoku(
             next_bakaze_kyoku.first, next_bakaze_kyoku.second,
             next_honba, get_kyotaku(game_record), next_oya,
-            dora_marker, haipai, scores
+            dora_marker, haipai, scores, haiyama
         ));
     }
 }
@@ -399,10 +403,10 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
         const json11::Json& current_move = game_record[game_record.size() - 1];
         std::cout << game_record.size() - 1 << " " << current_move.dump() << std::endl;
         if (current_move["type"] == "start_game") {
-            add_first_kyoku(game_record, haiyama, chicha);
+            add_first_kyoku(game_record, haiyama, chicha, request);
             assert(haiyama.size() == 136);
         } else if (current_move["type"] == "hora" || current_move["type"] == "ryukyoku") {
-            add_next_kyoku_or_end_game(game_record, haiyama);
+            add_next_kyoku_or_end_game(game_record, haiyama, request);
             assert(haiyama.size() == 136);
         } else if (current_move["type"] == "start_kyoku") {
             add_tsumo(haiyama, game_record, get_oya(game_record));
@@ -439,6 +443,17 @@ json11::Json game_server(Moves& game_record, const json11::Json& request) {
     if (!request["haiyama"].is_null()) {
         for (const auto& hai : request["haiyama"].array_items()) {
             haiyama.push_back(hai_str_to_int(hai.string_value()));
+        }
+    } else {
+        for (int i = int(game_record.size()) - 1; 0 <= i; i--) {
+            const json11::Json& action_json = game_record[i];
+            if (action_json["type"] == "start_kyoku") {
+                assert_with_out(!action_json["haiyama"].is_null(), "game_server_error: haiyama is null");
+                for (const auto& hai : request["haiyama"].array_items()) {
+                    haiyama.push_back(hai_str_to_int(hai.string_value()));
+                }
+                break;
+            }
         }
     }
     proceed_game(haiyama, game_record, chicha, 0, request);
