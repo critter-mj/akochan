@@ -1,6 +1,6 @@
 COMPILER = g++
 NPROCS = 4
-CFLAGS = -g -MMD -MP -std=c++17 -O3 -fopenmp -DWINSTD -DNPROCS=$(NPROCS)
+CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -DWINSTD -DNPROCS=$(NPROCS)
 WFLAGS = -pedantic -Wignored-qualifiers -Wreturn-type -Wmaybe-uninitialized -Wbool-compare -Wshadow -Wunused-but-set-variable -Wunused-variable
 LIBS	= -lboost_system-mgw62-mt-x64-1_70 -lws2_32
 

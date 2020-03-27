@@ -87,7 +87,7 @@
 {"actor": 0, "pai": "1s", "type": "tsumo"}
 {"actor": 0, "pai": "8s", "tsumogiri": false, "type": "dahai"}
 {"actor": 1, "pai": "F", "type": "tsumo"}
-{"actor": 1, "pai": "F", "tsumogiri": true, "type": "dahai"}
+{"actor": 1, "pai": "7s", "tsumogiri": false, "type": "dahai"}
 {"actor": 2, "pai": "8m", "type": "tsumo"}
 {"actor": 2, "pai": "8m", "tsumogiri": true, "type": "dahai"}
 {"actor": 3, "pai": "1p", "type": "tsumo"}
@@ -95,15 +95,15 @@
 {"actor": 0, "pai": "E", "type": "tsumo"}
 {"actor": 0, "pai": "5p", "tsumogiri": false, "type": "dahai"}
 {"actor": 1, "pai": "6m", "type": "tsumo"}
-{"actor": 1, "pai": "7s", "tsumogiri": false, "type": "dahai"}
+{"actor": 1, "pai": "8m", "tsumogiri": false, "type": "dahai"}
 {"actor": 2, "pai": "1m", "type": "tsumo"}
 {"actor": 2, "pai": "1m", "tsumogiri": true, "type": "dahai"}
 {"actor": 3, "pai": "W", "type": "tsumo"}
 {"actor": 3, "pai": "W", "tsumogiri": true, "type": "dahai"}
 {"actor": 0, "pai": "S", "type": "tsumo"}
-{"actor": 0, "pai": "5p", "tsumogiri": false, "type": "dahai"}
+{"actor": 0, "pai": "S", "tsumogiri": true, "type": "dahai"}
 {"actor": 1, "pai": "3s", "type": "tsumo"}
-{"actor": 1, "pai": "8m", "tsumogiri": false, "type": "dahai"}
+{"actor": 1, "pai": "F", "tsumogiri": false, "type": "dahai"}
 {"actor": 2, "pai": "3s", "type": "tsumo"}
 {"actor": 2, "pai": "3s", "tsumogiri": true, "type": "dahai"}
 {"actor": 3, "pai": "6m", "type": "tsumo"}
@@ -117,7 +117,7 @@
 {"actor": 3, "consumed": ["1p", "2p"], "pai": "3p", "target": 2, "type": "chi"}
 {"actor": 3, "pai": "6m", "tsumogiri": false, "type": "dahai"}
 {"actor": 0, "pai": "S", "type": "tsumo"}
-{"actor": 0, "pai": "4m", "tsumogiri": false, "type": "dahai"}
+{"actor": 0, "pai": "S", "tsumogiri": true, "type": "dahai"}
 {"actor": 1, "pai": "8m", "type": "tsumo"}
 {"actor": 1, "pai": "6m", "tsumogiri": false, "type": "dahai"}
 {"actor": 2, "pai": "1p", "type": "tsumo"}
@@ -125,9 +125,9 @@
 {"actor": 3, "pai": "9m", "type": "tsumo"}
 {"actor": 3, "pai": "9m", "tsumogiri": true, "type": "dahai"}
 {"actor": 0, "pai": "F", "type": "tsumo"}
-{"actor": 0, "pai": "F", "tsumogiri": true, "type": "dahai"}
+{"actor": 0, "pai": "9m", "tsumogiri": false, "type": "dahai"}
 {"actor": 1, "pai": "5sr", "type": "tsumo"}
-{"actor": 1, "pai": "9m", "tsumogiri": false, "type": "dahai"}
+{"actor": 1, "pai": "8m", "tsumogiri": false, "type": "dahai"}
 {"actor": 2, "pai": "P", "type": "tsumo"}
 {"actor": 2, "pai": "P", "tsumogiri": true, "type": "dahai"}
 {"actor": 3, "fan": 3, "fu": 30, "hora_tehais": ["5p", "6p", "7p", "7p", "8p", "9p", "E", "E", "P", "P"], "pai": "P", "scores": [19000, 37000, 17100, 26900], "target": 2, "type": "hora"}
