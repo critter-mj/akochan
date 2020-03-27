@@ -345,7 +345,7 @@ Moves ai_assign(const Moves& game_record, const int player_id) {
     //}
 }
 
-std::array<Moves, 4> require_moves_after_dahai(const Moves& game_record, const int player_id) {
+std::array<Moves, 4> require_moves_after_dahai(const Moves& game_record, const int player_id, const json11::Json& request) {
     std::array<std::vector<Moves>, 4> all_legal_moves = get_all_legal_moves(game_record);
     std::array<Moves, 4> result;
     for (int pid = 0; pid < 4; pid++) {
@@ -354,6 +354,8 @@ std::array<Moves, 4> require_moves_after_dahai(const Moves& game_record, const i
                 //result[pid] = ai_interface(game_record, pid);
                 //result[pid] = ai_tsumogiri(game_record, pid);
                 result[pid] = ai_assign(game_record, pid);
+            } else {
+                result[pid].push_back(request);
             }
         } else {
             Moves moves;
@@ -364,24 +366,25 @@ std::array<Moves, 4> require_moves_after_dahai(const Moves& game_record, const i
     return result;
 }
 
-std::array<Moves, 4> require_moves_after_tsumo(const Moves& game_record, const int player_id) {
+std::array<Moves, 4> require_moves_after_tsumo(const Moves& game_record, const int player_id, const json11::Json& request) {
     std::array<Moves, 4> result;
     const int actor = game_record[game_record.size()-1]["actor"].int_value();
     if (actor != player_id) {
         //result[actor] = ai_interface(game_record, actor);
         //result[actor] = ai_tsumogiri(game_record, actor);
         result[actor] = ai_assign(game_record, actor);
-        
+    } else {
+        result[actor].push_back(request);
     }
     return result;
 }
 
-std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record, const int player_id) {
+std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record, const int player_id, const json11::Json& request) {
     const json11::Json& current_move = game_record[game_record.size() - 1];
     if (current_move["type"] == "tsumo") {
-        return require_moves_after_tsumo(game_record, player_id);
+        return require_moves_after_tsumo(game_record, player_id, request);
     } else if (current_move["type"] == "dahai" || current_move["type"] == "kakan") {
-        return require_moves_after_dahai(game_record, player_id);
+        return require_moves_after_dahai(game_record, player_id, request);
     } else {
         assert_with_out(false, "require_moves_after_tsumo_or_dahai error");
         std::array<Moves, 4> result;
@@ -389,7 +392,7 @@ std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record
     }
 }
 
-void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id) {
+void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, const json11::Json& request) {
     if (game_record.size() == 0) {
         add_start_game(game_record);
     } else {
@@ -404,19 +407,27 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
         } else if (current_move["type"] == "start_kyoku") {
             add_tsumo(haiyama, game_record, get_oya(game_record));
         } else if (current_move["type"] == "tsumo" || current_move["type"] == "dahai" || current_move["type"] == "kakan") {
-            std::array<Moves, 4> candidate_moves = require_moves_after_tsumo_or_dahai(game_record, player_id);
+            if (!request["type"].is_null() && request["type"] != "pass" && !is_legal_single_move(game_record, request)) {
+                return;
+            }
+            std::array<Moves, 4> candidate_moves = require_moves_after_tsumo_or_dahai(game_record, player_id, request);
             add_move_after_tsumo_or_dahai(haiyama, game_record, candidate_moves);
         } else if (current_move["type"] == "ankan") {
             add_after_ankan(haiyama, game_record, current_move["actor"].int_value());
         } else if (current_move["type"] == "daiminkan") {
             add_rinshan_tsumo(haiyama, game_record, current_move["actor"].int_value());
+        } else if (current_move["type"] == "reach" || current_move["type"] == "chi" || current_move["type"] == "pon") {
+            assert_with_out(current_move["actor"] == player_id, "game_server_error");
+            if (is_legal_dahai_after_reach_or_fuuro(game_record, request)) {
+                game_record.push_back(request);
+            }
         }
     }
 }
 
 void game_loop(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id) {
     while (game_record.size() == 0 || game_record.back()["type"] != "end_game") {
-        proceed_game(haiyama, game_record, chicha, player_id);
+        proceed_game(haiyama, game_record, chicha, player_id, {});
     }
 }
 
@@ -430,7 +441,7 @@ json11::Json game_server(Moves& game_record, const json11::Json& request) {
             haiyama.push_back(hai_str_to_int(hai.string_value()));
         }
     }
-    proceed_game(haiyama, game_record, chicha, 0);
+    proceed_game(haiyama, game_record, chicha, 0, request);
     json11::Json::array new_moves;
     for (size_t i = current_size; i < game_record.size(); i++) {
         new_moves.push_back(game_record[i]);

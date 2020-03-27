@@ -672,6 +672,72 @@ bool is_legal_kyushukyuhai(const Moves& game_record, const Game_State& game_stat
     return false;
 }
 
+bool is_legal_none(const Moves& game_record, const json11::Json& action_json) {
+    if (action_json["type"].string_value() != "none") { return false; }
+
+    const json11::Json& last_action = game_record.back();
+    const int last_actor = last_action["actor"].int_value();
+    const int actor = action_json["actor"].int_value();
+    if (last_actor == actor) {
+        if (last_action["type"].string_value() == "tsumo" ||
+            last_action["type"].string_value() == "reach" ||
+            last_action["type"].string_value() == "chi" ||
+            last_action["type"].string_value() == "pon"
+        ) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_legal_reach(const Moves& game_record, const Game_State& game_state, const json11::Json& action_json) {
+    const int actor = action_json["actor"].int_value();
+    for (int hai = 1; hai < 38; hai++) {
+        for (int tsumogiri = 0; tsumogiri < 2; tsumogiri++) {
+            Moves moves = { action_json };
+            moves.push_back(make_dahai(actor, hai, tsumogiri == 1));
+            if (is_legal_reach_and_dahai(game_record, game_state, moves)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool is_legal_single_move(const Moves& game_record, const json11::Json& action_json) {
+    const Game_State game_state = get_game_state(game_record);
+    if      (action_json["type"].string_value() == "none")         { return is_legal_none(game_record, action_json); }
+    else if (action_json["type"].string_value() == "dahai")        { return is_legal_dahai(game_record, game_state, action_json); }
+    else if (action_json["type"].string_value() == "reach")        { return is_legal_reach(game_record, game_state, action_json); }
+    else if (action_json["type"].string_value() == "chi")          { return is_legal_chi(game_record, game_state, action_json); }
+    else if (action_json["type"].string_value() == "pon")          { return is_legal_pon(game_record, game_state, action_json); }
+    else if (action_json["type"].string_value() == "daiminkan")    { return is_legal_daiminkan(game_record, game_state, action_json); }
+    else if (action_json["type"].string_value() == "ankan")        { return is_legal_ankan(game_record, game_state, action_json); }
+    else if (action_json["type"].string_value() == "kakan")        { return is_legal_kakan(game_record, game_state, action_json); }
+    else if (action_json["type"].string_value() == "hora")         { return is_legal_hora(game_record, game_state, action_json); }
+    else if (action_json["type"].string_value() == "ryukyoku" && action_json["reason"].string_value() == "kyushukyuhai") { return is_legal_kyushukyuhai(game_record, game_state, action_json); }
+    else { return false; }
+}
+
+bool is_legal_dahai_after_reach_or_fuuro(const Moves& game_record, const json11::Json& action_json) {
+    assert(0 < game_record.size());
+    Moves gr = game_record;
+    Moves moves;
+    moves.push_back(gr.back());
+    moves.push_back(action_json);
+    gr.pop_back();
+    const Game_State game_state = get_game_state(gr);
+    if (moves[0]["type"] == "reach") {
+        return is_legal_reach_and_dahai(gr, game_state, moves);
+    } else if (moves[0]["type"] == "chi") { 
+        return is_legal_chi_and_dahai(gr, game_state, moves);
+    } else if (moves[0]["type"] == "pon") {
+        return is_legal_pon_and_dahai(gr, game_state, moves);
+    } else {
+        return false;
+    }
+}
+
 std::vector<Moves> get_legal_tsumogiri_move(const Moves& game_record) {
     std::vector<Moves> result;
     const json11::Json& action_json = game_record[game_record.size() - 1];

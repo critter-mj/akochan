@@ -124,7 +124,7 @@ int main(int argc,char* argv[]) {
             game_record.push_back(action_json);
         }
         std::vector<int> haiyama;
-        proceed_game(haiyama, game_record, 0, -1);
+        proceed_game(haiyama, game_record, 0, -1, {});
         return 0;
     } else if (4 <= argc && strcmp(argv[1], "mjai_log") == 0) {
         const json11::Json& setup_mjai_json = load_json_from_file("setup_mjai.json");

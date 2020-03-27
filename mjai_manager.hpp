@@ -39,11 +39,11 @@ void add_move_after_tsumo(const std::vector<int>& haiyama, Moves& game_record, c
 void add_move_after_tsumo_or_dahai(const std::vector<int>& haiyama, Moves& game_record, const std::array<Moves, 4>& candidate_moves);
 
 Moves ai_assign(const Moves& game_record, const int player_id);
-std::array<Moves, 4> require_moves_after_tsumo(const Moves& game_record, const int player_id);
-std::array<Moves, 4> require_moves_after_dahai(const Moves& game_record, const int player_id);
-std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record, const int player_id);
+std::array<Moves, 4> require_moves_after_tsumo(const Moves& game_record, const int player_id, const json11::Json& request);
+std::array<Moves, 4> require_moves_after_dahai(const Moves& game_record, const int player_id, const json11::Json& request);
+std::array<Moves, 4> require_moves_after_tsumo_or_dahai(const Moves& game_record, const int player_id, const json11::Json& request);
 
-void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id);
+void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id, const json11::Json& request);
 void game_loop(std::vector<int>& haiyama, Moves& game_record, const int chicha, const int player_id);
 
 json11::Json game_server(Moves& game_record, const json11::Json& request);
