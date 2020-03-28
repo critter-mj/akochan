@@ -233,8 +233,9 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
         if (candidate_moves[actor][0]["type"].string_value() == "pon") {
             // legal_check;
             add_accept_reach_or_dora_if_necessary(haiyama, game_record);
-            game_record.push_back(candidate_moves[actor][0]);
-            game_record.push_back(candidate_moves[actor][1]);
+            for (const json11::Json& action : candidate_moves[actor]) {
+                game_record.push_back(action);
+            }
             return;
         } else if (candidate_moves[actor][0]["type"].string_value() == "daiminkan") {
             // legal_check;
@@ -248,8 +249,9 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
         if (candidate_moves[actor][0]["type"].string_value() == "chi") {
             // legal_check;
             add_accept_reach_or_dora_if_necessary(haiyama, game_record);
-            game_record.push_back(candidate_moves[actor][0]);
-            game_record.push_back(candidate_moves[actor][1]);
+            for (const json11::Json& action : candidate_moves[actor]) {
+                game_record.push_back(action);
+            }
             return;
         }
     }
