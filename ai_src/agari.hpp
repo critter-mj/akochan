@@ -49,7 +49,7 @@ public:
         const Hai_Array& hai_visible_kind, const int dora_num
     ) const;
     std::array<double, 2> get_ten_exp_direct(
-        const int my_pid, const int target, const Bit_Hai_Num& tehai_bit, const Tehai_State2& tehai_state,
+        const int my_pid, const int target, const int chankan_han, const Bit_Hai_Num& tehai_bit, const Tehai_State2& tehai_state,
         const Hai_Array& hai_visible_kind, const Game_State& game_state,
         const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
     ) const;
