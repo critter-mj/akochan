@@ -331,7 +331,11 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const Fuuro_Vector& current_fuuro = game_state.player_state[my_pid].fuuro;
 	const bool current_reach = game_state.player_state[my_pid].reach_declared;
 	const json11::Json& current_action = game_record[game_record.size() - 1];
-	assert(current_action["type"] == "tsumo" || (current_action["type"] == "dahai" && current_action["actor"].int_value() != my_pid));
+	assert_with_out(current_action["type"] == "tsumo" ||
+				    (current_action["type"] == "dahai" && current_action["actor"].int_value() != my_pid) ||
+					(current_action["type"] == "kakan" && current_action["actor"].int_value() != my_pid),
+					"set_selector current_action_type error"			
+	);
 	const int current_hai = hai_str_to_int(current_action["pai"].string_value());
 	const Hai_Array hai_visible_all = get_hai_visible_all(game_state);
 	const Hai_Array hai_visible_all_kind = haikind(hai_visible_all);
@@ -725,7 +729,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 						fuuro_choice_tmp.fuuro_action_type = AT_RON_AGARI;
 						fuuro_choice_tmp.fuuro_hai = current_hai;
 						const std::array<double, 2> ten_exp = agari.get_ten_exp_direct(
-							my_pid, current_action["actor"].int_value(), tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_bit, tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_state,
+							my_pid, current_action["actor"].int_value(), current_action["type"] == "kakan" ? 1 : 0,
+							tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_bit, tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_state,
 							hai_visible_kind, game_state, kyoku_end_pt_exp
 						);
 						const double agari_exp = is_aka_hai(current_hai) ? ten_exp[1] : ten_exp[0];
@@ -745,7 +750,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			fuuro_choice_tmp.pt_exp_total = std::max(tehai_calculator.get_ten_exp(cn_fuuro_neg, gn_fuuro_neg, tsumo_num_DP), not_agari_value); // to do 元はnot_agari_valueのかわりにpassive_valueだった。
 			fuuro_choice.push_back(fuuro_choice_tmp);
 
-			if (count_tsumo_num_all(game_record) < 70) { // ハイテイ牌をフーロしないための処理
+			if (current_action["type"] == "dahai" && count_tsumo_num_all(game_record) < 70) { // ハイテイ牌をフーロしないための処理
 				const std::array<int, 3>& fuuro_edge_loc = tehai_calculator_work.get_const_fuuro_edge_loc(cn_fuuro_neg, gn_fuuro_neg);
 				for (int acn = fuuro_edge_loc[1]; acn < fuuro_edge_loc[2]; acn++) {
 					const Tehai_Action& ac_tmp = tehai_calculator_work.cand_graph_sub_fuuro_work[fuuro_edge_loc[0]][acn];
