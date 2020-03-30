@@ -83,6 +83,8 @@ using Hai_Array = std::array<int, 38>;
 using Fuuro_Vector = std::vector<Fuuro_Elem>;
 using Kawa = std::vector<Sutehai>;
 
+json11::Json hai_array_to_json(const Hai_Array& hai_array);
+
 void replace_pon_to_kakan(Fuuro_Vector& fuuro_vector, const Fuuro_Elem fuuro_elem);
 
 class Player_State {

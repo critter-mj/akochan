@@ -40,6 +40,24 @@ Sutehai::Sutehai(){
 	is_reach = false;
 }
 
+json11::Json hai_array_to_json(const Hai_Array& hai_array) {
+    json11::Json::array arr;
+    for (int hai = 1; hai < 38; hai++) {
+        if (hai % 10 == 0) {
+            continue;
+        }
+        for (int i = 0; i < hai_array[hai]; i++) {
+            arr.push_back(hai_int_to_str(hai));
+        }
+        if (hai % 10 == 5 && hai < 30) {
+            for (int i = 0; i < hai_array[hai+5]; i++) {
+                arr.push_back(hai_int_to_str(hai+5));
+            }
+        }
+    }
+    return json11::Json(arr);
+}
+
 Player_State::Player_State(){}
 
 void Player_State::reset_tehai_state() {
