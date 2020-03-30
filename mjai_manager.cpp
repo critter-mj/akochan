@@ -135,6 +135,7 @@ void add_accept_reach_or_dora_if_necessary(const std::vector<int>& haiyama, Move
 
 void add_ryukyoku_fanpai(Moves& game_record) {
     std::array<bool, 4> tenpai_flag = {false, false, false, false};
+    std::array<json11::Json, 4> tehais;
     Game_State game_state = get_game_state(game_record);
     for (int pid = 0; pid < 4; pid++) {
         Hai_Array tehai = game_state.player_state[pid].tehai;
@@ -143,6 +144,15 @@ void add_ryukyoku_fanpai(Moves& game_record) {
         );
         if (tenpai_info.shanten_num() == 0) {
             tenpai_flag[pid] = true;
+            tehais[pid] = hai_array_to_json(tehai);
+        } else {
+            json11::Json::array t;
+            for (int hai = 0; hai < 38; hai++) {
+                for (int i = 0; i < tehai[hai]; i++) {
+                    t.push_back("?");
+                }
+            }
+            tehais[pid] = json11::Json(t);
         }
     }
     std::array<int, 4> deltas = ten_move_ryukyoku(tenpai_flag);
@@ -150,7 +160,7 @@ void add_ryukyoku_fanpai(Moves& game_record) {
     for (int pid = 0; pid < 4; pid++) {
         scores[pid] = game_state.player_state[pid].score + deltas[pid];
     }
-    game_record.push_back(make_ryukyoku_fanpai(tenpai_flag, scores));
+    game_record.push_back(make_ryukyoku_fanpai(tenpai_flag, tehais, scores));
 }
 
 void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, const std::array<Moves, 4>& candidate_moves) {

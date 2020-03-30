@@ -250,14 +250,7 @@ json11::Json make_hora(const int actor, const int target, const int hai_hora, co
     move["actor"] = actor;
     move["target"] = target;
     move["pai"] = hai_int_to_str(hai_hora);
-
-    json11::Json::array hora_tehais;
-    for (int hai = 0; hai < 38; hai++) {
-        for (int i = 0; i < tehai[hai]; i++) {
-            hora_tehais.push_back(hai_int_to_str(hai));
-        }
-    }
-    move["hora_tehais"] = json11::Json(hora_tehais);
+    move["hora_tehais"] = hai_array_to_json(tehai);
     move["fan"] = han;
     move["fu"] = fu;
     move["scores"] = json11::Json(scores);
@@ -272,11 +265,13 @@ json11::Json make_hora(const int actor, const int target, const int hai_hora, co
     return json11::Json(move);
 }
 
-json11::Json make_ryukyoku_fanpai(const std::array<bool, 4>& tenpai, const std::array<int, 4>& scores) {
+
+json11::Json make_ryukyoku_fanpai(const std::array<bool, 4>& tenpai, const std::array<json11::Json, 4>& tehais, const std::array<int, 4>& scores) {
     json11::Json::object move;
     move["type"] = "ryukyoku";
     move["reason"] = "fanpai";
     move["tenpais"] = json11::Json(tenpai);
+    move["tehais"] = json11::Json(tehais);
     move["scores"] = json11::Json(scores);
     return json11::Json(move);
 }
@@ -294,8 +289,20 @@ json11::Json make_kyushukyuhai(const int actor, const Hai_Array& tehai, const st
     move["type"] = "ryukyoku";
     move["reason"] = "kyushukyuhai";
     move["actor"] = actor;
+    json11::Json::array tehais;
+    for (int pid = 0; pid < 4; pid++) {
+        if (pid == actor) {
+            tehais.push_back(hai_array_to_json(tehai));
+        } else {
+            json11::Json::array tehai_tmp;
+            for (int i = 0; i < 13; i++) {
+                tehai_tmp.push_back("?");
+            }
+            tehais.push_back(tehai_tmp);
+        }
+    }
+    move["tehais"] = json11::Json(tehais);
     move["scores"] = json11::Json(scores);
-    // tehai の記述方法が良く分からないので保留。
     return json11::Json(move);
 }
 
