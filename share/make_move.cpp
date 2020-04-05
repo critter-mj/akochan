@@ -1109,3 +1109,16 @@ std::array<std::vector<Moves>, 4> get_all_legal_moves(const Moves& game_record) 
     }
     return all_legal_moves;
 }
+
+std::vector<json11::Json> get_all_legal_single_action(const Moves& game_record) {
+    std::array<std::vector<Moves>, 4> all_legal_moves = get_all_legal_moves(game_record);
+    std::vector<json11::Json> ret;
+    for (int pid = 0; pid < 4; pid++) {
+        for (Moves moves : all_legal_moves[pid]) {
+            if (ret.size() == 0 || moves[0] != ret.back()) {
+                ret.push_back(moves[0]);
+            }
+        }
+    }
+    return ret;
+}

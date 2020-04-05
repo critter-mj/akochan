@@ -121,6 +121,18 @@ int main(int argc,char* argv[]) {
         }
         assert_with_out(!input_json["request"].is_null(), "game_server input error: request is null");
         std::cout << game_server(game_record, input_json["request"]).dump() << std::endl;
+    } else if (argc == 3 && strcmp(argv[1], "legal_action") == 0) {
+        const std::string input_str = argv[2];
+        //const std::string input_str = R"({"record":[{"type":"start_game","kyoku_first":0,"aka_flag":true,"names":["garucia","\\u30d5\\u30fc\\u30ac","\\u677e\\u5cf6","CLS"]},{"type":"start_kyoku","bakaze":"E","dora_marker":"7s","kyoku":1,"honba":0,"kyotaku":0,"oya":0,"scores":[25000,25000,25000,25000],"tehais":[["1m","2m","3m","6m","7m","7m","1p","4p","7p","8p","8p","6s","W"],["1m","2m","4m","5m","5m","8m","9m","2p","3s","5s","N","P","F"],["2m","6m","6m","3p","5p","6p","8s","9s","9s","9s","E","E","C"],["2m","3m","8m","3p","4p","6p","1s","5sr","7s","E","P","F","C"]]},{"type":"tsumo","actor":0,"pai":"1s"}]})";               
+        std::string err;
+        const json11::Json input_json = json11::Json::parse(input_str, err);
+        assert_with_out(!input_json["record"].is_null(), "legal_action input error: record is null");
+        Moves game_record;
+        for (const json11::Json& action : input_json["record"].array_items()) {
+            game_record.push_back(action);
+        }
+        std::vector<json11::Json> all_legal_single_action = get_all_legal_single_action(game_record);
+        std::cout << json_vec_to_str(all_legal_single_action) << std::endl;
     } else if (argc == 2 && strcmp(argv[1], "check") == 0) {
         //field_vis.set_haifu_log_from_file("haifu_log.json");
         const json11::Json& setup_match_json = load_json_from_file("setup_match.json");

@@ -98,3 +98,4 @@ std::vector<Moves> get_legal_kakan_move(const Moves& game_record);
 std::vector<Moves> get_legal_reach_dahai_move(const Moves& game_record);
 std::vector<Moves> get_legal_ron_move(const Moves& game_record);
 std::array<std::vector<Moves>, 4> get_all_legal_moves(const Moves& game_record);
+std::vector<json11::Json> get_all_legal_single_action(const Moves& game_record);

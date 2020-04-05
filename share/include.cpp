@@ -77,6 +77,18 @@ void dump_json_vec_to_file(const std::vector<json11::Json>& json_vec, const std:
     outputfile.close();
 }
 
+std::string json_vec_to_str(const std::vector<json11::Json>& json_vec) {
+    std::string ret = "[";
+    for (int i = 0; i < json_vec.size(); i++) {
+        ret += json_vec[i].dump();
+        if (i < json_vec.size() - 1) {
+            ret += ",";
+        }
+    }
+    ret += "]";
+    return ret;
+}
+
 std::vector<std::string> get_files_path(const std::string& dir_name) {
     std::string ls_command = "ls -1 ./" + dir_name + "/* > tmp.txt"; // 指定したディレクトリ内のmjsonファイルを一旦tmp.txtに書き出す。
     int system_result = system(ls_command.c_str());
