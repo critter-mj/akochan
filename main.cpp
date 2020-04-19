@@ -133,6 +133,16 @@ int main(int argc,char* argv[]) {
         }
         std::vector<json11::Json> all_legal_single_action = get_all_legal_single_action(game_record);
         std::cout << json_vec_to_str(all_legal_single_action) << std::endl;
+    } else if (argc == 3 && strcmp(argv[1], "legal_action_log_all") == 0) {
+        std::string file_name = argv[2];
+        const Moves game_record = load_json_vec_from_file(file_name);
+        Moves current_game_record;
+        std::vector<std::vector<json11::Json>> legal_actions;
+        for (const json11::Json& action : game_record) {
+            current_game_record.push_back(action);
+            legal_actions.push_back(get_all_legal_single_action(current_game_record));
+        }
+        std::cout << json_vec2d_to_str(legal_actions) << std::endl;
     } else if (argc == 2 && strcmp(argv[1], "check") == 0) {
         //field_vis.set_haifu_log_from_file("haifu_log.json");
         const json11::Json& setup_match_json = load_json_from_file("setup_match.json");
