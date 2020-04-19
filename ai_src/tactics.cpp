@@ -44,7 +44,7 @@ void Tactics::set_common() {
     use_ratio_tas_to_coeff = true;
     use_ori_exp_at_dp_fuuro = true;
     do_ankan_inclusive = true;
-    do_kakan_inclusive = false;
+    do_kakan_inclusive = true;
     do_kan_ordinary = false;
     jun_calc_bug = false;
     use_yama_ratio_kawa_num = 100;
@@ -86,8 +86,9 @@ void Tactics::set_common() {
     hanfu_weight_ron[3][3] = 0.5;
     hanfu_weight_ron[4][3] = 0.4;
 
-    han_shift_prob_kan[1] = 0.0;
-    han_shift_prob_kan[0] = 1.0;
+    han_shift_prob_kan[0] = 0.1;
+    han_shift_prob_kan[1] = 0.8;
+    han_shift_prob_kan[2] = 0.1;
 
     betaori_est = "ako";
 }
