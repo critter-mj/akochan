@@ -36,7 +36,6 @@ std::array<std::array<std::array<bool, 38>, 7>, 3> get_tas_ryoukei_flag(const Ga
 std::array<std::array<std::array<bool, 38>, 9>, 3> get_tas_kanchan_flag(const Game_State& game_state, const int target);
 std::array<std::array<std::array<bool, 38>, 2>, 3> get_tas_penchan_flag(const Game_State& game_state, const int target);
 
-int hai_dora_han(const std::vector<int>& dora_markerv, int hai);
 void han_prob_shift(std::array<float, 14>& han_prob, const int shift_num);
 void hanfu_prob_han_shift(std::array<std::array<float, 12>, 14>& hanfu_prob, const int shift_num);
 void hanfu_prob_han_shift_with_prob(std::array<std::array<float, 12>, 14>& hanfu_prob, const std::array<float, 14>& shift_prob);

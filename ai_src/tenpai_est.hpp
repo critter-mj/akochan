@@ -30,7 +30,7 @@ class Agari_Estimate_Info {
 };
 
 Agari_Estimate_Info yaku_check(
-    const int bakaze, const int jikaze, const std::vector<int>& dorav, const int visible_dora_num,
+    const int bakaze, const int jikaze,
     const Hai_Array tehai, const int head[38], const int kotu[38], const int syuntu[30], const int machi_hai, const Machi_Type machi_type, const int ryanmen_id
 );
 
@@ -49,7 +49,6 @@ class Tehai_Estimator_Element {
 class Tehai_Estimator {
 	private: // 作業用
     int tehai_max_num;
-    int visible_dora_num;
 	Hai_Array nokori;
     std::array<bool, 38> minogashi;
 
@@ -58,23 +57,23 @@ class Tehai_Estimator {
 
     private:
     void tenpai_check (
-        const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
+        const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
         int type, Hai_Array& tehai, int head[38], int kotu[38], int syuntu[30], std::vector<Tehai_Estimator_Element>& teev
     );
     void add_syuntu (
-        const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
+        const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
         int head_num, int kotu_num, int syuntu_num, int start, Hai_Array& tehai, int head[38], int kotu[38], int syuntu[30], std::vector<Tehai_Estimator_Element>& teev
     );
 	void add_kotu (
-        const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
+        const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
         int head_num, int kotu_num, int start, Hai_Array& tehai, int head[38], int kotu[38], int syuntu[30], std::vector<Tehai_Estimator_Element>& teev
     );
 	void add_head (
-        const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
+        const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
         int head_num, int start, Hai_Array& tehai, int head[38], int kotu[38], int syuntu[30], std::vector<Tehai_Estimator_Element>& teev
     );
     std::vector<Tehai_Estimator_Element> cal_teev (
-        const int bakaze, const int jikaze, const std::vector<int>& dora_marker, const Fuuro_Vector& fuuro,
+        const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
         const int tehai_max_num_in, const Hai_Array& nokori_in, const std::array<bool, 38>& minogashi_in
     );
 

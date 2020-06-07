@@ -106,7 +106,6 @@ class Game_State {
     int kyoku; // 1,2,3,4
     int honba;
     int kyotaku;
-    std::vector<int> dora_marker;
     Player_State player_state[4];
 
     Game_State();
@@ -137,13 +136,6 @@ int haikind(const int hai); // 牌種を返す関数。10,20,30がそれぞれ�
 Hai_Array haikind(const Hai_Array& tehai);
 Fuuro_Elem haikind(Fuuro_Elem elem);
 Fuuro_Vector haikind(Fuuro_Vector fuuro);
-
-int dora_to_dora_marker(const int hai);
-int dora_marker_to_dora(const int hai);
-std::vector<int> dora_marker_to_dora(const std::vector<int>& dora_marker);
-
-int count_dora(const Hai_Array& Hai_Array, const Fuuro_Vector& fuuro, const std::vector<int>& dora_marker);
-int count_dora(const Hai_Array& Hai_Array, const Fuuro_Vector& fuuro, const std::vector<int>& dora_marker, const std::vector<int>& uradora_marker);
 
 int get_hai38(const int hai136);
 

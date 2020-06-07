@@ -206,70 +206,6 @@ Fuuro_Vector haikind(Fuuro_Vector fuuro) {
 	return fuuro;
 }
 
-int dora_to_dora_marker(int hai) {
-	if (hai % 10 == 1 && hai < 30) {
-		return hai + 8;
-	} else if (hai == 31) {
-		return 34;
-	} else if (hai == 35) {
-		return 37;
-	} else {
-		return haikind(hai)-1;
-	}
-}
-
-int dora_marker_to_dora(int hai) {
-	if (hai % 10 == 9) {
-		return hai - 8;
-	} else if (hai == 34) {
-		return 31;
-	} else if (hai == 37) {
-		return 35;
-	} else {
-		return haikind(hai) + 1;
-	}
-}
-
-std::vector<int> dora_marker_to_dora(const std::vector<int>& dora_marker) {
-    std::vector<int> dora;
-    for (int i = 0; i < dora_marker.size(); i++) {
-        dora.push_back(dora_marker_to_dora(dora_marker[i]));
-    }
-    return dora;
-}
-
-int count_dora(const Hai_Array& hai_array, const Fuuro_Vector& fuuro, const std::vector<int>& dora_marker) {
-	int dora_num = 0;
-	Hai_Array hai_array_kind = haikind(hai_array);
-	for (int i = 0; i < dora_marker.size(); i++) {
-		dora_num += hai_array_kind[dora_marker_to_dora(dora_marker[i])];
-		for (int j = 0; j < fuuro.size(); j++) {
-			if (fuuro[j].type != FT_ANKAN) {
-				if (haikind(fuuro[j].hai) == dora_marker_to_dora(dora_marker[i])) { dora_num++; }
-			}
-			for (int k = 0; k < fuuro[j].consumed.size(); k++) {
-				if (haikind(fuuro[j].consumed[k]) == dora_marker_to_dora(dora_marker[i])) { dora_num++; }
-			}
-		}
-	}
-	for (int j = 0; j < fuuro.size(); j++) {
-		if (fuuro[j].type != FT_ANKAN) {
-			if (fuuro[j].hai % 10 == 0) { dora_num++; }
-		}
-		for (int k = 0; k < fuuro[j].consumed.size(); k++) {
-			if (fuuro[j].consumed[k] % 10 == 0) { dora_num++; }
-		}
-	}
-	return dora_num + hai_array[10] + hai_array[20] + hai_array[30];
-}
-
-int count_dora(const Hai_Array& hai_array, const Fuuro_Vector& fuuro, const std::vector<int>& dora_marker, const std::vector<int>& uradora_marker) {
-	std::vector<int> dora_all;
-	dora_all.insert(dora_all.end(), dora_marker.begin(), dora_marker.end());
-	dora_all.insert(dora_all.end(), uradora_marker.begin(), uradora_marker.end());
-	return count_dora(hai_array, fuuro, dora_all);
-}
-
 int get_hai38(const int hai136) {
 	if (hai136 == 16) {
 		return 10;
@@ -420,8 +356,6 @@ Game_State get_game_state_start_kyoku(const json11::Json& action_json) {
     game_state.kyoku = action_json["kyoku"].int_value();
     game_state.honba = action_json["honba"].int_value();
     game_state.kyotaku = action_json["kyotaku"].int_value();
-    game_state.dora_marker.clear();
-    game_state.dora_marker.push_back(hai_str_to_int(action_json["dora_marker"].string_value()));
 
     assert(haipai_array.size() == 4);
     for (int pid = 0; pid < 4; pid++) {
@@ -439,9 +373,7 @@ Game_State get_game_state_start_kyoku(const json11::Json& action_json) {
 }
 
 void go_next_state(Game_State& game_state, const json11::Json& action_json) {
-    if (action_json["type"].string_value() == "dora") {
-        game_state.dora_marker.push_back(hai_str_to_int(action_json["dora_marker"].string_value()));
-    } else if (action_json["type"].string_value() == "tsumo") {
+    if (action_json["type"].string_value() == "tsumo") {
         const int hai = hai_str_to_int(action_json["pai"].string_value());
         if (is_valid_hai(hai)) {
             const int actor = action_json["actor"].int_value();
@@ -603,8 +535,7 @@ std::pair<int, int> count_tsumo_num(const Moves& game_record) {
             assert(i > 0);
             assert(game_record[i-1]["type"].string_value() != "ankan");
             if (game_record[i-1]["type"].string_value() == "daiminkan" ||
-                game_record[i-1]["type"].string_value() == "kakan" ||
-                (game_record[i-1]["type"].string_value() == "dora" && game_record[i-2]["type"].string_value() == "ankan") // アンカンの場合、ツモの前はドラ
+                game_record[i-1]["type"].string_value() == "kakan"
             ) {
                 tsumo_rinshan++;
             } else {

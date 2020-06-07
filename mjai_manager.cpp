@@ -58,7 +58,6 @@ void add_first_kyoku(Moves& game_record, std::vector<int>& haiyama, const int ch
         prepare_haiyama(haiyama);
     }
     const std::array<std::array<int, 13>, 4> haipai = get_haipai(haiyama, chicha);
-    const int dora_marker = haiyama[haiyama.size() - 6];
     if (!prev["first_kyoku"].is_null()) {
         std::array<int, 4> scores;
         assert(!prev["first_kyoku"]["kyoku"].is_null());
@@ -67,9 +66,9 @@ void add_first_kyoku(Moves& game_record, std::vector<int>& haiyama, const int ch
         for (int i = 0; i < 4; i++) {
             scores[i] = prev["first_kyoku"]["scores"][i].int_value();
         }
-        game_record.push_back(make_start_kyoku(0, first_kyoku, 0, 0, chicha, dora_marker, haipai, scores, haiyama));
+        game_record.push_back(make_start_kyoku(0, first_kyoku, 0, 0, chicha, haipai, scores, haiyama));
     } else {
-        game_record.push_back(make_start_kyoku(0, 1, 0, 0, chicha, dora_marker, haipai, {25000, 25000, 25000, 25000}, haiyama));
+        game_record.push_back(make_start_kyoku(0, 1, 0, 0, chicha, haipai, {25000, 25000, 25000, 25000}, haiyama));
     }
 }
 
@@ -93,12 +92,11 @@ void add_next_kyoku_or_end_game(Moves& game_record, std::vector<int>& haiyama, c
             prepare_haiyama(haiyama);
         }
         const std::array<std::array<int, 13>, 4> haipai = get_haipai(haiyama, next_oya);
-        const int dora_marker = haiyama[haiyama.size() - 6];
 
         game_record.push_back(make_start_kyoku(
             next_bakaze_kyoku.first, next_bakaze_kyoku.second,
             next_honba, get_kyotaku(game_record), next_oya,
-            dora_marker, haipai, scores, haiyama
+            haipai, scores, haiyama
         ));
     }
 }
@@ -115,22 +113,7 @@ void add_rinshan_tsumo(const std::vector<int>& haiyama, Moves& game_record, cons
 
 void add_after_ankan(const std::vector<int>& haiyama, Moves& game_record, const int pid) {
     Game_State game_state = get_game_state(game_record);
-    const int dora_marker = haiyama[haiyama.size() - 6 - 2 * game_state.dora_marker.size()];
-    game_record.push_back(make_dora(dora_marker));
     add_rinshan_tsumo(haiyama, game_record, pid);
-}
-
-void add_accept_reach_or_dora_if_necessary(const std::vector<int>& haiyama, Moves& game_record) {
-    assert(game_record[game_record.size()-1]["type"].string_value() == "dahai");
-    if (game_record[game_record.size()-2]["type"].string_value() == "reach") {
-        game_record.push_back(make_reach_accepted(game_record[game_record.size()-2]["actor"].int_value()));
-    } else if (game_record[game_record.size()-2]["type"].string_value() == "tsumo") {
-        if (game_record[game_record.size()-3]["type"].string_value() == "daiminkan" || game_record[game_record.size()-3]["type"].string_value() == "kakan") {
-            Game_State game_state = get_game_state(game_record);
-            const int dora_marker = haiyama[haiyama.size() - 6 - 2 * game_state.dora_marker.size()];
-            game_record.push_back(make_dora(dora_marker));
-        }
-    }
 }
 
 void add_ryukyoku_fanpai(Moves& game_record) {
@@ -195,14 +178,6 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
             }
             // ハイテイ、
             tehai[hai]++;
-            int dora_num = 0;
-            std::vector<int> uradora_marker;
-            if (game_state.player_state[actor].reach_accepted) {                
-                for (int i = 0; i < game_state.dora_marker.size(); i++) {
-                    uradora_marker.push_back(haiyama[136 - 5 - 2*i]);
-                }
-            }
-            dora_num = count_dora(tehai, game_state.player_state[actor].fuuro, game_state.dora_marker, uradora_marker);
 
             for (int i = 0; i < tenpai_info.agari_vec.size(); i++) {
                 if (haikind(hai) == tenpai_info.agari_vec[i].hai &&
@@ -212,7 +187,7 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
                     agari_id = i;
                 }
             }
-            const int han = han_add + tenpai_info.agari_vec[agari_id].han_ron + dora_num;
+            const int han = han_add + tenpai_info.agari_vec[agari_id].han_ron;
             std::array<int, 4> ten_move = ten_move_hora(actor, target, han);
 
             std::array<int, 4> scores;
@@ -220,7 +195,7 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
                 scores[pid] = game_state.player_state[pid].score + ten_move[pid];
             }
             tehai[hai]--;
-            game_record.push_back(make_hora(actor, target, hai, tehai, han, uradora_marker, scores));
+            game_record.push_back(make_hora(actor, target, hai, tehai, han, scores));
             ron_flag = true;
         }
     }
@@ -237,14 +212,12 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
         const int actor = (target + pid_add) % 4;
         if (candidate_moves[actor][0]["type"].string_value() == "pon") {
             // legal_check;
-            add_accept_reach_or_dora_if_necessary(haiyama, game_record);
             for (const json11::Json& action : candidate_moves[actor]) {
                 game_record.push_back(action);
             }
             return;
         } else if (candidate_moves[actor][0]["type"].string_value() == "daiminkan") {
             // legal_check;
-            add_accept_reach_or_dora_if_necessary(haiyama, game_record);
             game_record.push_back(candidate_moves[actor][0]);
             return;
         }
@@ -253,14 +226,12 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
         const int actor = (target + pid_add) % 4;
         if (candidate_moves[actor][0]["type"].string_value() == "chi") {
             // legal_check;
-            add_accept_reach_or_dora_if_necessary(haiyama, game_record);
             for (const json11::Json& action : candidate_moves[actor]) {
                 game_record.push_back(action);
             }
             return;
         }
     }
-    add_accept_reach_or_dora_if_necessary(haiyama, game_record);
     add_tsumo(haiyama, game_record, (target + 1) % 4);
 }
 
@@ -273,7 +244,7 @@ void add_move_after_tsumo(const std::vector<int>& haiyama, Moves& game_record, c
         const Game_State game_state = get_game_state(game_record);
         // legal_check;
         Hai_Array tehai = game_state.player_state[actor].tehai;
-        // dora_count
+
         tehai[hai]--;
         const Tenpai_Info tenpai_info = cal_tenpai_info(
             game_state.bakaze, game_state.player_state[actor].jikaze, tehai, game_state.player_state[actor].fuuro
@@ -289,14 +260,6 @@ void add_move_after_tsumo(const std::vector<int>& haiyama, Moves& game_record, c
         }
         // ハイテイ、
         tehai[hai]++;
-        int dora_num = 0;
-        std::vector<int> uradora_marker;
-        if (game_state.player_state[actor].reach_accepted) {
-            for (int i = 0; i < game_state.dora_marker.size(); i++) {
-                uradora_marker.push_back(haiyama[136 - 5 - 2*i]);
-            }
-        }
-        dora_num = count_dora(tehai, game_state.player_state[actor].fuuro, game_state.dora_marker, uradora_marker);
 
         for (int i = 0; i < tenpai_info.agari_vec.size(); i++) {
             if (haikind(hai) == tenpai_info.agari_vec[i].hai &&
@@ -306,14 +269,14 @@ void add_move_after_tsumo(const std::vector<int>& haiyama, Moves& game_record, c
                 agari_id = i;
             }
         }
-        const int han = han_add + tenpai_info.agari_vec[agari_id].han_tsumo + dora_num;
+        const int han = han_add + tenpai_info.agari_vec[agari_id].han_tsumo;
         std::array<int, 4> ten_move = ten_move_hora(actor, actor, han);
         std::array<int, 4> scores;
         for (int pid = 0; pid < 4; pid++) {
             scores[pid] = game_state.player_state[pid].score + ten_move[pid];
         }
         tehai[hai]--;
-        game_record.push_back(make_hora(actor, actor, hai, tehai, han, uradora_marker, scores));
+        game_record.push_back(make_hora(actor, actor, hai, tehai, han, scores));
     } else if (moves[0]["type"].string_value() == "ryukyoku" && moves[0]["reason"].string_value() == "kyushukyuhai") {
         const int actor = moves[0]["actor"].int_value();
         const Game_State game_state = get_game_state(game_record);

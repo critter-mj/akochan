@@ -13,7 +13,7 @@ class MJAI_Interface {
     std::array<int, 4> scores_;
 
     void push(const json11::Json &receive);
-    void push_start_game(const json11::Json &receive, const int kyoku_first, const bool aka_flag);
+    void push_start_game(const json11::Json &receive, const int kyoku_first);
     void clear();
     void init_scores();
 

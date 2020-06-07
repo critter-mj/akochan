@@ -6,7 +6,6 @@
 #include "tehai_pat.hpp"
 #include "tehai_inout_pattern.hpp"
 #include "tehai_state2.hpp"
-#include "ankan_after_reach.hpp"
 
 void copy_tehai(const int tehai_src[38], int tehai_dst[38]);
 void get_tehai_kcp(const int tehai_src[38], int tehai_kcp[38]);

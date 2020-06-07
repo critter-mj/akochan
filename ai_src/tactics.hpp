@@ -31,7 +31,6 @@ public:
     bool use_rule_base_at_mentu5_titoi3_shanten;
     bool use_cn_max_addition_if_honitsu; // ホンイツ手を余分に列挙するかどうか。
     bool use_reach_daten_data_flag;
-    bool do_tsumo_prob_dora_shift;
     bool use_no_fuuro_data_flag;
     bool use_new_other_end_prob;
     bool use_fuuro_choice_simple;
@@ -57,7 +56,6 @@ public:
     int reach_regression_mode_other_reach; // 他家がリーチしている場合にcalc_DPにおいて、リーチに関する種々の確率推定を使うかどうか。
     double reach_regression_coeff_other_reach; // 他家がリーチしている場合にcalc_DPにおいて利用する、ロン確率に関する係数。
     double norisk_ratio_if_other_reach; // 現在の危険牌が、将来的に通っているとする確率。
-    double dora_fuuro_coeff; // calc_DPにおいてドラを副露できる確率の補正係数。
     double other_end_prob_max; // calc_DPにおける、other_end_probの最大値。
     double reach_tenpai_prob_other_coeff; // reach_tenpai_prob_otherの係数
     double other_end_prob_coeff_if_other_reach; // 他家からリーチが来ているときに、other_end_probにかける係数。

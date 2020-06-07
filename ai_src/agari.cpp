@@ -83,7 +83,6 @@ Agari_Basic agari_info_to_agari_basic(const Agari_Info& agari_info) {
     agari_basic.agari_info.set_han_tsumo(agari_info.han_tsumo);
     agari_basic.agari_info.set_han_ron(agari_info.han_ron);
     agari_basic.agari_info.set_hai(agari_info.hai);
-    //agari_basic.agari_info.set_dora_num(agari_info.dora_num);
     return agari_basic;
 }
 
@@ -93,46 +92,4 @@ Agari_Calc agari_info_to_agari_calc(const Agari_Info& agari_info) {
     agari_calc.tsumo_exp = -200.0;
     agari_calc.ron_exp = -200.0;
     return agari_calc;
-}
-
-// to do : needless for chn
-
-std::array<double, 5> calc_ura_elem(const Hai_Array& visible_me_kind, const Hai_Array& tehai){
-    std::array<double, 5> ura_elem = {};
-    Hai_Array tehai_kind = haikind(tehai);
-
-	int invisible_total = 0;
-	for (int hai = 1; hai < 38; hai++) {
-		if (hai % 10 != 0) {
-			ura_elem[tehai_kind[dora_marker_to_dora(hai)]] += 4 - visible_me_kind[hai];
-			invisible_total += 4 - visible_me_kind[hai];
-		}
-	}
-	for (int i = 0; i < 5; i++) {
-		ura_elem[i] = ura_elem[i]/invisible_total;
-	}
-    return ura_elem;
-}
-
-std::array<double, 13> multiply_ura_prob(const std::array<double, 5>& ura_elem, const int dora_num) {
-	std::array<double, 13> ura_prob_tmp = {};
-	std::array<double, 13> ura_prob = {};
-
-	ura_prob[0] = 1.0;
-	for (int dn = 0; dn < dora_num; dn++) {
-		for (int i = 0; i < 13;i++) {
-			ura_prob_tmp[i] = ura_prob[i];
-			ura_prob[i] = 0.0;
-		}
-		for (int i = 0; i < 13; i++) {
-			for (int j = 0; j < 5;j++) {
-				if (i + j >= 12) {
-					ura_prob[12] += ura_prob_tmp[i]*ura_elem[j];
-				} else {
-					ura_prob[i+j] += ura_prob_tmp[i]*ura_elem[j];
-				}
-			}
-		}
-	}
-	return ura_prob;
 }

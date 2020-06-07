@@ -55,7 +55,7 @@ std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_
 int cal_tsumo_num_DP(const Moves& game_record, const int my_pid);
 
 void set_sarashi_hai(const Tehai_State2& dst_tehai_state, const Fuuro_Vector& present_fuuro, const int current_hai, int sarashi_hai[3]);
-int koritu_most_needless(const Hai_Array& tehai, const Hai_Array& visible, const int bakaze, const int jikaze, const std::vector<int>& dora_marker);
+int koritu_most_needless(const Hai_Array& tehai, const Hai_Array& visible, const int bakaze, const int jikaze);
 
 class Selector{
 	public:

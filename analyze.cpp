@@ -16,16 +16,13 @@ std::vector<json11::Json> full_analyze(const Moves& game_record, const int my_pi
             std::array<std::vector<Moves>, 4> all_legal_moves = get_all_legal_moves(current_game_record);
             if (all_legal_moves[my_pid].size() >= 2) {
                 int check_pos = 1;
-                while (game_record[i + check_pos]["type"] == "dora" || game_record[i + check_pos]["type"] == "reach_accepted") {
-                    check_pos++; //カンドラがめくられたときならスキップ
-                }
                 if ((game_record[i + check_pos]["type"] == "pon" || game_record[i + check_pos]["type"] == "hora") &&
                     game_record[i + check_pos]["actor"].int_value() != my_pid)
                 {
                     continue; //邪魔ポン、ロンの時はスキップ
                 } else if (game_record[i + check_pos]["type"] == "ankan" || game_record[i + check_pos]["type"] == "kakan" || game_record[i + check_pos]["type"] == "daiminkan") {
                     continue;		//行った行動がカンならスキップ
-                } else if (game_record[i + check_pos]["type"] == "hora" && (game_record[i - check_pos]["type"] == "ankan" || game_record[i - check_pos]["type"] == "kakan" || game_record[i - check_pos]["type"] == "daiminkan" || game_record[i-check_pos]["type"]=="dora")) {
+                } else if (game_record[i + check_pos]["type"] == "hora" && (game_record[i - check_pos]["type"] == "ankan" || game_record[i - check_pos]["type"] == "kakan" || game_record[i - check_pos]["type"] == "daiminkan")) {
                     continue;	//嶺上牌であがりならばスキップ
                 } else {		//エラーチェック
                     const std::vector<std::pair<Moves, float>> moves_score = calc_moves_score(current_game_record, my_pid);

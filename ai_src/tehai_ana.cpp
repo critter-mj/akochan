@@ -873,15 +873,7 @@ int koritu_needless_num(const Hai_Array& tehai, const Game_State& game_state, co
 		}
 	}
 	for (int cn = 0; cn < cand.size();cn++) {
-		int dora_flag = 0;
-		for (int dn = 0; dn < game_state.dora_marker.size(); dn++) {
-			if (cand[cn] == dora_marker_to_dora(game_state.dora_marker[dn]) && hai_visible_all[cand[cn]] < 3) {
-				dora_flag = 1;
-			}
-		}
-		if(dora_flag==0){
-			res++;
-		}
+		res++;
 	}
 	return res;
 }

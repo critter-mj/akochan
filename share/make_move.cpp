@@ -29,7 +29,7 @@ json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba
     return json11::Json(move);
 }
 
-json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba, const int kyotaku, const int oya, const int dora_marker,
+json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba, const int kyotaku, const int oya,
                               const std::array<std::array<int, 13>, 4>& tehais, const std::array<int, 4>& scores, const std::vector<int>& haiyama)
 {
     json11::Json::object move;
@@ -39,7 +39,6 @@ json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba
     move["honba"] = honba;
     move["kyotaku"] = kyotaku;
     move["oya"] = oya;
-    move["dora_marker"] = hai_int_to_str(dora_marker);
 
     json11::Json::array haipai_arrays;
 	for (int pid = 0; pid < 4; pid++) {
@@ -56,13 +55,6 @@ json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba
         haiyama_arrays.push_back(hai_int_to_str(hai));
     }
     move["haiyama"] = json11::Json(haiyama_arrays);
-    return json11::Json(move);
-}
-
-json11::Json make_dora(const int dora_marker) {
-    json11::Json::object move;
-    move["type"] = "dora";
-    move["dora_marker"] = hai_int_to_str(dora_marker);
     return json11::Json(move);
 }
 
@@ -244,7 +236,7 @@ json11::Json make_hora(const int actor, const int target, const int hai_hora) {
     return json11::Json(move);
 }
 
-json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::vector<int>& uradora_markers, const std::array<int, 4>& scores) {
+json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::array<int, 4>& scores) {
     json11::Json::object move;
     move["type"] = "hora";
     move["actor"] = actor;
@@ -254,13 +246,6 @@ json11::Json make_hora(const int actor, const int target, const int hai_hora, co
     move["fan"] = han;
     move["scores"] = json11::Json(scores);
 
-    if (uradora_markers.size() > 0) {
-        json11::Json::array uradora_arrays;
-        for (int i = 0; i < uradora_markers.size(); i++) {
-            uradora_arrays.push_back(hai_int_to_str(uradora_markers[i]));
-        }
-        move["uradora_marker"] = uradora_arrays;
-    }
     return json11::Json(move);
 }
 

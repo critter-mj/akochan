@@ -26,9 +26,6 @@ public:
     void set_hai(const int hai);
 };
 
-std::array<double, 5> calc_ura_elem(const Hai_Array& visible_me_kind, const Hai_Array& tehai);
-std::array<double, 13> multiply_ura_prob(const std::array<double, 5>& ura_elem, const int dora_num);
-
 class Agari_Basic {
 public:
     Agari_Basic();

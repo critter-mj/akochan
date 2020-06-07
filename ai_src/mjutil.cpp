@@ -138,9 +138,6 @@ Hai_Array get_hai_visible_all(const Game_State& game_state) {
 			}
 		}
 	}
-	for (int dn = 0; dn < game_state.dora_marker.size(); dn++) {
-		hai_visible_all[game_state.dora_marker[dn]]++;
-	}
 	for (int c = 0; c < 3; c++) {
 		if (hai_visible_all[c*10 + 10] > 1) {
 			hai_visible_all[c*10 + 5] += hai_visible_all[c*10 + 10] - 1;
@@ -407,19 +404,6 @@ std::array<std::array<std::array<bool, 38>, 2>, 3> get_tas_penchan_flag(const Ga
 		}
 	}
 	return tas_penchan_flag;
-}
-
-int hai_dora_han(const std::vector<int>& dora_markerv, int hai) {
-	int res = 0;
-	for (const int dm : dora_markerv) {
-		if (haikind(hai) == dora_marker_to_dora(dm)) {
-			res++;
-		}
-	}
-	if (hai > 0 && hai % 10 == 0) {
-		res++;
-	}
-	return res;
 }
 
 void han_prob_shift(std::array<float, 14>& han_prob, const int shift_num) {

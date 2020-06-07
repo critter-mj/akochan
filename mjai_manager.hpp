@@ -31,7 +31,6 @@ void add_next_kyoku_or_end_game(Moves& game_record, std::vector<int>& haiyama, c
 void add_tsumo(const std::vector<int>& haiyama, Moves& game_record, const int pid);
 void add_rinshan_tsumo(const std::vector<int>& haiyama, Moves& game_record, const int pid);
 void add_after_ankan(const std::vector<int>& haiyama, Moves& game_record, const int pid);
-void add_accept_reach_or_dora_if_necessary(const std::vector<int>& haiyama, Moves& game_record);
 void add_ryukyoku_fanpai(Moves& game_record);
 
 void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, const std::array<Moves, 4>& candidate_moves);

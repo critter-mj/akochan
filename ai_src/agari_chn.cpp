@@ -83,7 +83,6 @@ Agari_Basic_Chn agari_info_to_agari_basic(const Agari_Info_Chn& agari_info) {
     agari_basic.agari_info.set_han_tsumo(agari_info.han_tsumo);
     agari_basic.agari_info.set_han_ron(agari_info.han_ron);
     agari_basic.agari_info.set_hai(agari_info.hai);
-    //agari_basic.agari_info.set_dora_num(agari_info.dora_num);
     return agari_basic;
 }
 

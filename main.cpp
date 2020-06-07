@@ -296,7 +296,7 @@ int main(int argc,char* argv[]) {
             std::string type = recv["type"].string_value();
       
             if (type == "start_game") {
-                mjai_interface.push_start_game(recv, 4, true);
+                mjai_interface.push_start_game(recv, 4);
             } else {
                 mjai_interface.push(recv);
             }

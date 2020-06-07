@@ -31,7 +31,6 @@ void Tactics::set_common() {
     use_rule_base_at_mentu5_titoi3_shanten = true;
     use_cn_max_addition_if_honitsu = false;
     use_reach_daten_data_flag = false;
-    do_tsumo_prob_dora_shift = false;
     use_no_fuuro_data_flag = false;
     use_new_other_end_prob = true;
     use_fuuro_choice_simple = false;
@@ -58,7 +57,6 @@ void Tactics::set_common() {
     reach_regression_mode_other_reach = 1;
     reach_regression_coeff_other_reach = 1.0;
     norisk_ratio_if_other_reach = 0.0;
-    dora_fuuro_coeff = 1.0;
     other_end_prob_max = 1.0;
     reach_tenpai_prob_other_coeff = 1.0;
     other_end_prob_coeff_if_other_reach = 1.0;

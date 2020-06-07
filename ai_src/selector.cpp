@@ -210,7 +210,7 @@ void set_sarashi_hai(const Tehai_State2& dst_tehai_state, const Fuuro_Vector& pr
 	}
 }
 
-int koritu_most_needless(const Hai_Array& tehai, const Hai_Array& visible, const int bakaze, const int jikaze, const std::vector<int>& dora_marker) {
+int koritu_most_needless(const Hai_Array& tehai, const Hai_Array& visible, const int bakaze, const int jikaze) {
 	for(int h=31;h<38;h++){
 		if(tehai[h]==1 && visible[h]==3){
 			return h;
@@ -221,58 +221,58 @@ int koritu_most_needless(const Hai_Array& tehai, const Hai_Array& visible, const
 			return h;
 		}
 	}
-	const std::vector<int> dorav = dora_marker_to_dora(dora_marker);
+
 	for(int h=31;h<35;h++){
-		if(tehai[h]==1 && visible[h]==1 && h!=31+bakaze && h!=31+jikaze && std::count(dorav.begin(), dorav.end(), h) == 0){
+		if(tehai[h]==1 && visible[h]==1 && h!=31+bakaze && h!=31+jikaze){
 			return h;
 		}
 	}
 	for(int h=31;h<35;h++){
-		if(tehai[h]==1 && visible[h]==0 && h!=31+bakaze && h!=31+jikaze && std::count(dorav.begin(), dorav.end(), h) == 0){
+		if(tehai[h]==1 && visible[h]==0 && h!=31+bakaze && h!=31+jikaze){
 			return h;
 		}
 	}
 	for(int h=31;h<38;h++){
-		if(tehai[h]==1 && visible[h]==1 && h!=31+jikaze && std::count(dorav.begin(), dorav.end(), h) == 0){
+		if(tehai[h]==1 && visible[h]==1 && h!=31+jikaze){
 			return h;
 		}
 	}
 	for(int h=31;h<38;h++){
-		if(tehai[h]==1 && visible[h]==1 && std::count(dorav.begin(), dorav.end(), h) == 0){
+		if(tehai[h]==1 && visible[h]==1){
 			return h;
 		}
 	}
 	for(int c=0;c<3;c++){
-		if(tehai[c*10+1]==1 && tehai[c*10+2]==0 && tehai[c*10+3]==0 && tehai[c*10+4]==1 && std::count(dorav.begin(), dorav.end(), c*10+1) == 0){
+		if(tehai[c*10+1]==1 && tehai[c*10+2]==0 && tehai[c*10+3]==0 && tehai[c*10+4]==1){
 			return c*10+1;
 		}
-		if(tehai[c*10+9]==1 && tehai[c*10+8]==0 && tehai[c*10+7]==0 && tehai[c*10+6]==1 && std::count(dorav.begin(), dorav.end(), c*10+9) == 0){
+		if(tehai[c*10+9]==1 && tehai[c*10+8]==0 && tehai[c*10+7]==0 && tehai[c*10+6]==1){
 			return c*10+9;
 		}
 	}
 	for(int c=0;c<3;c++){
-		if(tehai[c*10+1]==1 && tehai[c*10+2]==0 && tehai[c*10+3]==0 && std::count(dorav.begin(), dorav.end(), c*10+1) == 0){
+		if(tehai[c*10+1]==1 && tehai[c*10+2]==0 && tehai[c*10+3]==0){
 			return c*10+1;
 		}
-		if(tehai[c*10+9]==1 && tehai[c*10+8]==0 && tehai[c*10+7]==0 && std::count(dorav.begin(), dorav.end(), c*10+9) == 0){
+		if(tehai[c*10+9]==1 && tehai[c*10+8]==0 && tehai[c*10+7]==0){
 			return c*10+9;
 		}
 	}
 	for(int h=31;h<38;h++){
-		if(tehai[h]==1 && visible[h]==0 && h!=31+jikaze && std::count(dorav.begin(), dorav.end(), h) == 0){
+		if(tehai[h]==1 && visible[h]==0 && h!=31+jikaze){
 			return h;
 		}
 	}
 	for(int h=31;h<38;h++){
-		if(tehai[h]==1 && visible[h]==0 && std::count(dorav.begin(), dorav.end(), h) == 0){
+		if(tehai[h]==1 && visible[h]==0){
 			return h;
 		}
 	}
 	for(int c=0;c<3;c++){
-		if(tehai[c*10+1]==0 && tehai[c*10+2]==1 && tehai[c*10+3]==0 && tehai[c*10+4]==0 && std::count(dorav.begin(), dorav.end(), c*10+2) == 0){
+		if(tehai[c*10+1]==0 && tehai[c*10+2]==1 && tehai[c*10+3]==0 && tehai[c*10+4]==0){
 			return c*10+2;
 		}
-		if(tehai[c*10+9]==0 && tehai[c*10+8]==1 && tehai[c*10+7]==0 && tehai[c*10+6]==0 && std::count(dorav.begin(), dorav.end(), c*10+8) == 0){
+		if(tehai[c*10+9]==0 && tehai[c*10+8]==1 && tehai[c*10+7]==0 && tehai[c*10+6]==0){
 			return c*10+8;
 		}
 	}
@@ -485,7 +485,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 				}
 			} else {
 				int hai_tmp = 0;
-				hai_tmp = koritu_most_needless(game_state.player_state[my_pid].tehai, hai_visible_all, game_state.bakaze, game_state.player_state[my_pid].jikaze, game_state.dora_marker);
+				hai_tmp = koritu_most_needless(game_state.player_state[my_pid].tehai, hai_visible_all, game_state.bakaze, game_state.player_state[my_pid].jikaze);
 				Hai_Choice hai_choice_tmp;
 				hai_choice_tmp.action_type = AT_DAHAI;
 				hai_choice_tmp.hai = hai_tmp;

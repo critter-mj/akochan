@@ -8,9 +8,8 @@
 json11::Json make_start_game();
 json11::Json make_start_game_with_initial_condition(const int kyoku, const std::array<int, 4>& scores);
 json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba, const int kyotaku, const std::array<int, 4>& scores); // pseudo game 用
-json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba, const int kyotaku, const int oya, const int dora_marker,
+json11::Json make_start_kyoku(const int bakaze, const int kyoku, const int honba, const int kyotaku, const int oya,
                               const std::array<std::array<int, 13>, 4>& tehais, const std::array<int, 4>& scores, const std::vector<int>& haiyama);
-json11::Json make_dora(const int dora_marker);
 json11::Json make_none(const int actor);
 json11::Json make_tsumo(const int actor, const int hai);
 
@@ -43,7 +42,7 @@ json11::Json make_chi_high_default(const int actor, const int target, const int 
 json11::Json make_chi_high_aka(const int actor, const int target, const int hai);
 
 json11::Json make_hora(const int actor, const int target, const int hai_hora);
-json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::vector<int>& uradora_markers, const std::array<int, 4>& scores);
+json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::array<int, 4>& scores);
 json11::Json make_ryukyoku_fanpai(const std::array<bool, 4>& tenpai, const std::array<json11::Json, 4>& tehais, const std::array<int, 4>& scores);
 json11::Json make_kyushukyuhai(const int actor);
 json11::Json make_kyushukyuhai(const int actor, const Hai_Array& tehai, const std::array<int, 4>& scores);

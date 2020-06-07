@@ -353,7 +353,7 @@ int kan_num_count_est (const Fuuro_Vector& fuuro) {
 Agari_Estimate_Info::Agari_Estimate_Info(){}
 
 Agari_Estimate_Info yaku_check(
-	const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector fuuro, const int visible_dora_num,
+	const int bakaze, const int jikaze, const Fuuro_Vector fuuro,
 	const Hai_Array tehai, const int head[38], const int kotu[38], const int syuntu[30], const int machi_hai, const Machi_Type machi_type, const int ryanmen_id
 ) {
 	Agari_Estimate_Info agari;
@@ -508,18 +508,6 @@ Agari_Estimate_Info yaku_check(
 		}
 	}
 
-	int dora_num = visible_dora_num;
-	for (int dn = 0; dn < dorav.size(); dn++) {
-		dora_num += tehai[dorav[dn]];
-		if (dorav[dn] == machi_hai) {
-			dora_num++;
-		}
-	}
-
-	if (agari.han > 0) {
-		agari.han += dora_num;
-	}
-
 	if (agari.han >= 13) {
 		agari.han = 13;
 	}
@@ -559,7 +547,7 @@ Color_Type Tehai_Estimator_Element::get_somete_color(const Fuuro_Vector& fuuro) 
 Tehai_Estimator::Tehai_Estimator(){}
 
 void Tehai_Estimator::tenpai_check (
-	const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
+	const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
 	int type, Hai_Array& tehai, int head[38], int kotu[38], int syuntu[30], std::vector<Tehai_Estimator_Element>& teev
 ) {
 	Tehai_Estimator_Element tee;
@@ -574,11 +562,11 @@ void Tehai_Estimator::tenpai_check (
 						tehai[hc*10+hn+2]++;
 						tee.reset(tehai);
 						tee.agariv.push_back(yaku_check(
-							bakaze, jikaze, dorav, fuuro, visible_dora_num,
+							bakaze, jikaze, fuuro,
 							tehai, head, kotu, syuntu, hc*10+hn, MT_RYANMEN, hc*10+hn
 						));
 						tee.agariv.push_back(yaku_check(
-							bakaze, jikaze, dorav, fuuro, visible_dora_num,
+							bakaze, jikaze, fuuro,
 							tehai, head, kotu, syuntu, hc*10+hn+3, MT_RYANMEN, hc*10+hn
 						));
 						if ((tee.agariv[0].han>0 || tee.agariv[1].han>0)) {
@@ -597,7 +585,7 @@ void Tehai_Estimator::tenpai_check (
 						tehai[hc*10+hn+1]++;
 						tee.reset(tehai);
 						tee.agariv.push_back(yaku_check(
-							bakaze, jikaze, dorav, fuuro, visible_dora_num,
+							bakaze, jikaze, fuuro,
 							tehai, head, kotu, syuntu, hc*10+hn, MT_KANCHAN, 0
 						));
 						if (tee.agariv[0].han > 0) {
@@ -615,7 +603,7 @@ void Tehai_Estimator::tenpai_check (
 					tehai[hc*10+2]++;
 					tee.reset(tehai);
 					tee.agariv.push_back(yaku_check(
-						bakaze, jikaze, dorav, fuuro, visible_dora_num,
+						bakaze, jikaze, fuuro,
 						tehai, head, kotu, syuntu, hc*10+3, MT_PENCHAN, 0
 					));
 					if (tee.agariv[0].han > 0) {
@@ -632,7 +620,7 @@ void Tehai_Estimator::tenpai_check (
 					tehai[hc*10+9]++;
 					tee.reset(tehai);
 					tee.agariv.push_back(yaku_check(
-						bakaze, jikaze, dorav, fuuro, visible_dora_num,
+						bakaze, jikaze, fuuro,
 						tehai, head, kotu, syuntu, hc*10+7, MT_PENCHAN, 0
 					));
 					if (tee.agariv[0].han > 0) {
@@ -649,7 +637,7 @@ void Tehai_Estimator::tenpai_check (
 			if (head[hai] == 1) {
 				if (minogashi[hai]) { return; }
 				tee.agariv.push_back(yaku_check(
-					bakaze, jikaze, dorav, fuuro, visible_dora_num,
+					bakaze, jikaze, fuuro,
 					tehai, head, kotu, syuntu, hai, MT_SHABO, 0
 				));
 			}
@@ -668,7 +656,7 @@ void Tehai_Estimator::tenpai_check (
 					tehai[hai]++;
 					tee.reset(tehai);
 					tee.agariv.push_back(yaku_check(
-						bakaze, jikaze, dorav, fuuro, visible_dora_num,
+						bakaze, jikaze, fuuro,
 						tehai, head, kotu, syuntu, hai, MT_TANKI, 0
 					));
 					if (tee.agariv[0].han > 0) {
@@ -682,16 +670,16 @@ void Tehai_Estimator::tenpai_check (
 }
 
 void Tehai_Estimator::add_syuntu (
-	const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
+	const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
 	int head_num, int kotu_num, int syuntu_num, int start, Hai_Array& tehai, int head[38], int kotu[38], int syuntu[30], std::vector<Tehai_Estimator_Element>& teev
 ) {
 	int mentu_num = kotu_num + syuntu_num;
 	if (mentu_num*3 + head_num*2 == tehai_max_num-1) {
-		tenpai_check(bakaze, jikaze, dorav, fuuro, 2, tehai, head, kotu, syuntu, teev);
+		tenpai_check(bakaze, jikaze, fuuro, 2, tehai, head, kotu, syuntu, teev);
 	} else if (mentu_num*3 + head_num*2 == tehai_max_num-2) {
-		tenpai_check(bakaze, jikaze, dorav, fuuro, 0, tehai, head, kotu, syuntu, teev);
+		tenpai_check(bakaze, jikaze, fuuro, 0, tehai, head, kotu, syuntu, teev);
 	} else if (mentu_num*3 + head_num*2 == tehai_max_num) {
-		tenpai_check(bakaze, jikaze, dorav, fuuro, 1, tehai, head, kotu, syuntu, teev);
+		tenpai_check(bakaze, jikaze, fuuro, 1, tehai, head, kotu, syuntu, teev);
 	} else if (mentu_num*3 + head_num*2 < tehai_max_num) {
 		for (int haic = start/10; haic < 3; haic++) {
 			for (int hain = start%10; hain <= 7; hain++) {
@@ -700,7 +688,7 @@ void Tehai_Estimator::add_syuntu (
 					tehai[haic*10+hain+1]++;
 					tehai[haic*10+hain+2]++;
 					syuntu[haic*10+hain]++;
-					add_syuntu(bakaze, jikaze, dorav, fuuro, head_num, kotu_num, syuntu_num+1, haic*10+hain, tehai, head, kotu, syuntu, teev);
+					add_syuntu(bakaze, jikaze, fuuro, head_num, kotu_num, syuntu_num+1, haic*10+hain, tehai, head, kotu, syuntu, teev);
 					tehai[haic*10+hain]--;
 					tehai[haic*10+hain+1]--;
 					tehai[haic*10+hain+2]--;
@@ -712,7 +700,7 @@ void Tehai_Estimator::add_syuntu (
 }
 
 void Tehai_Estimator::add_kotu (
-	const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
+	const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
 	int head_num, int kotu_num, int start, Hai_Array& tehai, int head[38], int kotu[38], int syuntu[30], std::vector<Tehai_Estimator_Element>& teev
 ) {
 	if (head_num*2 + kotu_num*3 < tehai_max_num) {
@@ -720,18 +708,18 @@ void Tehai_Estimator::add_kotu (
 			if(nokori[hai]-tehai[hai]>=3){
 				tehai[hai] += 3;
 				kotu[hai]++;
-				add_kotu(bakaze, jikaze, dorav, fuuro, head_num, kotu_num+1, hai+1, tehai, head, kotu, syuntu, teev);
-				add_syuntu(bakaze, jikaze, dorav, fuuro, head_num, kotu_num+1, 0, 1, tehai, head, kotu, syuntu, teev);
+				add_kotu(bakaze, jikaze, fuuro, head_num, kotu_num+1, hai+1, tehai, head, kotu, syuntu, teev);
+				add_syuntu(bakaze, jikaze, fuuro, head_num, kotu_num+1, 0, 1, tehai, head, kotu, syuntu, teev);
 				tehai[hai] -= 3;
 				kotu[hai]--;
 			}
 		}
 	}
-	add_syuntu(bakaze, jikaze, dorav, fuuro, head_num, kotu_num, 0, 1, tehai, head, kotu, syuntu, teev);
+	add_syuntu(bakaze, jikaze, fuuro, head_num, kotu_num, 0, 1, tehai, head, kotu, syuntu, teev);
 }
 
 void Tehai_Estimator::add_head (
-	const int bakaze, const int jikaze, const std::vector<int>& dorav, const Fuuro_Vector& fuuro,
+	const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
 	int head_num, int start, Hai_Array& tehai, int head[38], int kotu[38], int syuntu[30], std::vector<Tehai_Estimator_Element>& teev
 ) {
 	if (head_num<2 && head_num*2 < tehai_max_num) {
@@ -739,18 +727,18 @@ void Tehai_Estimator::add_head (
 			if (nokori[hai]-tehai[hai] >= 2) {
 				tehai[hai] += 2;
 				head[hai]++;
-				add_head(bakaze, jikaze, dorav, fuuro, head_num+1, hai+1, tehai, head, kotu, syuntu, teev);
-				add_kotu(bakaze, jikaze, dorav, fuuro, head_num+1, 0, 1, tehai, head, kotu, syuntu, teev);
+				add_head(bakaze, jikaze, fuuro, head_num+1, hai+1, tehai, head, kotu, syuntu, teev);
+				add_kotu(bakaze, jikaze, fuuro, head_num+1, 0, 1, tehai, head, kotu, syuntu, teev);
 				tehai[hai] -= 2;
 				head[hai]--;
 			}
 		}
 	}
-	add_kotu(bakaze, jikaze, dorav, fuuro, head_num, 0, 1, tehai, head, kotu, syuntu, teev);
+	add_kotu(bakaze, jikaze, fuuro, head_num, 0, 1, tehai, head, kotu, syuntu, teev);
 }
 
 std::vector<Tehai_Estimator_Element> Tehai_Estimator::cal_teev (
-	const int bakaze, const int jikaze, const std::vector<int>& dora_marker, const Fuuro_Vector& fuuro,
+	const int bakaze, const int jikaze, const Fuuro_Vector& fuuro,
 	const int tehai_max_num_in, const Hai_Array& nokori_in, const std::array<bool, 38>& minogashi_in
 ) {
 	tehai_max_num = tehai_max_num_in;
@@ -761,10 +749,8 @@ std::vector<Tehai_Estimator_Element> Tehai_Estimator::cal_teev (
 	int head[38] = {};
 	int kotu[38] = {};
 	int syuntu[30] = {};
-	visible_dora_num = count_dora(tehai, fuuro, dora_marker);
 	std::vector<Tehai_Estimator_Element> teev;
-	const std::vector<int> dorav = dora_marker_to_dora(dora_marker);
-	add_head(bakaze, jikaze, dorav, fuuro, 0, 1, tehai, head, kotu, syuntu, teev);
+	add_head(bakaze, jikaze, fuuro, 0, 1, tehai, head, kotu, syuntu, teev);
 	return teev;
 }
 
@@ -773,7 +759,7 @@ std::vector<Tehai_Estimator_Element> Tehai_Estimator::cal_teev_with_prob (
 	const int tehai_max_num_in, const Hai_Array& nokori_in, const std::array<bool, 38>& minogashi_in
 ) {
 	std::vector<Tehai_Estimator_Element> teev = cal_teev(
-		game_state.bakaze, game_state.player_state[target].jikaze, game_state.dora_marker, game_state.player_state[target].fuuro,
+		game_state.bakaze, game_state.player_state[target].jikaze, game_state.player_state[target].fuuro,
 		tehai_max_num_in, nokori_in, minogashi_in
 	);
 	const std::array<bool, 38> minogashi_flag = get_minogashi_flag(game_record, target);
@@ -1250,63 +1236,6 @@ std::array<std::array<float, 100>, 38> cal_hai_prob_from_machi_coeff(
 		for (int han = 0; han < 100; han++) {
 			hai_prob[j*10+3][han] += machi_coeff.katachi_prob[3] * machi_coeff.penchan_coeff[j][0] * hanfu_weight[han];
 			hai_prob[j*10+7][han] += machi_coeff.katachi_prob[3] * machi_coeff.penchan_coeff[j][1] * hanfu_weight[han];
-		}
-	}
-	if (!is_tsumo) {
-		// 以下はcal_hai_prob_reach_dora_shift()の内容
-		std::array<std::array<float, 14>, 38> dora_shift_prob;
-		for (int hai = 0; hai < 38; hai++) {
-			for (int han = 0; han < 14; han++) {
-				dora_shift_prob[hai][han] = 0.0;
-			}
-		}
-
-		int ds_ryanmen[3][7], ds_syabo[38], ds_tanki[38], ds_kanchan[3][9], ds_penchan[3][2];
-		for(int c=0;c<3;c++){
-			for(int i=1;i<=6;i++){
-				ds_ryanmen[c][i] = hai_dora_han(game_state.dora_marker, c*10+i+1) + hai_dora_han(game_state.dora_marker, c*10+i+2);
-			}
-			for(int i=2;i<=8;i++){
-				ds_kanchan[c][i] = hai_dora_han(game_state.dora_marker, c*10+i-1) + hai_dora_han(game_state.dora_marker, c*10+i+1);
-			}
-			ds_penchan[c][0] = hai_dora_han(game_state.dora_marker, c*10+1) + hai_dora_han(game_state.dora_marker, c*10+2);
-			ds_penchan[c][1] = hai_dora_han(game_state.dora_marker, c*10+8) + hai_dora_han(game_state.dora_marker, c*10+9);
-		}
-		for(int hai=1;hai<38;hai++){
-			if(hai%10!=0){
-				ds_syabo[hai] = hai_dora_han(game_state.dora_marker, hai)*2;
-				ds_tanki[hai] = hai_dora_han(game_state.dora_marker, hai);
-			}
-		}
-
-		for(int c=0;c<3;c++){
-			for(int i=1;i<=6;i++){
-				dora_shift_prob[c*10+i][std::min(ds_ryanmen[c][i],13)] += machi_coeff.katachi_prob[0]*machi_coeff.ryanmen_coeff[c][i];
-				dora_shift_prob[c*10+i+3][std::min(ds_ryanmen[c][i],13)] += machi_coeff.katachi_prob[0]*machi_coeff.ryanmen_coeff[c][i];
-			}
-			for(int i=2;i<=8;i++){
-				dora_shift_prob[c*10+i][std::min(ds_kanchan[c][i],13)] += machi_coeff.katachi_prob[3]*machi_coeff.kanchan_coeff[c][i];
-			}
-			dora_shift_prob[c*10+3][std::min(ds_penchan[c][0],13)] += machi_coeff.katachi_prob[3]*machi_coeff.penchan_coeff[c][0];
-			dora_shift_prob[c*10+7][std::min(ds_penchan[c][1],13)] += machi_coeff.katachi_prob[3]*machi_coeff.penchan_coeff[c][1];
-		}
-		for(int hai=1;hai<38;hai++){
-			if(hai%10!=0){
-				dora_shift_prob[hai][std::min(ds_syabo[hai],13)] += machi_coeff.katachi_prob[1]*machi_coeff.syabo_coeff[hai];
-				dora_shift_prob[hai][std::min(ds_tanki[hai],13)] += machi_coeff.katachi_prob[2]*machi_coeff.tanki_coeff[hai];
-			}
-		}
-
-		for (const int dm : game_state.dora_marker) {
-			han_prob_shift(dora_shift_prob[dora_marker_to_dora(dm)], 1);
-		}
-		for (int hai = 0; hai < 38; hai++) {
-			if (hai % 10 != 0) {
-				float sum = 0.0;
-				for (int han = 0; han < 100; han++) {
-					sum += hai_prob[hai][han];
-				}
-			}
 		}
 	}
 	return hai_prob;
