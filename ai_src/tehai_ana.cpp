@@ -236,7 +236,7 @@ void Tehai_Analyzer_Basic::set_agari_shanten_num(const int num) {
 }
 
 int Tehai_Analyzer_Basic::count_hai(const int hai) const {
-	assert_with_out(hai%10 != 0, "count_hai_error");
+	//assert_with_out(hai%10 != 0, "count_hai_error");
 	return tehai_bit.count_hai(hai);
 }
 	  

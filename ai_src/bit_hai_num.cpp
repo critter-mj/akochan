@@ -45,18 +45,18 @@ int Bit_Hai_Num::get_size() const {
 }
 
 int Bit_Hai_Num::count_hai(const int hai) const {
-  assert(hai%10 != 0);
+  //assert(hai%10 != 0);
   return bit_to_num(color[hai/10],hai%10);
 }
 
 void Bit_Hai_Num::add_hai(const int hai) {
-  assert(hai%10 != 0);
+  //assert(hai%10 != 0);
   color[hai/10] += 1 << ((hai%10 - 1)*3);
   size++;
 }
 
 void Bit_Hai_Num::delete_hai(const int hai) {
-  assert(hai%10 != 0);
+  //assert(hai%10 != 0);
   color[hai/10] -= 1 << ((hai%10 - 1)*3);
   size--;
 }
