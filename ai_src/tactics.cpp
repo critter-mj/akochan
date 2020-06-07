@@ -228,19 +228,15 @@ int cal_titoi_change_num_max(const int titoi_shanten_num, const int mentu_shante
 	}
 }
 
-bool cal_dp_flag(const int shanten_num, const int fuuro_agari_shanten_num, const bool is_other_reach_declared, const bool is_fuuro_phase, const Tactics& tactics) {
+bool cal_dp_flag(const int shanten_num, const int fuuro_agari_shanten_num, const bool is_fuuro_phase, const Tactics& tactics) {
     if (shanten_num <= tactics.inclusive_sn_always) {
         return true;
     }
-    if (is_other_reach_declared) {
-        if (shanten_num <= tactics.inclusive_sn_other_reach) {
-            return true;
-        }
-    }
+
     if (is_fuuro_phase && shanten_num <= tactics.inclusive_sn_fp) {
         return true;
     }
-    if (is_other_reach_declared && is_fuuro_phase) {
+    if (is_fuuro_phase) {
         if (shanten_num <= tactics.inclusive_sn_fp_other_reach) {
             return true;
         }
@@ -249,17 +245,15 @@ bool cal_dp_flag(const int shanten_num, const int fuuro_agari_shanten_num, const
     if (fuuro_agari_shanten_num <= tactics.inclusive_sn_always) {
         return true;
     }
-    if (is_other_reach_declared) {
-        if (fuuro_agari_shanten_num <= tactics.inclusive_sn_other_reach) {
-            return true;
-        }
+    if (fuuro_agari_shanten_num <= tactics.inclusive_sn_other_reach) {
+        return true;
     }
     
     if (fuuro_agari_shanten_num <= tactics.inclusive_sn_fp) {
         return true;
     }
 
-    if (is_other_reach_declared && is_fuuro_phase) {
+    if (is_fuuro_phase) {
         if (fuuro_agari_shanten_num <= tactics.inclusive_sn_fp_other_reach) {
             return true;
         }

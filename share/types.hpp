@@ -92,8 +92,6 @@ class Player_State {
     Hai_Array tehai;
     Fuuro_Vector fuuro;
     Kawa kawa;
-    bool reach_declared;
-    bool reach_accepted;
 
     Player_State();
     void reset_tehai_state();
@@ -152,7 +150,6 @@ Game_State get_game_state_start_kyoku(const json11::Json& action_json);
 void go_next_state(Game_State& game_state, const json11::Json& action_json);
 Game_State get_game_state(const Moves& game_record);
 
-bool is_reach_accepted(const Moves& game_record, const int pid);
 bool is_ippatsu_valid(const Moves& game_record, const int pid);
 std::pair<int, int> count_tsumo_num(const Moves& game_record);
 int count_tsumo_num_all(const Moves& game_record);

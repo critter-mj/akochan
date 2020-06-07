@@ -6,8 +6,6 @@
 enum Action_Type : char {
 	AT_TSUMO = 0,
 	AT_DAHAI = -1,
-	AT_REACH_DECLARE = 19,
-	AT_REACH_ACCEPTED = 20, //宣言牌がロンされない場合「リーチ宣言、打牌、リーチ受理、次の行動」の順番を想定しています。ロンされる場合「リーチ宣言、打牌、ロン」で局が終わる想定です。
 	AT_CHI_LOW = 11, // 数字の小さい牌をチーする。例:2m,3mを晒して1mをフーロ
 	AT_CHI_MIDDLE = 12, // 数字が中間の牌をチーする。
 	AT_CHI_HIGH = 13, // 数字の大きい牌をチーする。
@@ -24,7 +22,6 @@ enum Action_Type : char {
 
     AT_TSUMO_AGARI = 50,
 	AT_RON_AGARI = 51,
-	AT_ANKAN_AND_REACH_DECLARE = 52, // 暗槓とリーチ宣言の前にはリンシャンツモが入るため、この合法手のまとめ方は不自然だが、この行動の期待利得を計算したいケースがあるため定義。
 	AT_FUURO_PASS = 53,
 	AT_KYUSHUKYUHAI = 54,
     AT_NULL = -100,
@@ -38,7 +35,6 @@ bool is_chi_low(Action_Type action_type);
 bool is_chi_middle(Action_Type action_type);
 bool is_chi_high(Action_Type action_type);
 bool is_chi(Action_Type action_type);
-bool is_reach_declare(Action_Type action_type);
 
 class Tsumo_Edge {
 	public:

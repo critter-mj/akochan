@@ -30,7 +30,7 @@ void Tehai_Analyzer_Basic_Chn::reset_tehai_analyzer_basic(){
 	tehai_state.reset();
 }
 
-void Tehai_Analyzer_Basic_Chn::reset_tehai_analyzer_basic_with(const Hai_Array& tehai_src, const bool reach_flag, const Fuuro_Vector& fuuro){
+void Tehai_Analyzer_Basic_Chn::reset_tehai_analyzer_basic_with(const Hai_Array& tehai_src, const Fuuro_Vector& fuuro){
 	reset_tehai_analyzer_basic();
 	set_tehai_num(0);
 	for (int hai = 1; hai < 38; hai++) {
@@ -40,7 +40,7 @@ void Tehai_Analyzer_Basic_Chn::reset_tehai_analyzer_basic_with(const Hai_Array& 
 		}
 	}
 	set_fuuro(fuuro);
-	tehai_state.reset_with(tehai_src, reach_flag, fuuro);
+	tehai_state.reset_with(tehai_src, fuuro);
 }
 
 void Tehai_Analyzer_Basic_Chn::reset_tehai_analyzer_basic_with2(const Bit_Hai_Num& tehai_bit_src, const Tehai_State2& ts) {
@@ -76,9 +76,9 @@ void Tehai_Analyzer_Chn::reset_tehai_analyzer() {
 	}
 }
 
-void Tehai_Analyzer_Chn::reset_tehai_analyzer_with(const Hai_Array& tehai_src, const bool reach_flag, const Fuuro_Vector& fuuro){
+void Tehai_Analyzer_Chn::reset_tehai_analyzer_with(const Hai_Array& tehai_src, const Fuuro_Vector& fuuro){
 	reset_tehai_analyzer();
-	reset_tehai_analyzer_basic_with(tehai_src, reach_flag, fuuro);
+	reset_tehai_analyzer_basic_with(tehai_src, fuuro);
 }
 
 bool Tehai_Analyzer_Basic_Chn::operator==(const Tehai_Analyzer_Basic_Chn& rhs) const {

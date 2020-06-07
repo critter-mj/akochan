@@ -16,7 +16,6 @@ bool is_aka_hai(const int hai);
 
 int mod_pid(const int kyoku, const int oya, const int pid);
 
-int get_other_reach_declared_num(const int my_pid, const Game_State& game_state);
 int get_other_fuuro_num_max(const int my_pid, const Game_State& game_state);
 
 Hai_Array get_hai_visible_all(const Game_State& game_state);

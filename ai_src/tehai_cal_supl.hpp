@@ -48,7 +48,7 @@ void set_tsumo_node_mentu(
 
 void set_tenpai_prob_other(const int my_pid, const Game_State& game_state, const int tsumo_num, const std::array<float, 4>& tenpai_prob_now, double **tenpai_prob_other, double **reach_tenpai_prob_other);
 
-float cal_other_end_prob_ako(const bool my_reach, const int act_num1, const int act_num2, const int other_reach_num, const float other_end_prob_input);
+float cal_other_end_prob_ako(const bool my_reach, const int act_num1, const int act_num2, const float other_end_prob_input);
 float cal_tenpai_after_prob_ako(const bool my_reach, const int act_num1, const int act_num2, const float tenpai_prob_now);
 void set_other_end_prob(const int my_pid, const int tsumo_num, const int act_num, const std::array<float, 4>& tenpai_prob_now, double *other_end_prob, double *reach_other_end_prob, const Game_State& game_state);
 

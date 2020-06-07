@@ -15,7 +15,6 @@ json11::Json make_tsumo(const int actor, const int hai);
 
 json11::Json make_dahai(const int actor, const int hai, const bool tsumogiri);
 json11::Json make_reach(const int actor);
-json11::Json make_reach_accepted(const int actor);
 
 json11::Json make_pon(const int actor, const int target, const int hai, const std::vector<int> consumed);
 json11::Json make_pon_default(const int actor, const int target, const int hai);

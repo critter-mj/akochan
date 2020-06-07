@@ -216,7 +216,7 @@ std::array<int, 2> get_somete_tenpai_post_feature(const Kawa& kawa, const Color_
 }
 
 float cal_somete_ako(const Game_State& game_state, const int target, const Color_Type color) {
-	if (game_state.player_state[target].reach_declared || game_state.player_state[target].fuuro.size() == 0) {
+	if (game_state.player_state[target].fuuro.size() == 0) {
 		return 0.0;
 	} else if (!somete_possible(game_state.player_state[target].fuuro, color)) {
 		return 0.0;

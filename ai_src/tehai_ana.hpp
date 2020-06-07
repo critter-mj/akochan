@@ -26,7 +26,7 @@ public:
 	Tehai_Analyzer_Basic();
 	void reset_tenpai();
 	void reset_tehai_analyzer_basic();
-	void reset_tehai_analyzer_basic_with(const Hai_Array& tehai_src, const bool reach_flag, const Fuuro_Vector& fuuro);
+	void reset_tehai_analyzer_basic_with(const Hai_Array& tehai_src, const Fuuro_Vector& fuuro);
 	//void reset_tehai_analyzer_basic_with2(const int tehai_src[38], const Tehai_State2& ts);
 	void reset_tehai_analyzer_basic_with2(const Bit_Hai_Num& tehai_bit_src, const Tehai_State2& ts);
 	bool operator==(const Tehai_Analyzer_Basic& rhs) const;
@@ -128,7 +128,7 @@ public:
 	Tehai_Analyzer();
 	
 	void reset_tehai_analyzer();
-	void reset_tehai_analyzer_with(const Hai_Array& tehai_src, const bool reach_flag, const Fuuro_Vector& fuuro);
+	void reset_tehai_analyzer_with(const Hai_Array& tehai_src, const Fuuro_Vector& fuuro);
 
 	int pattern_flag;
 	int mentu_change_num_max, titoi_change_num_max;

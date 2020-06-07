@@ -6,13 +6,7 @@ PG_Kyoku_Result::PG_Kyoku_Result(){}
 PG_Kyoku_Init get_next_kyoku_init(const PG_Kyoku_Init& kyoku_init, const PG_Kyoku_Result& kyoku_result, const std::string& game_rule) {
     PG_Kyoku_Init next_kyoku_init = kyoku_init;
     const int oya = kyoku_init.kyoku - 1;
-    for (int pid = 0; pid < 4; pid++) {
-        if (kyoku_result.reach_accepted[pid]) {
-            next_kyoku_init.scores[pid] -= 1000;
-            next_kyoku_init.kyotaku++;
-            // 1000点未満のプレイヤーはリーチを打てないが、疑似ゲームなら打ててもよいと思われる。
-        }
-    }
+    
     std::array<int, 4> ten_move;
     if (kyoku_result.hora_player < 4) {
         ten_move = ten_move_hora(kyoku_result.hora_player, kyoku_result.target_player, kyoku_result.han);
@@ -71,11 +65,10 @@ PG_Kyoku_Result make_pg_kyoku_result_hora(const int hora_player, const int targe
     // リーチ状況に関しては考慮しないことにする。
 }
 
-PG_Kyoku_Result make_pg_kyoku_result_ryukyoku(const std::array<bool, 4>& tenpai, const std::array<bool, 4>& reach_accepted) {
+PG_Kyoku_Result make_pg_kyoku_result_ryukyoku(const std::array<bool, 4>& tenpai) {
     PG_Kyoku_Result kyoku_result;
     kyoku_result.hora_player = 4;
     kyoku_result.tenpai = tenpai;
-    kyoku_result.reach_accepted = reach_accepted;
     return kyoku_result;
 }
 
@@ -161,21 +154,18 @@ PG_Kyoku_Result Pseudo_Game_Generator::generate_kyoku() {
         const int fuidx_ron = random_int_from_acc_vec(ron_fu_prob_acc);
         return make_pg_kyoku_result_hora(hora_player, target_player, han_ron, fuidx_ron);
     } else if (result_type == 2) {
-        std::array<bool, 4> tenpai, reach_accepted;
+        std::array<bool, 4> tenpai;
         for (int pid = 0; pid < 4; pid++) {
             const int ryukyoku_player_type = random_int_from_acc_vec(ryukyoku_player_prob_acc);
             if (ryukyoku_player_type == 0) {
                 tenpai[pid] = true;
-                reach_accepted[pid] = true;
             } else if (ryukyoku_player_type == 1) {
                 tenpai[pid] = true;
-                reach_accepted[pid] = false;
             } else if (ryukyoku_player_type == 2) {
                 tenpai[pid] = false;
-                reach_accepted[pid] = false;
             } else { assert_with_out(false, "PG_Kyoku_Generator ryukyoku_player_type error!"); }
         }
-        return make_pg_kyoku_result_ryukyoku(tenpai, reach_accepted);
+        return make_pg_kyoku_result_ryukyoku(tenpai);
     } else { assert_with_out(false, "PG_Kyoku_Generator result_type error!"); return PG_Kyoku_Result(); }
 }
 

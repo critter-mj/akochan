@@ -123,19 +123,10 @@ void set_tenpai_prob_other(const int my_pid, const Game_State& game_state, const
 		assert_with_out(!tactics_json[my_pid]["tenpai_after_est_begin"].is_null(), "tenpai_after_est_begin_is_null");
 		const int act_num = game_state.player_state[my_pid].kawa.size();
 		const int after_begin = tactics_json[my_pid]["tenpai_after_est_begin"].int_value(); // ako のデフォルトは0
-		const int other_reach_declared_num = get_other_reach_declared_num(my_pid, game_state);
 		for (int pid = 0; pid < 4; pid++) {
 			for (int tn = 0; tn <= tsumo_num; tn++) {
-				if (game_state.player_state[pid].reach_declared) {
-					tenpai_prob_other[pid][tsumo_num-tn] = 1.0;
-					reach_tenpai_prob_other[pid][tsumo_num-tn] = 1.0;
-				} else {
-					tenpai_prob_other[pid][tsumo_num-tn] = cal_tenpai_after_prob_ako(false, act_num, act_num + after_begin + tn, tenpai_prob_now[pid]);
-					reach_tenpai_prob_other[pid][tsumo_num-tn] = cal_tenpai_after_prob_ako(true, act_num, act_num + after_begin + tn, tenpai_prob_now[pid]);
-				}
-				if (0 < other_reach_declared_num) { // to do ako この処理を kanon へ反映したほうがよいかもしれない。
-					tenpai_prob_other[pid][tsumo_num-tn] = reach_tenpai_prob_other[pid][tsumo_num-tn];
-				}
+				tenpai_prob_other[pid][tsumo_num-tn] = cal_tenpai_after_prob_ako(false, act_num, act_num + after_begin + tn, tenpai_prob_now[pid]);
+				reach_tenpai_prob_other[pid][tsumo_num-tn] = cal_tenpai_after_prob_ako(true, act_num, act_num + after_begin + tn, tenpai_prob_now[pid]);
 			}
 		}
 	} else {
@@ -144,7 +135,7 @@ void set_tenpai_prob_other(const int my_pid, const Game_State& game_state, const
 	}
 }
 
-float cal_other_end_prob_ako(const bool my_reach, const int act_num1, const int act_num2, const int other_reach_num, const float other_end_prob_input) {
+float cal_other_end_prob_ako(const bool my_reach, const int act_num1, const int act_num2, const float other_end_prob_input) {
 	const int lb = my_reach ? 7 : 6;
 	const int ub = my_reach ? 15 : 16;
 	const int ac1 = std::min(std::max(lb, act_num1), ub);
@@ -157,7 +148,7 @@ float cal_other_end_prob_ako(const bool my_reach, const int act_num1, const int 
 
 	float x[3];
 	x[0] = 1.0;
-	x[1] = other_reach_num;
+	x[1] = 0;
 	x[2] = other_end_prob_input;
 	return logistic(w, x, 3);
 }
@@ -187,14 +178,14 @@ void set_other_end_prob(const int my_pid, const int tsumo_num, const int act_num
 	} else if (tactics_json[my_pid]["other_end_prob_est"] == "ako") {
 		float other_end_prob_input = 1.0;
 		for (int pid = 0; pid < 4; pid++) {
-			if (pid != my_pid && !game_state.player_state[pid].reach_declared){
+			if (pid != my_pid){
 				other_end_prob_input *= (1.0 - tenpai_prob_now[pid]);
 			}
 		}
 		other_end_prob_input = 1.0 - other_end_prob_input;
 		for (int tn=0;tn<=tsumo_num;tn++) {
-			other_end_prob[tsumo_num-tn] = cal_other_end_prob_ako(false, act_num, act_num + tn, get_other_reach_declared_num(my_pid, game_state), other_end_prob_input);
-			reach_other_end_prob[tsumo_num-tn] = cal_other_end_prob_ako(true, act_num, act_num + tn, get_other_reach_declared_num(my_pid, game_state), other_end_prob_input);
+			other_end_prob[tsumo_num-tn] = cal_other_end_prob_ako(false, act_num, act_num + tn, other_end_prob_input);
+			reach_other_end_prob[tsumo_num-tn] = cal_other_end_prob_ako(true, act_num, act_num + tn, other_end_prob_input);
 		}
 	} else { assert_with_out(false, "cal_other_end_prob_error:"); }
 }

@@ -21,14 +21,13 @@ class PG_Kyoku_Result {
     int target_player;
     int han, fu;
     std::array<bool, 4> tenpai;
-    std::array<bool, 4> reach_accepted;
     PG_Kyoku_Result();
 };
 
 PG_Kyoku_Init get_next_kyoku_init(const PG_Kyoku_Init& kyoku_init, const PG_Kyoku_Result& kyoku_result);
 
 PG_Kyoku_Result make_pg_kyoku_result_hora(const int hora_player, const int target_player, const int han, const int fuidx);
-PG_Kyoku_Result make_pg_kyoku_result_ryukyoku(const std::array<bool, 4>& tenpai, const std::array<bool, 4>& reach_accepted);
+PG_Kyoku_Result make_pg_kyoku_result_ryukyoku(const std::array<bool, 4>& tenpai);
 
 std::vector<float> read_acc_vec(const std::string& file_name);
 int random_int_from_acc_vec(const std::vector<float>& acc_vec);

@@ -14,8 +14,7 @@
 class Hai_Choice {
 	public:
 	Action_Type action_type;
-	// ツモした時の行動を入れる想定、AT_DAHAI, AT_REACH_DECLARE, AT_ANKAN, AT_KAKAN, AT_TSUMO_AGARI, AT_KYUSHUKYUHAIのいずれか。
-	// AT_REACH_DECLAREの場合、打牌もセットにする。
+	// ツモした時の行動を入れる想定、AT_DAHAI, AT_ANKAN, AT_KAKAN, AT_TSUMO_AGARI, AT_KYUSHUKYUHAIのいずれか。
 	int hai;
 	float pt_exp_after;
 	float pt_exp_total;
@@ -25,7 +24,6 @@ class Hai_Choice {
 
 	Hai_Choice();
 	bool operator<(const Hai_Choice& rhs) const;
-	int is_choice_reach_declare();
 	Moves out_moves(const Game_State& game_state, const int my_pid, const int tsumo_hai) const;
 };
 

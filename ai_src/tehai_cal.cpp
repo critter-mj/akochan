@@ -225,19 +225,17 @@ void Tehai_Calculator::set_tsumo_node_1in_1out(
 	Tehai_Change& tehai_change_tmp_new
 ){
 	set_tsumo_node_exec(tehai_change_tmp_new, true, tehai_calculator_work.candidates_work, tcs, in0num);
-	if (!game_state.player_state[my_pid].reach_declared) {
-		for(int hai_in=0;hai_in<38;hai_in++){
-			if(hai_in%10!=0 && ta_in.using_haikind_num(hai_in)<4){
-				tehai_change_tmp_new.tehai_base.add_hai(hai_in);
-				for(int hai_out=0;hai_out<38;hai_out++){
-					if(hai_out%10 != 0 && ta_in.count_hai(hai_out)) {
-						tehai_change_tmp_new.tehai_base.delete_hai(hai_out);
-						set_tsumo_node_exec(tehai_change_tmp_new, false, tehai_calculator_work.candidates_work, tcs, in0num);
-						tehai_change_tmp_new.tehai_base.add_hai(hai_out);
-					}
+	for(int hai_in=0;hai_in<38;hai_in++){
+		if(hai_in%10!=0 && ta_in.using_haikind_num(hai_in)<4){
+			tehai_change_tmp_new.tehai_base.add_hai(hai_in);
+			for(int hai_out=0;hai_out<38;hai_out++){
+				if(hai_out%10 != 0 && ta_in.count_hai(hai_out)) {
+					tehai_change_tmp_new.tehai_base.delete_hai(hai_out);
+					set_tsumo_node_exec(tehai_change_tmp_new, false, tehai_calculator_work.candidates_work, tcs, in0num);
+					tehai_change_tmp_new.tehai_base.add_hai(hai_out);
 				}
-				tehai_change_tmp_new.tehai_base.delete_hai(hai_in);
 			}
+			tehai_change_tmp_new.tehai_base.delete_hai(hai_in);
 		}
 	}
 }
@@ -615,7 +613,7 @@ void Tehai_Calculator::set_candidates3_sub(Tehai_Analyzer tehai_analyzer, const 
 	tehai_change_tmp.id = 0;
 	in0num_sub = 0;
 
-	if (field.player[my_pid].reach_declared_flag == 0 && tehai_analyzer.get_shanten_num() != -1) {
+	if (tehai_analyzer.get_shanten_num() != -1) {
 		set_tsumo_node_mentu(bit_hai_num, tehai_all_num, tehai_analyzer, fuuro_cand_hai, change_num,
 			candidates_sub, tcs_sub, in0num_sub);
 	}
@@ -646,72 +644,70 @@ void Tehai_Calculator::set_candidates3_single_thread(
 		set_tsumo_node_1in_1out(game_state, tehai_analyzer, tehai_change_tmp);
 	}
 
-	if (!game_state.player_state[my_pid].reach_declared) {
-		if (tehai_analyzer.get_shanten_num() != -1) {
-			int mentu_node_flag = 0;
-			for (int sn = 0; sn <= cn_max + tactics.cn_max_addition; sn++) {
-				if (sn <= cn_max) {
-					if (tactics.tsumo_enumerate_always == -1 ||
-						candidates_size() < tactics.tsumo_enumerate_always ||
-						(mentu_node_flag == 0 && sn < 5)
+	if (tehai_analyzer.get_shanten_num() != -1) {
+		int mentu_node_flag = 0;
+		for (int sn = 0; sn <= cn_max + tactics.cn_max_addition; sn++) {
+			if (sn <= cn_max) {
+				if (tactics.tsumo_enumerate_always == -1 ||
+					candidates_size() < tactics.tsumo_enumerate_always ||
+					(mentu_node_flag == 0 && sn < 5)
+				){
+					int size_tmp = candidates_size();
+					set_tsumo_node_mentu(bit_hai_num, tehai_all_num, tehai_analyzer, fuuro_cand_hai, sn,
+						tehai_calculator_work.candidates_work, tcs, in0num);
+					if(candidates_size()>size_tmp && mentu_node_flag==0){
+						mentu_node_flag = 1;
+					}
+					if(sn<=tehai_analyzer.get_titoi_shanten_num()){
+						set_tsumo_node_titoi(tehai_analyzer, sn);
+					}
+					if (fuuro_cand_hai!=0 &&
+						(tactics.tsumo_enumerate_fuuro_restriction == -1 || candidates_size() < tactics.tsumo_enumerate_fuuro_restriction)
 					){
-						int size_tmp = candidates_size();
-						set_tsumo_node_mentu(bit_hai_num, tehai_all_num, tehai_analyzer, fuuro_cand_hai, sn,
+						set_tsumo_node_mentu(bit_hai_num, tehai_all_num, tehai_analyzer_af, fuuro_cand_hai, sn,
 							tehai_calculator_work.candidates_work, tcs, in0num);
-						if(candidates_size()>size_tmp && mentu_node_flag==0){
-							mentu_node_flag = 1;
+					}
+				} else if (candidates_size() < tactics.tsumo_enumerate_restriction) {
+					std::sort(tehai_analyzer.inout_pattern_vec[sn].begin(), tehai_analyzer.inout_pattern_vec[sn].end());
+					std::reverse(tehai_analyzer.inout_pattern_vec[sn].begin(), tehai_analyzer.inout_pattern_vec[sn].end());
+					for(int nip=0;nip<tehai_analyzer.inout_pattern_vec[sn].size();nip++){
+						for(int nin=1;nin<=sn;nin++){
+							set_tsumo_node_child(bit_hai_num, tehai_all_num,
+								tehai_analyzer.inout_pattern_vec[sn][nip].hai_in_pattern, tehai_analyzer.inout_pattern_vec[sn][nip].hai_out_pattern,
+								nin, tehai_calculator_work.candidates_work, tcs, in0num);
 						}
-						if(sn<=tehai_analyzer.get_titoi_shanten_num()){
-							set_tsumo_node_titoi(tehai_analyzer, sn);
+						if (candidates_size() >= tactics.tsumo_enumerate_restriction) {
+							break;
 						}
-						if (fuuro_cand_hai!=0 &&
-							(tactics.tsumo_enumerate_fuuro_restriction == -1 || candidates_size() < tactics.tsumo_enumerate_fuuro_restriction)
-						){
-							set_tsumo_node_mentu(bit_hai_num, tehai_all_num, tehai_analyzer_af, fuuro_cand_hai, sn,
-								tehai_calculator_work.candidates_work, tcs, in0num);
-						}
-					} else if (candidates_size() < tactics.tsumo_enumerate_restriction) {
-						std::sort(tehai_analyzer.inout_pattern_vec[sn].begin(), tehai_analyzer.inout_pattern_vec[sn].end());
-						std::reverse(tehai_analyzer.inout_pattern_vec[sn].begin(), tehai_analyzer.inout_pattern_vec[sn].end());
-						for(int nip=0;nip<tehai_analyzer.inout_pattern_vec[sn].size();nip++){
+					}
+				}
+			} else {
+				if (candidates_size() < tactics.tsumo_enumerate_additional_maximum) {
+					std::sort(tehai_analyzer.inout_pattern_vec[sn].begin(), tehai_analyzer.inout_pattern_vec[sn].end());
+					std::reverse(tehai_analyzer.inout_pattern_vec[sn].begin(), tehai_analyzer.inout_pattern_vec[sn].end());
+					for(int nip=0;nip<tehai_analyzer.inout_pattern_vec[sn].size();nip++){
+						if (candidates_size() < tactics.tsumo_enumerate_additional_minimum ||
+							tehai_analyzer.inout_pattern_vec[sn][nip].priority > tactics.tsumo_enumerate_additional_priority
+						) {
 							for(int nin=1;nin<=sn;nin++){
 								set_tsumo_node_child(bit_hai_num, tehai_all_num,
 									tehai_analyzer.inout_pattern_vec[sn][nip].hai_in_pattern, tehai_analyzer.inout_pattern_vec[sn][nip].hai_out_pattern,
 									nin, tehai_calculator_work.candidates_work, tcs, in0num);
 							}
-							if (candidates_size() >= tactics.tsumo_enumerate_restriction) {
-								break;
-							}
+						}
+						if (candidates_size() >= tactics.tsumo_enumerate_additional_maximum) {
+							break;
 						}
 					}
-				} else {
-					if (candidates_size() < tactics.tsumo_enumerate_additional_maximum) {
-						std::sort(tehai_analyzer.inout_pattern_vec[sn].begin(), tehai_analyzer.inout_pattern_vec[sn].end());
-						std::reverse(tehai_analyzer.inout_pattern_vec[sn].begin(), tehai_analyzer.inout_pattern_vec[sn].end());
-						for(int nip=0;nip<tehai_analyzer.inout_pattern_vec[sn].size();nip++){
-							if (candidates_size() < tactics.tsumo_enumerate_additional_minimum ||
-								tehai_analyzer.inout_pattern_vec[sn][nip].priority > tactics.tsumo_enumerate_additional_priority
-							) {
-								for(int nin=1;nin<=sn;nin++){
-									set_tsumo_node_child(bit_hai_num, tehai_all_num,
-										tehai_analyzer.inout_pattern_vec[sn][nip].hai_in_pattern, tehai_analyzer.inout_pattern_vec[sn][nip].hai_out_pattern,
-										nin, tehai_calculator_work.candidates_work, tcs, in0num);
-								}
-							}
-							if (candidates_size() >= tactics.tsumo_enumerate_additional_maximum) {
-								break;
-							}
-						}
-					}
-				}
-				if (out_console) {
-					std::cout << sn << " " << cn_max << " " << candidates_size() << " " << mentu_node_flag << std::endl;
 				}
 			}
-		}else{
-			//set_tsumo_node_mawashi_routine(tehai_analyzer, 0);
-			//set_tsumo_node_mawashi_routine(tehai_analyzer, 1);
+			if (out_console) {
+				std::cout << sn << " " << cn_max << " " << candidates_size() << " " << mentu_node_flag << std::endl;
+			}
 		}
+	}else{
+		//set_tsumo_node_mawashi_routine(tehai_analyzer, 0);
+		//set_tsumo_node_mawashi_routine(tehai_analyzer, 1);
 	}
 
 

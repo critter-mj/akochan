@@ -11,7 +11,7 @@ bool is_daiminkan(Action_Type action_type) {
 }
 
 bool is_ankan(Action_Type action_type) {
-    return (action_type == AT_ANKAN || action_type == AT_ANKAN_AND_REACH_DECLARE);
+    return action_type == AT_ANKAN;
 }
 
 bool is_kakan(Action_Type action_type) {
@@ -32,10 +32,6 @@ bool is_chi_high(Action_Type action_type) {
 
 bool is_chi(Action_Type action_type) {
     return ( is_chi_low(action_type) || is_chi_middle(action_type) || is_chi_high(action_type) );
-}
-
-bool is_reach_declare(Action_Type action_type) {
-    return (action_type == AT_REACH_DECLARE || action_type == AT_ANKAN_AND_REACH_DECLARE );
 }
 
 Tsumo_Edge::Tsumo_Edge() {

@@ -61,8 +61,6 @@ json11::Json hai_array_to_json(const Hai_Array& hai_array) {
 Player_State::Player_State(){}
 
 void Player_State::reset_tehai_state() {
-	reach_declared = false;
-	reach_accepted = false;
 	for (int hai = 0; hai < 38; hai++) {
 		tehai[hai] = 0;
 	}
@@ -379,21 +377,12 @@ void go_next_state(Game_State& game_state, const json11::Json& action_json) {
             const int actor = action_json["actor"].int_value();
             game_state.player_state[actor].tehai[hai]++;
         }
-    } else if (action_json["type"].string_value() == "reach") {
-        const int actor = action_json["actor"].int_value();
-        game_state.player_state[actor].reach_declared = true;
-    } else if (action_json["type"].string_value() == "reach_accepted") {
-        const int actor = action_json["actor"].int_value();
-        game_state.player_state[actor].reach_accepted = true;
-        game_state.player_state[actor].score -= 1000;
-        game_state.kyotaku++;
     } else if (action_json["type"].string_value() == "dahai") {
         const int hai = hai_str_to_int(action_json["pai"].string_value());
         const int actor = action_json["actor"].int_value();
         Sutehai sutehai;
         sutehai.hai = hai;
         sutehai.tsumogiri = action_json["tsumogiri"].bool_value();
-        sutehai.is_reach = game_state.player_state[actor].reach_declared && !game_state.player_state[actor].reach_accepted;
         game_state.player_state[actor].kawa.push_back(sutehai);
         game_state.player_state[actor].tehai[hai]--;
     } else if (action_json["type"].string_value() == "chi") {
@@ -486,19 +475,6 @@ Game_State get_game_state(const Moves& game_record) {
     return game_state;
 }
 
-bool is_reach_accepted(const Moves& game_record, const int pid) {
-    for (int i = game_record.size() - 1; 0 <= i; i--) {
-        const json11::Json& action_json = game_record[i];
-        if (action_json["type"].string_value() == "start_kyoku") {
-            return false;
-        }
-        if (action_json["type"].string_value() == "reach_accepted" && action_json["actor"].int_value() == pid) {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool is_ippatsu_valid(const Moves& game_record, const int pid) {
     for (int i = game_record.size() - 1; 0 <= i; i--) {
         const json11::Json& action_json = game_record[i];
@@ -515,9 +491,6 @@ bool is_ippatsu_valid(const Moves& game_record, const int pid) {
             if (action_json["target"].int_value() == pid) {
                 return false;
             }
-        }
-        if (action_json["type"].string_value() == "reach_accepted" && action_json["actor"].int_value() == pid) {
-            return true;
         }
     }
     return false;
@@ -612,9 +585,6 @@ int get_kyotaku(const Moves& game_record) {
         const json11::Json& action_json = game_record[i];
         if (action_json["type"].string_value() == "hora") {
             return 0;
-        }
-        if (action_json["type"].string_value() == "reach_accepted") {
-            tmp++;
         }
         if (action_json["type"].string_value() == "start_kyoku") {
             return action_json["kyotaku"].int_value() + tmp;
@@ -765,7 +735,6 @@ std::array<bool, 38> get_furiten_flags(const Moves& game_record, const Game_Stat
     std::array<bool, 38> furiten_flags;
     std::fill(furiten_flags.begin(), furiten_flags.end(), false);
     bool once_dahai = false;
-    bool reach_flag = game_state.player_state[pid].reach_accepted;
     for (int i = game_record.size() - 1; 0 <= i; i--) {
         const json11::Json& action_json = game_record[i];
         if (action_json["type"].string_value() == "start_kyoku") {
@@ -778,12 +747,9 @@ std::array<bool, 38> get_furiten_flags(const Moves& game_record, const Game_Stat
             if (action_json["actor"].int_value() == pid) {
                 furiten_flags[haikind(hai_str_to_int(action_json["pai"].string_value()))] = true;
                 once_dahai = true;
-            } else if (!once_dahai || reach_flag) {
+            } else if (!once_dahai) {
                 furiten_flags[haikind(hai_str_to_int(action_json["pai"].string_value()))] = true;
             }
-        }
-        if (action_json["type"].string_value() == "reach_accepted" && action_json["actor"].int_value() == pid) {
-            reach_flag = false;
         }
     }
     return furiten_flags;

@@ -1265,23 +1265,19 @@ std::array<float, 100> cal_agari_hanfu_prob(const std::array<std::array<float, 1
 Tenpai_Estimator_Simple::Tenpai_Estimator_Simple(){}
 
 void Tenpai_Estimator_Simple::set_tenpai2(const Moves& game_record, const Game_State& game_state, const int my_pid, const int target) {
-	if (game_state.player_state[target].reach_declared) {
-		tenpai_prob = 1.0;
-	} else {
-		if (tactics_json[my_pid]["tenpai_prob_est"] == "instant") {
-			tenpai_prob = 0.25 * game_state.player_state[target].fuuro.size();
-		} else if (tactics_json[my_pid]["tenpai_prob_est"] == "ako") {
-			std::array<float, 3> somete_prob, somete_tenpai_prob;
-			for (Color_Type color = CT_MANZU; color < CT_JIHAI; ++color) {
-				somete_prob[color] = cal_somete_ako(game_state, target, color);
-				somete_tenpai_prob[color] = somete_prob[color] * cal_somete_tenpai_post(game_state, target, color);
-			}
-			const float normal_tenpai_prob = (1.0 - somete_prob[CT_MANZU] - somete_prob[CT_PINZU] - somete_prob[CT_SOZU]) * infer_tenpai_prob_ako(game_record, game_state, target);
-			tenpai_prob = normal_tenpai_prob + somete_tenpai_prob[CT_MANZU] + somete_tenpai_prob[CT_PINZU] + somete_tenpai_prob[CT_SOZU];
-		} else {
-			std::cout << "cal_tenpai_error:" << std::endl;
-			assert(false);
+	if (tactics_json[my_pid]["tenpai_prob_est"] == "instant") {
+		tenpai_prob = 0.25 * game_state.player_state[target].fuuro.size();
+	} else if (tactics_json[my_pid]["tenpai_prob_est"] == "ako") {
+		std::array<float, 3> somete_prob, somete_tenpai_prob;
+		for (Color_Type color = CT_MANZU; color < CT_JIHAI; ++color) {
+			somete_prob[color] = cal_somete_ako(game_state, target, color);
+			somete_tenpai_prob[color] = somete_prob[color] * cal_somete_tenpai_post(game_state, target, color);
 		}
+		const float normal_tenpai_prob = (1.0 - somete_prob[CT_MANZU] - somete_prob[CT_PINZU] - somete_prob[CT_SOZU]) * infer_tenpai_prob_ako(game_record, game_state, target);
+		tenpai_prob = normal_tenpai_prob + somete_tenpai_prob[CT_MANZU] + somete_tenpai_prob[CT_PINZU] + somete_tenpai_prob[CT_SOZU];
+	} else {
+		std::cout << "cal_tenpai_error:" << std::endl;
+		assert(false);
 	}
 }
 
@@ -1297,7 +1293,7 @@ void Tenpai_Estimator_Simple::set_tenpai_estimator(const Moves& game_record, con
 	// 副露時は他家が見逃した前提で評価するためget_furiten_flagsのskip_latestはfalseにする。
 		
 	set_tenpai2(game_record, game_state, my_pid, target);
-	if (game_state.player_state[target].reach_declared || game_state.player_state[target].fuuro.size() == 0) {
+	if (game_state.player_state[target].fuuro.size() == 0) {
 		Machi_Coeff machi_coeff;
 		machi_coeff.init_coeff(my_pid);
 		machi_coeff.safe_flag_to_coeff(sute_kind_flag);

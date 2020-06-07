@@ -29,11 +29,7 @@ int cal_tsumo_num_exp(const int my_pid, const Game_State& game_state, const int 
 		float tp = 1.0;
 		for (int pid = 0; pid < 4; pid++) {
 			if (pid != my_pid) {
-				if (game_state.player_state[pid].reach_declared) {
-					rp++;
-				} else {
-					tp = tp * (1.0 - infer_tenpai_prob_ako_old(game_state.player_state[pid].kawa, game_state.player_state[pid].fuuro.size()));
-				}
+				tp = tp * (1.0 - infer_tenpai_prob_ako_old(game_state.player_state[pid].kawa, game_state.player_state[pid].fuuro.size()));
 			}
 		}
 		tp = 1.0 - tp;
@@ -56,7 +52,6 @@ float cal_my_agari_prob(const int my_pid, const Moves& game_record, const float 
 	assert_with_out(!tactics_json[my_pid]["use_agari_coeff_tp_fnm"].is_null(), "use_agari_coeff_tp_fnm is null");
 	assert_with_out(!tactics_json[my_pid]["use_agari_coeff_tp_an"].is_null(), "use_agari_coeff_tp_an is null");
 	if (game_record[game_record.size()-1]["type"] == "tsumo" &&
-		get_other_reach_declared_num(my_pid, game_state) == 0 &&
 		game_state.player_state[my_pid].fuuro.size() == 0 &&
 		get_other_fuuro_num_max(my_pid, game_state) <= tactics_json[my_pid]["use_agari_coeff_tp_fnm"].int_value() &&
 		game_state.player_state[my_pid].kawa.size() <= tactics_json[my_pid]["use_agari_coeff_tp_an"].int_value()
@@ -75,10 +70,10 @@ float cal_my_agari_prob(const int my_pid, const Moves& game_record, const float 
 
 		float x[4];
 		x[0] = 1.0;
-		x[1] = get_other_reach_declared_num(my_pid, game_state);
+		x[1] = 0;
 		float tmp = 1.0;
 		for (int pid = 0; pid < 4; pid++) {
-			if (pid != my_pid && !game_state.player_state[pid].reach_declared) {
+			if (pid != my_pid) {
 				tmp *= 1.0 - tenpai_prob[pid];
 			}
 		}
@@ -107,23 +102,15 @@ float cal_ryuukyoku_prob(const int my_pid, const Game_State& game_state, const f
 		const int act_num = game_state.player_state[my_pid].kawa.size() + dahai_inc;
 		std::string file_name;
 		if (act_num <= 6) {
-			if (game_state.player_state[my_pid].reach_declared) { 
-				file_name = "params/ryukyoku_prob/ako/reach_para1_6_200.txt";
-			} else {
-				file_name = "params/ryukyoku_prob/ako/para1_6_4000.txt";
-			}
+			file_name = "params/ryukyoku_prob/ako/para1_6_4000.txt";
 		} else {
-			if (game_state.player_state[my_pid].reach_declared) {
-				file_name = "params/ryukyoku_prob/ako/reach_para" + std::to_string(std::min(act_num, 18)) + "_200.txt";
-			} else {
-				file_name = "params/ryukyoku_prob/ako/para" + std::to_string(std::min(act_num, 18)) + "_4000.txt";
-			}
+			file_name = "params/ryukyoku_prob/ako/para" + std::to_string(std::min(act_num, 18)) + "_4000.txt";
 		}
 		float w[4];
 		read_parameters(w, 4, file_name);
 		float x[4];
 		x[0] = 1.0;
-		const int reach_player_num_other = get_other_reach_declared_num(my_pid, game_state);
+		const int reach_player_num_other = 0;
 		if (act_num <= 6) {
 			x[1] = act_num;
 			x[2] = (reach_player_num_other > 0) ? 1.0 : 0.0;
@@ -137,7 +124,7 @@ float cal_ryuukyoku_prob(const int my_pid, const Game_State& game_state, const f
 		}
 		float tmp = 1.0;
 		for (int pid = 0; pid < 4; pid++) {
-			if (pid != my_pid && !game_state.player_state[pid].reach_declared) {
+			if (pid != my_pid) {
 				tmp *= 1.0 - tenpai_prob[pid];
 			}
 		}
@@ -150,51 +137,43 @@ float cal_ryuukyoku_prob(const int my_pid, const Game_State& game_state, const f
 }
 
 float cal_my_keiten_prob(const int my_pid, const Game_State& game_state,  const int dahai_inc, const float keiten_prob_sol) {
-	if (game_state.player_state[my_pid].reach_declared) { 
-		return 1.0;
-	} else {
-		if (tactics_json[my_pid]["my_keiten_prob_est"] == "instant") {
-			if (keiten_prob_sol == 0.0) {
-				return 0.0;
-			} else {
-				return 0.6 * keiten_prob_sol;
-			}
-		} else if (tactics_json[my_pid]["my_keiten_prob_est"] == "ako") {
-			const int act_num = (int)game_state.player_state[my_pid].kawa.size() + dahai_inc;
-			const std::string file_name = "params/my_keiten_prob/ako/para" + std::to_string(std::min(act_num, 17)) + "_4000.txt";
-			float w[3];
-			read_parameters(w, 3, file_name);
-
-			float x[3];
-			x[0] = 1.0;
-			x[1] = keiten_prob_sol;
-			x[2] = std::min(1, get_other_reach_declared_num(my_pid, game_state));
-			return logistic(w, x, 3);
-		} else {
-			assert_with_out(false, "my_keiten_prob_est error!");
+	if (tactics_json[my_pid]["my_keiten_prob_est"] == "instant") {
+		if (keiten_prob_sol == 0.0) {
 			return 0.0;
+		} else {
+			return 0.6 * keiten_prob_sol;
 		}
+	} else if (tactics_json[my_pid]["my_keiten_prob_est"] == "ako") {
+		const int act_num = (int)game_state.player_state[my_pid].kawa.size() + dahai_inc;
+		const std::string file_name = "params/my_keiten_prob/ako/para" + std::to_string(std::min(act_num, 17)) + "_4000.txt";
+		float w[3];
+		read_parameters(w, 3, file_name);
+
+		float x[3];
+		x[0] = 1.0;
+		x[1] = keiten_prob_sol;
+		x[2] = 0;
+		return logistic(w, x, 3);
+	} else {
+		assert_with_out(false, "my_keiten_prob_est error!");
+		return 0.0;
 	}
 }
 
 float cal_other_keiten_prob(const int my_pid, const int target_pid, const Game_State& game_state,  const int dahai_inc, const float current_tenpai_prob) {
-	if (game_state.player_state[target_pid].reach_declared) { 
-		return 1.0;
-	} else {
-		if (tactics_json[my_pid]["other_keiten_prob_est"] == "instant") {
-			return 0.5;
-		} else if (tactics_json[my_pid]["other_keiten_prob_est"] == "ako") {
-			const int act_num = (int)game_state.player_state[my_pid].kawa.size() + dahai_inc;
-			const std::string file_name = "params/other_keiten_prob/ako/para" + std::to_string(std::min(act_num, 17)) + "_4000.txt";
-			float w[2], x[2];
-			read_parameters(w, 2, file_name);
+	if (tactics_json[my_pid]["other_keiten_prob_est"] == "instant") {
+		return 0.5;
+	} else if (tactics_json[my_pid]["other_keiten_prob_est"] == "ako") {
+		const int act_num = (int)game_state.player_state[my_pid].kawa.size() + dahai_inc;
+		const std::string file_name = "params/other_keiten_prob/ako/para" + std::to_string(std::min(act_num, 17)) + "_4000.txt";
+		float w[2], x[2];
+		read_parameters(w, 2, file_name);
 
-			x[0] = 1.0; x[1] = current_tenpai_prob;
-			return logistic(w, x, 2);
-		} else {
-			assert_with_out(false, "other_keiten_prob_est error!");
-			return 0.0;
-		}
+		x[0] = 1.0; x[1] = current_tenpai_prob;
+		return logistic(w, x, 2);
+	} else {
+		assert_with_out(false, "other_keiten_prob_est error!");
+		return 0.0;
 	}
 }
 
@@ -365,13 +344,8 @@ std::array<float, 5> cal_kyoku_result_prob(const int my_pid, const Game_State& g
 		x[0] = 1.0;
 		for (int pid_add = 1; pid_add <= 3; pid_add++) {
 			const int pid = (my_pid + pid_add) % 4;
-			if (game_state.player_state[pid].reach_declared) {
-				x[pid_add] = 1.0;
-				x[pid_add+3] = 0.0;
-			} else {
-				x[pid_add] = 0.0;
-				x[pid_add+3] = tenpai_prob[pid];
-			}
+			x[pid_add] = 0.0;
+			x[pid_add+3] = tenpai_prob[pid];
 		}
 		float tmp_array[3];
 		MC_logistic(w, x, tmp_array, 7, 3);
@@ -451,7 +425,7 @@ float cal_passive_ryuukyoku_value(
 	const int my_pid, const Game_State& game_state, const std::array<float, 4>& tenpai_prob, 
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp
 ) {
-	std::array<float, 4> keiten_prob = cal_keiten_prob(my_pid, game_state, 0, game_state.player_state[my_pid].reach_declared ? 1.0 : 0.0, tenpai_prob); // to do tenpai_probの反映
+	std::array<float, 4> keiten_prob = cal_keiten_prob(my_pid, game_state, 0, 0.0, tenpai_prob); // to do tenpai_probの反映
 	keiten_prob[my_pid] = 0.0; // 本来cal_keiten_probの内部で、keiten_prob_sol = 0.0の時は、keiten_prob[my_pid]が0になるようにすべきと思われるが、akoの方がそのようになっていないため、passive_ryuukyoku_valueの途中で0にする。
 	return cal_ryuukyoku_value(keiten_prob, ryuukyoku_pt_exp);
 }

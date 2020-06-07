@@ -11,10 +11,10 @@ private:
 
 public:
 	Tehai_State2();
-	Tehai_State2(const Hai_Array& tehai, const bool rf, const Fuuro_Vector& fuuro);
+	Tehai_State2(const Hai_Array& tehai, const Fuuro_Vector& fuuro);
   void reset();
   void reset_fuuro();
-  void reset_with(const Hai_Array& tehai, const bool rf, const Fuuro_Vector& fuuro);
+  void reset_with(const Hai_Array& tehai, const Fuuro_Vector& fuuro);
 
 	Tehai_State2& operator=(const Tehai_State2& rhs);
 	bool operator==(const Tehai_State2& rhs) const;

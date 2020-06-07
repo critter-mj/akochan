@@ -167,12 +167,7 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
             int agari_id = -1;
             int agari_ten = 0;
             int han_add = 0;
-            if (game_state.player_state[actor].reach_accepted) {
-                han_add++;
-                if (is_ippatsu_valid(game_record, actor)) {
-                    han_add++;
-                }
-            }
+
             if (current_move["type"].string_value() == "kakan") {
                 han_add++; // 槍槓
             }
@@ -252,12 +247,7 @@ void add_move_after_tsumo(const std::vector<int>& haiyama, Moves& game_record, c
         int agari_id = -1;
         int agari_ten = 0;
         int han_add = 0;
-        if (game_state.player_state[actor].reach_accepted) {
-            han_add++;
-            if (is_ippatsu_valid(game_record, actor)) {
-                han_add++;
-            }
-        }
+
         // ハイテイ、
         tehai[hai]++;
 

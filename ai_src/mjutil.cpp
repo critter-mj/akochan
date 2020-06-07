@@ -102,16 +102,6 @@ int mod_pid(const int kyoku, const int oya, const int pid) {
 	return (4 + pid - oya_first)%4;
 }
 
-int get_other_reach_declared_num(const int my_pid, const Game_State& game_state) {
-	int ret = 0;
-	for (int pid = 0; pid < 4; pid++) {
-		if (pid != my_pid && game_state.player_state[pid].reach_declared) {
-			ret++;
-		}
-	}
-	return ret;
-}
-
 int get_other_fuuro_num_max(const int my_pid, const Game_State& game_state) {
 	int ret = 0;
 	for (int pid = 0; pid < 4; pid++) {
@@ -225,15 +215,6 @@ std::array<bool, 38> get_minogashi_flag(const Moves& game_record, const int targ
 std::array<bool, 38> get_minogashi_ar_flag(const Moves& game_record, const Game_State& game_state, const int target) {
 	std::array<bool, 38> minogashi_ar_flag;
 	std::fill(minogashi_ar_flag.begin(), minogashi_ar_flag.end(), false);
-	if (game_state.player_state[target].reach_declared) {
-		for (int i = game_record.size() - 1; 0 <= i; i--) {
-			if (game_record[i]["type"] == "reach" && game_record[i]["actor"].int_value() == target) {
-				break;
-			} else if (game_record[i]["type"] == "dahai") {
-				minogashi_ar_flag[haikind(hai_str_to_int(game_record[i]["pai"].string_value()))] = true;
-			}
-		}
-	}
 	return minogashi_ar_flag;
 }
 

@@ -6,8 +6,8 @@ Tehai_State2::Tehai_State2(){
 	reset();
 }
 
-Tehai_State2::Tehai_State2(const Hai_Array& tehai, const bool rf, const Fuuro_Vector& fuuro){
-	reset_with(tehai, rf, fuuro);
+Tehai_State2::Tehai_State2(const Hai_Array& tehai, const Fuuro_Vector& fuuro){
+	reset_with(tehai, fuuro);
 }
 
 Tehai_State2& Tehai_State2::operator=(const Tehai_State2& rhs){
@@ -87,7 +87,7 @@ void Tehai_State2::set_fuuro(const Fuuro_Vector& fuuro) {
 	}
 }
 
-void Tehai_State2::reset_with(const Hai_Array& tehai, const bool rf, const Fuuro_Vector& fuuro) {
+void Tehai_State2::reset_with(const Hai_Array& tehai, const Fuuro_Vector& fuuro) {
     for(int i=0;i<3;i++){
         chi_int[i] = 0;
     }
@@ -95,10 +95,7 @@ void Tehai_State2::reset_with(const Hai_Array& tehai, const bool rf, const Fuuro
 		pon_kan_int[i] = 0;
 	}
 	reach_aka_int = 0;
-
-	if (rf) {
-		reach_aka_int += 1;
-	}
+	
 	for(int hc=0;hc<3;hc++){
 		if(tehai[10*(hc+1)]==1){
 			reach_aka_int += 1 << (hc+1);

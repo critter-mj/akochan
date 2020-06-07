@@ -43,12 +43,7 @@ Moves Hai_Choice::out_moves(const Game_State& game_state, const int my_pid, cons
 		return moves;
 	}
 
-	if (action_type == AT_REACH_DECLARE) {
-		if (!game_state.player_state[my_pid].reach_declared) {
-			moves.push_back(make_reach(my_pid));
-		}
-	}
-	if (action_type == AT_DAHAI || AT_REACH_DECLARE) {
+	if (action_type == AT_DAHAI) {
 		moves.push_back(make_dahai(my_pid, hai, hai == tsumo_hai));
 	}
 	return moves;
@@ -131,14 +126,6 @@ std::array<std::array<std::array<float, 100>, 4>, 4> cal_kyoku_end_pt_exp(const 
 }
 
 std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode, const Tactics& tactics) {
-	int riibou = game_state.kyotaku;
-    for (int pid = 0; pid < 4; pid++) {
-        if (game_state.player_state[pid].reach_declared && !game_state.player_state[pid].reach_accepted) {
-            riibou++;
-        }
-        // リーチに関して、declared_flagを用いる。（宣言牌に対する副露判断を適切なものにするため）
-	    // 宣言牌に対するロンに関しては、個別に期待利得を計算する。
-    }
 	const int kyoku_mod = get_kyoku_first(game_record) + game_state.bakaze*4 + game_state.kyoku - 1;
     const int oyaid = get_oya(game_record);
 
@@ -158,9 +145,6 @@ std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_
 					std::array<int, 4> ten_tmp;
 					for (int pid = 0; pid < 4; pid++) {
 						ten_tmp[pid] = game_state.player_state[pid].score + ten_move[pid];
-						if ((game_state.player_state[pid].reach_declared || (pid == my_pid && reach_mode)) && !game_state.player_state[pid].reach_accepted) {
-							ten_tmp[pid] -= 1000;
-						}
 					}
 
 					assert(oyaid - kyoku_mod + 12 >= 0);
@@ -297,7 +281,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const Hai_Array& current_tehai = game_state.player_state[my_pid].tehai;
 	const Hai_Array& current_tehai_kind = haikind(current_tehai);
 	const Fuuro_Vector& current_fuuro = game_state.player_state[my_pid].fuuro;
-	const bool current_reach = game_state.player_state[my_pid].reach_declared;
 	const json11::Json& current_action = game_record[game_record.size() - 1];
 	assert_with_out(current_action["type"] == "tsumo" ||
 				    (current_action["type"] == "dahai" && current_action["actor"].int_value() != my_pid) ||
@@ -310,9 +293,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const Hai_Array hai_visible_kind = sum_hai_array(hai_visible_all_kind, current_tehai_kind);
 
 	const std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp = cal_kyoku_end_pt_exp(game_record, game_state, my_pid, false, tactics);
-	const std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? kyoku_end_pt_exp : cal_kyoku_end_pt_exp(game_record, game_state, my_pid, true, tactics);
+	const std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp_ar = kyoku_end_pt_exp;
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp = cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, false, tactics);
-	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? ryuukyoku_pt_exp : cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, true, tactics);
+	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp_ar = ryuukyoku_pt_exp;
 
 	if (out_console) {
 		std::cout << "ryuukyoku_pt_exp:" << std::endl; 
@@ -340,14 +323,11 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 		}
 		std::cout << std::endl;
 	}
-	tehai_analyzer.reset_tehai_analyzer_with(current_tehai, current_reach, current_fuuro);
+	tehai_analyzer.reset_tehai_analyzer_with(current_tehai, current_fuuro);
 	if (out_console) {
 		tehai_analyzer.print_tehai();
 	}
 
-	if (current_reach && current_action["type"] == "tsumo") {
-		tehai_analyzer.delete_hai(current_hai);
-	}
 	tehai_analyzer.analyze_tenpai(my_pid, game_state);
 	const int mentu_shanten_num = tehai_analyzer.get_mentu_shanten_num();
 	const int titoi_shanten_num = tehai_analyzer.get_titoi_shanten_num();
@@ -456,7 +436,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			bool ori_flag = false;
 			for (int pid_add = 1; pid_add < 4; pid_add++) {
 				const int pid = next_player(my_pid, pid_add);
-				if (game_state.player_state[pid].reach_declared || tenpai_estimator[pid].tenpai_prob > 0.5) {
+				if (tenpai_estimator[pid].tenpai_prob > 0.5) {
 					ori_flag = true;
 				}
 			}
@@ -500,19 +480,14 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 		return;
 	}
 
-	if (current_reach) {
-		tehai_analyzer.mentu_change_num_max = 0;
-		tehai_analyzer.titoi_change_num_max = 0;
-	} else {
-		tehai_analyzer.pattern_flag = 1;
-		tehai_analyzer.mentu_change_num_max = tehai_analyzer.get_mentu_shanten_num() + tactics.tegawari_num[tehai_analyzer.get_mentu_shanten_num()];
-		tehai_analyzer.titoi_change_num_max = cal_titoi_change_num_max(titoi_shanten_num, mentu_shanten_num);
-		tehai_analyzer.analyze_tenpai(my_pid, game_state);
-	}
+	tehai_analyzer.pattern_flag = 1;
+	tehai_analyzer.mentu_change_num_max = tehai_analyzer.get_mentu_shanten_num() + tactics.tegawari_num[tehai_analyzer.get_mentu_shanten_num()];
+	tehai_analyzer.titoi_change_num_max = cal_titoi_change_num_max(titoi_shanten_num, mentu_shanten_num);
+	tehai_analyzer.analyze_tenpai(my_pid, game_state);
 
-	tehai_analyzer_af.reset_tehai_analyzer_with(current_tehai, current_reach, current_fuuro);
+	tehai_analyzer_af.reset_tehai_analyzer_with(current_tehai, current_fuuro);
 
-	if (current_action["type"] == "dahai" && !current_reach) {
+	if (current_action["type"] == "dahai") {
 		tehai_analyzer_af.add_hai(current_hai);
 		tehai_analyzer_af.analyze_tenpai(my_pid, game_state);
 		tehai_analyzer_af.pattern_flag = 1;
@@ -560,14 +535,14 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const int fuuro_agari_shanten_num = tehai_calculator.get_fuuro_agari_shanten_num(game_state, current_tehai, chi_flag);
 	// 副露時のみget_fuuro_agari_shanten_numの内部のset_agari_shanten_numが呼ばれる。おそらく問題は無い。
 	
-	const bool DP_flag = cal_dp_flag(tehai_analyzer.get_shanten_num(), fuuro_agari_shanten_num, get_other_reach_declared_num(my_pid, game_state) > 0 , current_action["type"] == "dahai", tactics);
+	const bool DP_flag = cal_dp_flag(tehai_analyzer.get_shanten_num(), fuuro_agari_shanten_num, current_action["type"] == "dahai", tactics);
 
 	if (DP_flag) {
 		// set_tehai_calculator2_DP();
 		const int ori_choice_mode = 2;
 		const int tsumo_num_DP = cal_tsumo_num_DP(game_record, my_pid);
 
-		if (game_state.player_state[0].reach_declared || game_state.player_state[1].reach_declared || game_state.player_state[2].reach_declared || game_state.player_state[3].reach_declared || mentu_shanten_num > 0) {
+		if (mentu_shanten_num > 0) {
 			tehai_calculator.calc_DP(
 				game_state.player_state[my_pid].kawa.size(), tsumo_num_DP, other_end_value, other_end_value_ar, other_end_value_kan, tenpai_prob_array, houjuu_hai_prob, houjuu_hai_value,
 				ori_choice_mode, 1.0, 0.0, passive_ryuukyoku_prob,
@@ -631,8 +606,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 									Hai_Choice kan_choice;
 									kan_choice.hai = hai;
 									kan_choice.action_type = ac_tmp.action_type;
-									// AT_ANKAN_AND_REACH_DECLARE かもしれないが、move出力時の処理が面倒なのでac_tmp.action_typeのままにしておく
-									// 結果的に、AT_ANKANの同じmovesが別スコアで出力される可能性がある点に注意。
 
 									kan_choice.pt_exp_after_ori = tehai_calculator.get_ori_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_DP);
 									kan_choice.pt_exp_after = tehai_calculator.get_ten_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_DP);
@@ -776,8 +749,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 						hai_choice_tmp.hai = hai_out;
 						hai_choice_tmp.action_type = AT_DAHAI;
 
-						const auto& kyoku_end_pt_exp_tmp = hai_choice_tmp.action_type == AT_REACH_DECLARE ? kyoku_end_pt_exp_ar : kyoku_end_pt_exp;
-						const auto& ryuukyoku_pt_exp_tmp = hai_choice_tmp.action_type == AT_REACH_DECLARE ? ryuukyoku_pt_exp_ar : ryuukyoku_pt_exp;
+						const auto& kyoku_end_pt_exp_tmp = kyoku_end_pt_exp;
+						const auto& ryuukyoku_pt_exp_tmp = ryuukyoku_pt_exp;
 
 						Hai_Array tehai_tmp = current_tehai;
 						tehai_tmp[hai_out]--;
@@ -833,7 +806,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 				}
 			}
 
-			if (0 < get_other_reach_declared_num(my_pid, game_state) || 2 <= get_other_fuuro_num_max(my_pid, game_state)) {
+			if (2 <= get_other_fuuro_num_max(my_pid, game_state)) {
 				// 降りに関して、どのような条件を採用したときに強くなるかは要検証
 				for (int i = 0; i < hai_choice.size(); i++) {
 					if (hai_choice[i].pt_exp_after_ori > hai_choice[i].pt_exp_after) {
@@ -844,7 +817,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 			for (int i = 0; i < hai_choice.size(); i++) {
 				const int hai_out = hai_choice[i].hai;
-				if (hai_choice[i].action_type == AT_DAHAI || hai_choice[i].action_type == AT_REACH_DECLARE || hai_choice[i].action_type == AT_KAKAN) {
+				if (hai_choice[i].action_type == AT_DAHAI || hai_choice[i].action_type == AT_KAKAN) {
 					hai_choice[i].pt_exp_total = total_houjuu_hai_prob_now[hai_out] * total_houjuu_hai_value_now[hai_out] + (1.0 - total_houjuu_hai_prob_now[hai_out]) * hai_choice[i].pt_exp_after;
 				} else if (hai_choice[i].action_type == AT_ANKAN) {
 					hai_choice[i].pt_exp_total = hai_choice[i].pt_exp_after;
