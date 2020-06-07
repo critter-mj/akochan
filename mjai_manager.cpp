@@ -376,9 +376,9 @@ void proceed_game(std::vector<int>& haiyama, Moves& game_record, const int chich
             add_after_ankan(haiyama, game_record, current_move["actor"].int_value());
         } else if (current_move["type"] == "daiminkan") {
             add_rinshan_tsumo(haiyama, game_record, current_move["actor"].int_value());
-        } else if (current_move["type"] == "reach" || current_move["type"] == "chi" || current_move["type"] == "pon") {
+        } else if (current_move["type"] == "chi" || current_move["type"] == "pon") {
             assert_with_out(current_move["actor"] == player_id, "game_server_error");
-            if (is_legal_dahai_after_reach_or_fuuro(game_record, request)) {
+            if (is_legal_dahai_after_fuuro(game_record, request)) {
                 game_record.push_back(request);
             }
         }
@@ -423,7 +423,7 @@ json11::Json game_server(Moves& game_record, const json11::Json& request) {
 
     const json11::Json& last_action = game_record.back();
     if (prev_size < game_record.size()) {
-        if (last_action["type"] == "reach" || last_action["type"] == "pon" || last_action["type"] == "chi") {
+        if (last_action["type"] == "pon" || last_action["type"] == "chi") {
             assert_with_out(last_action["actor"] == my_pid, "game_server_error: last_action is unexpected"); // プレイヤーのリーチ、副露が受理された場合のみの想定。
             ret["msg_type"] = "update_and_dahai";
         } else {
@@ -438,7 +438,7 @@ json11::Json game_server(Moves& game_record, const json11::Json& request) {
     } else {
         // クライアントが合法でないmoveを送信した場合のみの想定
         // assert(0 < get_all_legal_moves(game_record)[player_id].size()); 副露した牌を捨てた場合などは、get_all_legal_movesが0になる。
-        if (last_action["type"] == "reach" || last_action["type"] == "pon" || last_action["type"] == "chi" ||
+        if (last_action["type"] == "pon" || last_action["type"] == "chi" ||
             (last_action["type"] == "tsumo" && last_action["actor"] == my_pid)
         ) {
             ret["msg_type"] = "dahai_again";

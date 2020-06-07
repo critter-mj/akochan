@@ -1042,36 +1042,6 @@ void Machi_Coeff::visible_to_coeff(const Hai_Array& visible_all, const Hai_Array
 	}
 }
 
-void Machi_Coeff::sute_br_to_coeff(const Game_State& game_state, const int my_pid, const int target) {
-	if (tactics_json[my_pid]["sbr_est"] == "instant") {
-		// nothing to do.
-	} else if (tactics_json[my_pid]["sbr_est"] == "ako") {
-		const std::array<bool, 38> sute_before_reach_flag = get_sute_before_reach_flag(game_state.player_state[target].kawa);
-		for (int j = 0; j < 3; j++) {
-			if(sute_before_reach_flag[10*j+2]){ syabo_coeff[10*j+3] *= 0.419; }
-			if(sute_before_reach_flag[10*j+3]){ syabo_coeff[10*j+2] *= 0.335; syabo_coeff[10*j+4] *= 0.387; }
-			if(sute_before_reach_flag[10*j+4]){ syabo_coeff[10*j+3] *= 0.360; syabo_coeff[10*j+5] *= 0.282; }
-			if(sute_before_reach_flag[10*j+5]){ syabo_coeff[10*j+4] *= 0.338; syabo_coeff[10*j+6] *= 0.338; }
-			if(sute_before_reach_flag[10*j+6]){ syabo_coeff[10*j+5] *= 0.282; syabo_coeff[10*j+7] *= 0.360; }
-			if(sute_before_reach_flag[10*j+7]){ syabo_coeff[10*j+6] *= 0.387; syabo_coeff[10*j+8] *= 0.335; }
-			if(sute_before_reach_flag[10*j+8]){ syabo_coeff[10*j+7] *= 0.419; }
-
-			if(sute_before_reach_flag[10*j+2]){ kanchan_coeff[j][4] *= 0.574; kanchan_coeff[j][5] *= 1.05; kanchan_coeff[j][6] *= 1.18; kanchan_coeff[j][7] *= 1.00; kanchan_coeff[j][8] *= 1.10; }
-			if(sute_before_reach_flag[10*j+3]){ kanchan_coeff[j][5] *= 0.397; kanchan_coeff[j][6] *= 1.28; kanchan_coeff[j][7] *= 1.16; kanchan_coeff[j][8] *= 1.01; }
-			if(sute_before_reach_flag[10*j+4]){ kanchan_coeff[j][2] *= 0.141; kanchan_coeff[j][6] *= 0.249; kanchan_coeff[j][7] *= 1.66; kanchan_coeff[j][8] *= 1.14; }
-			if(sute_before_reach_flag[10*j+5]){ kanchan_coeff[j][2] *= 1.57; kanchan_coeff[j][3] *= 0.139; kanchan_coeff[j][7] *= 0.139; kanchan_coeff[j][8] *= 1.57; }
-			if(sute_before_reach_flag[10*j+6]){ kanchan_coeff[j][2] *= 1.14; kanchan_coeff[j][3] *= 1.66; kanchan_coeff[j][4] *= 0.249; kanchan_coeff[j][8] *= 0.141; }
-			if(sute_before_reach_flag[10*j+7]){ kanchan_coeff[j][2] *= 1.01; kanchan_coeff[j][3] *= 1.16; kanchan_coeff[j][4] *= 1.28; kanchan_coeff[j][5] *= 0.397; }
-			if(sute_before_reach_flag[10*j+8]){ kanchan_coeff[j][2] *= 1.10; kanchan_coeff[j][3] *= 1.00; kanchan_coeff[j][4] *= 1.18; kanchan_coeff[j][5] *= 1.05; kanchan_coeff[j][6] *= 0.574; }
-
-			// ako の方にある akagiri_flag をわざわざ使う必要は無い。
-			if(sute_before_reach_flag[10*j+10]){ ryanmen_coeff[j][3] *= 0.1; ryanmen_coeff[j][4] *= 0.1; kanchan_coeff[j][4] *= 0.1; kanchan_coeff[j][6] *= 0.1; }
-		}
-	} else {
-		assert_with_out(false, "sbr_est_error!");
-	}
-}
-
 void Machi_Coeff::ratio_tas_to_coeff(const Game_State& game_state, const int my_pid, const int target) {
 	if (tactics_json[my_pid]["tas_est"] == "instant") {
 		return;
@@ -1301,7 +1271,6 @@ void Tenpai_Estimator_Simple::set_tenpai_estimator(const Moves& game_record, con
 		machi_coeff.visible_to_coeff(visible_all_kind, visible_kind);
 		machi_coeff.set_katachi_prob(my_pid);
 		machi_coeff.ratio_tas_to_coeff(game_state, my_pid, target);
-		machi_coeff.sute_br_to_coeff(game_state, my_pid, target);
 		Machi_Coeff machi_coeff_now = machi_coeff;
 		machi_coeff_now.safe_flag_to_coeff(furiten_flag);
 		machi_coeff.std_coeff();

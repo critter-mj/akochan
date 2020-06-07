@@ -564,7 +564,6 @@ void exec_calc_DP(
 				tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn] = tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn]/nokori_all2;
 
 				//if(ori_choice_flag==1 && ori_exp[cn][gn][tn] > ten_exp_to[cn][gn][tn]){
-				//if(ori_choice_mode>0 && cal_tav[loc_first][loc_second].get_reach_flag()==0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second][tn] > tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn]){
 				if(ori_choice_mode>0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second] > tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn]){
 					if (tactics.use_ori_exp_at_dp_fuuro || cal_tav[loc_first][loc_second].get_fuuro_num() == game_state.player_state[my_pid].fuuro.size()) {
 						tehai_calculator_work.tenpai_prob_to_work[loc_first][loc_second][mod2tn] = 0.0;
@@ -748,7 +747,6 @@ void exec_calc_DP(
 				tehai_calculator_work.agari_exp_work[loc_first][loc_second][mod2tn] = (1.0 - other_end_prob_tmp)*tehai_calculator_work.agari_exp_work[loc_first][loc_second][mod2tn];
 				tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn] = other_end_prob_tmp*other_end_value_tmp + (1.0 - other_end_prob_tmp)*tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn];
 
-				//if(ori_choice_mode>0 && cal_tav[loc_first][loc_second].get_reach_flag()==0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second][tn] > tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn]){
 				if(ori_choice_mode>0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second] > tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn]){
 					if (tactics.use_ori_exp_at_dp_fuuro || cal_tav[loc_first][loc_second].get_fuuro_num() == game_state.player_state[my_pid].fuuro.size()) {
 						tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][mod2tn] = 0.0;

@@ -448,22 +448,6 @@ void Tehai_Calculator::set_cand_graph_sub_child(
 				// 何かアラートを出すべき？
 			}
 		}
-
-		if((tehai_action.action_type==AT_TSUMO || tehai_action.action_type==AT_ANKAN)
-			&& get_const_ta_cgn(tehai_action.dst_group, tehai_action.dst_group_sub).get_tenpai_flag()==1
-			&& get_const_ta_cgn(tehai_action.dst_group, tehai_action.dst_group_sub).get_fuuro_num() - get_const_ta_cgn(tehai_action.dst_group, tehai_action.dst_group_sub).get_ankan_num()==0
-		){
-			tehai_state.set_reach(1);
-			itr = ts_maps[tehai_action.dst_group].find(tehai_state);
-			if(itr != ts_maps[tehai_action.dst_group].end()){
-				if (tehai_calculator_work.cand_graph_sub_tsumo_work[thread_num].size() < MAX_EDGE_NUM_PER_THREAD) {
-					tehai_action.dst_group_sub = itr->second;
-					tehai_calculator_work.cand_graph_sub_tsumo_work[thread_num].push_back(tehai_action);
-				} else {
-					// 何かアラートを出すべき？
-				}
-			}
-		}
 	}
 }
 

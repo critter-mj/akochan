@@ -69,8 +69,6 @@ float infer_tenpai_prob_ako(const Moves& game_record, const Game_State& game_sta
 
 	float x[5];
 
-    bool other_reach_flag = false;
-    int discard_after_other_reach = 0;
     int kyoku_begin = -1;
     for (int i = game_record.size() - 1; 0 <= i; i--) {
         if (game_record[i]["type"] == "start_kyoku") {
@@ -90,20 +88,7 @@ float infer_tenpai_prob_ako(const Moves& game_record, const Game_State& game_sta
             assert(false);
         } else if (action_json["type"] == "start_kyoku") {
             continue;
-        } else if (action_json["type"] == "reach") {
-            if (action_json["actor"].int_value() != target) {
-                other_reach_flag = true;
-            }
-        } else if (action_json["type"] == "dahai") {
-            if (action_json["actor"].int_value() == target && other_reach_flag) {
-                discard_after_other_reach++;
-            }
-        } else if (action_json["type"] == "chi" || action_json["type"] == "pon") {
-			if (action_json["actor"].int_value() == target && other_reach_flag) {
-				discard_after_other_reach = -1;
-				// 現状discard_after_other_reachに対するこの処理はakoにのみ行われている。
-			}
-		}
+        } 
     }
 
     int sute_kind[6] = {};
@@ -124,7 +109,7 @@ float infer_tenpai_prob_ako(const Moves& game_record, const Game_State& game_sta
 
 	x[0] = 1.0;
 	x[1] = (float)count_tedashi_num(game_state.player_state[target].kawa);
-	x[2] = (float)discard_after_other_reach;
+	x[2] = 0.0;
 	x[3] = (float)(sute_kind[0] + sute_kind[1]);
 	x[4] = (float)(sute_kind[2] + sute_kind[3] + sute_kind[4] + sute_kind[5]);
 

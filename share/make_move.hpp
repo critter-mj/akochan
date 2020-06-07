@@ -14,7 +14,6 @@ json11::Json make_none(const int actor);
 json11::Json make_tsumo(const int actor, const int hai);
 
 json11::Json make_dahai(const int actor, const int hai, const bool tsumogiri);
-json11::Json make_reach(const int actor);
 
 json11::Json make_pon(const int actor, const int target, const int hai, const std::vector<int> consumed);
 json11::Json make_pon_default(const int actor, const int target, const int hai);
@@ -57,10 +56,8 @@ bool is_valid_daiminkan(const json11::Json& action_json);
 bool is_valid_ankan(const json11::Json& action_json);
 bool is_valid_kakan(const json11::Json& action_json);
 
-bool is_valid_reach(const json11::Json& action_json);
 bool is_valid_hora(const json11::Json& action_json);
 
-bool is_valid_reach_and_dahai(const Moves& moves);
 bool is_valid_pon_and_dahai(const Moves& moves);
 bool is_valid_chi_and_dahai(const Moves& moves);
 
@@ -75,16 +72,14 @@ bool is_legal_kakan(const Moves& game_record, const Game_State& game_state, cons
 
 bool is_legal_hora(const Moves& game_record, const Game_State& game_state, const json11::Json& action_json);
 
-bool is_legal_reach_and_dahai(const Moves& game_record, const Game_State& game_state, const Moves& moves);
 bool is_legal_pon_and_dahai(const Moves& game_record, const Game_State& game_state, const Moves& moves);
 bool is_legal_chi_and_dahai(const Moves& game_record, const Game_State& game_state, const Moves& moves);
 
 bool is_legal_kyushukyuhai(const Moves& game_record, const Game_State& game_state, const json11::Json& action_json);
 
 bool is_legal_none(const Moves& game_record, const json11::Json& action_json);
-bool is_legal_reach(const Moves& game_record, const Game_State& game_state, const json11::Json& action_json);
 bool is_legal_single_move(const Moves& game_record, const json11::Json& action_json);
-bool is_legal_dahai_after_reach_or_fuuro(const Moves& game_record, const json11::Json& action_json);
+bool is_legal_dahai_after_fuuro(const Moves& game_record, const json11::Json& action_json);
 
 std::vector<Moves> get_legal_tsumogiri_move(const Moves& game_record);
 std::vector<Moves> get_legal_tedashi_move(const Moves& game_record);
@@ -93,7 +88,6 @@ std::vector<Moves> get_legal_chi_dahai_move(const Moves& game_record);
 std::vector<Moves> get_legal_daiminkan_move(const Moves& game_record);
 std::vector<Moves> get_legal_ankan_move(const Moves& game_record);
 std::vector<Moves> get_legal_kakan_move(const Moves& game_record);
-std::vector<Moves> get_legal_reach_dahai_move(const Moves& game_record);
 std::vector<Moves> get_legal_ron_move(const Moves& game_record);
 std::array<std::vector<Moves>, 4> get_all_legal_moves(const Moves& game_record);
 std::vector<json11::Json> get_all_legal_single_action(const Moves& game_record);

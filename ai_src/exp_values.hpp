@@ -14,7 +14,7 @@ float cal_my_agari_value(const float agari_prob_sol, const float value_sol, cons
 float cal_ryuukyoku_prob(const int my_pid, const Game_State& game_state, const float my_agari_prob, const std::array<float, 4>& tenpai_prob, const int dahai_inc); // 自分がアガリできないときに流局する確率
 float cal_my_keiten_prob(const int my_pid, const Game_State& game_state,  const int dahai_inc, const float keiten_prob_sol); // 流局するときにテンパイしている確率
 float cal_other_keiten_prob(const int my_pid, const int target_pid, const Game_State& game_state,  const int dahai_inc, const float current_tenpai_prob);
-std::array<float, 4> cal_keiten_prob(const int my_pid, const std::array<bool, 4>& reach_flag, const float keiten_prob_sol, const std::array<float, 4>& tenpai_prob);
+std::array<float, 4> cal_keiten_prob(const int my_pid, const Game_State& game_state, const int dahai_inc, const float keiten_prob_sol, const std::array<float, 4>& tenpai_prob);
 float cal_ryuukyoku_value(const std::array<float, 4>& keiten_prob, const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp);
 float cal_noten_ryuukyoku_value(const int my_pid, const std::array<float, 4>& keiten_prob, const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp);
 

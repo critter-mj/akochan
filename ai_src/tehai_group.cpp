@@ -426,7 +426,6 @@ void Tehai_Group::add_kakan(
 		for (int hai = 1; hai < 38; hai++) {
 			if (hai%10 != 0 && cal_tav[ta_loc_gn_first][ta_loc_gn_second].tehai_state.get_pon_num(hai) == 1 && kan_cand[hai] == 1) {
 				assert(cal_tav[ta_loc_gn_first][ta_loc_gn_second].tehai_state.get_minkan_num(hai) == 0);
-				assert(cal_tav[ta_loc_gn_first][ta_loc_gn_second].tehai_state.get_reach_flag() == 0);
 
 				if (cal_tav[thread_num].size() >= MAX_TA_NUM_PER_THREAD - BUF_FOR_REACH_PER_THREAD ||
 					ta_loc.size() >= MAX_TA_NUM_PER_GROUP - BUF_FOR_REACH_PER_GROUP
@@ -448,7 +447,6 @@ void Tehai_Group::add_kakan(
 				}
 				assert(cal_tav[ta_loc_gn_first][ta_loc_gn_second].tehai_state.get_pon_num(hai) == 1);
 				assert(cal_tav[ta_loc_gn_first][ta_loc_gn_second].tehai_state.get_minkan_num(hai) == 0);
-				assert(cal_tav[ta_loc_gn_first][ta_loc_gn_second].tehai_state.get_reach_flag() == 0);
 			}
 		}
 	}

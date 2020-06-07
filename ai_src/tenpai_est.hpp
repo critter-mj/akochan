@@ -105,7 +105,6 @@ class Machi_Coeff {
     void set_katachi_prob(const int my_pid);
     void safe_flag_to_coeff(const std::array<bool, 38>& safe_flag);
 	void visible_to_coeff(const Hai_Array& visible_all, const Hai_Array& visible);
-    void sute_br_to_coeff(const Game_State& game_state, const int my_pid, const int target);
     void ratio_tas_to_coeff(const Game_State& game_state, const int my_pid, const int target);
 	void std_coeff();
 };

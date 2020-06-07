@@ -22,7 +22,7 @@ public:
 
   void set_aka_inside(int color, int flag);
   void set_aka_outside(int color, int flag);
-  void set_reach(int flag);
+
   void set_fuuro(const Fuuro_Vector& fuuro);
 
   void add_chi(int smallest_haikind);
@@ -36,7 +36,6 @@ public:
   void add_one_fuuro(const Fuuro_Type fuuro_type, const int smallest_haikind);
   void delete_one_fuuro(const Fuuro_Type fuuro_type, int smallest_haikind);
 
-  int get_reach_flag() const;
   int get_chi_num(const int smallest_haikind) const;
   int get_pon_num(const int haikind) const;
   int get_ankan_num(const int haikind) const;

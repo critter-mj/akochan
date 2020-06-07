@@ -94,7 +94,7 @@ Moves Fuuro_Choice::out_moves(const int my_pid, const int target) const {
 	return moves;
 }
 
-std::array<std::array<std::array<float, 100>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode, const Tactics& tactics) {
+std::array<std::array<std::array<float, 100>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const Tactics& tactics) {
 	const int kyoku_mod = get_kyoku_first(game_record) + game_state.bakaze*4 + game_state.kyoku - 1;
     const int oyaid = get_oya(game_record);
 
@@ -125,7 +125,7 @@ std::array<std::array<std::array<float, 100>, 4>, 4> cal_kyoku_end_pt_exp(const 
     return kyoku_end_pt_exp;
 }
 
-std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode, const Tactics& tactics) {
+std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const Tactics& tactics) {
 	const int kyoku_mod = get_kyoku_first(game_record) + game_state.bakaze*4 + game_state.kyoku - 1;
     const int oyaid = get_oya(game_record);
 
@@ -292,9 +292,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const Hai_Array hai_visible_all_kind = haikind(hai_visible_all);
 	const Hai_Array hai_visible_kind = sum_hai_array(hai_visible_all_kind, current_tehai_kind);
 
-	const std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp = cal_kyoku_end_pt_exp(game_record, game_state, my_pid, false, tactics);
+	const std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp = cal_kyoku_end_pt_exp(game_record, game_state, my_pid, tactics);
 	const std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp_ar = kyoku_end_pt_exp;
-	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp = cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, false, tactics);
+	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp = cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, tactics);
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp_ar = ryuukyoku_pt_exp;
 
 	if (out_console) {

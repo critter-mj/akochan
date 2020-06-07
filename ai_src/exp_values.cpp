@@ -110,17 +110,11 @@ float cal_ryuukyoku_prob(const int my_pid, const Game_State& game_state, const f
 		read_parameters(w, 4, file_name);
 		float x[4];
 		x[0] = 1.0;
-		const int reach_player_num_other = 0;
 		if (act_num <= 6) {
 			x[1] = act_num;
-			x[2] = (reach_player_num_other > 0) ? 1.0 : 0.0;
+			x[2] = 0.0;
 		} else {
 			x[1] = 0.0; x[2] = 0.0;
-			if (reach_player_num_other > 1) {
-				x[1] = 1.0;
-			} else if(reach_player_num_other > 0) {
-				x[2] = 1.0;
-			}
 		}
 		float tmp = 1.0;
 		for (int pid = 0; pid < 4; pid++) {

@@ -72,7 +72,6 @@ class Sutehai {
 	public:
 	int hai;
     bool tsumogiri;
-	bool is_reach;
 
 	Sutehai();
 };

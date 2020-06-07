@@ -14,7 +14,6 @@ void show_stats_mjai(const std::string& dir_name, const std::string& player_name
     int result_num[4] = {};
     int kyoku_num = 0;
     int hora_num = 0;
-    int reach_num = 0;
     int houjuu_num = 0;
     int fuuro1_num = 0;
     int fuuro_num = 0;
@@ -41,10 +40,6 @@ void show_stats_mjai(const std::string& dir_name, const std::string& player_name
                 kyoku_num++;
                 for (int i = 0; i < 4; i++) {
                     fuuro_flag[i] = 0;
-                }
-            } else if (action_json["type"].string_value() == "reach") {
-                if (action_json["actor"].int_value() == my_pid) {
-                    reach_num++;
                 }
             } else if (action_json["type"].string_value() == "chi" || action_json["type"].string_value() == "pon") {
                 if (action_json["actor"].int_value() == my_pid) {
@@ -82,7 +77,6 @@ void show_stats_mjai(const std::string& dir_name, const std::string& player_name
     jun_average = jun_average/(result_num[0] + result_num[1] + result_num[2] + result_num[3]);
     std::cout << "average_rank:" << jun_average << std::endl;
     std::cout << "hora_prob:" << (double)hora_num / kyoku_num << std::endl;
-    std::cout << "reach_prob:" << (double)reach_num / kyoku_num << std::endl;
     std::cout << "houjuu_prob:" << (double)houjuu_num / kyoku_num << std::endl;
     std::cout << "fuuro_prob:" << (double)fuuro1_num / kyoku_num << std::endl;
     std::cout << "fuuro_num:" << (double)fuuro_num / kyoku_num << std::endl;
@@ -93,7 +87,6 @@ void show_stats_mjai(const std::string& dir_name, const std::string& player_name
 void show_stats(const std::string& dir_name) {
     int result_num[4][4] = {};
     int kyoku_num = 0;
-    int reach_num[4] = {};
     int fuuro_num[4] = {};
     int fuuro_prob[4] = {};
     int fuuro_flag[4] = {};
@@ -118,8 +111,6 @@ void show_stats(const std::string& dir_name) {
                 if (oya_first == -1) {
                     oya_first = action_json["oya"].int_value();
                 }
-            } else if (action_json["type"].string_value() == "reach") {
-                reach_num[action_json["actor"].int_value()]++;
             } else if (action_json["type"].string_value() == "chi" || action_json["type"].string_value() == "pon") {
                 fuuro_num[action_json["actor"].int_value()]++;
                 fuuro_flag[action_json["actor"].int_value()] = 1;
@@ -152,7 +143,7 @@ void show_stats(const std::string& dir_name) {
         std::cout << result_num[i][0] << " " << result_num[i][1] << " " << result_num[i][2] << " " << result_num[i][3] << " ";
         double jun_average = result_num[i][0] + result_num[i][1]*2.0 + result_num[i][2]*3.0 + result_num[i][3]*4.0;
         jun_average = jun_average/(result_num[i][0] + result_num[i][1] + result_num[i][2] + result_num[i][3]);
-        std::cout << jun_average << " " << double(reach_num[i])/kyoku_num << " " << double(fuuro_prob[i])/kyoku_num << " " << double(fuuro_num[i])/kyoku_num << " ";
+        std::cout << jun_average << " " << double(fuuro_prob[i])/kyoku_num << " " << double(fuuro_num[i])/kyoku_num << " ";
         std::cout << double(hora_num[i])/kyoku_num << " " << double(houjuu_num[i])/kyoku_num << std::endl;
     }
     std::cout << std::endl;
@@ -181,12 +172,6 @@ void show_stats(const std::string& dir_name) {
     std::cout << "houjuu_prob:";
     for (int pid = 0; pid < 4; pid++) {
         std::cout << " " << float(houjuu_num[pid])/kyoku_num;
-    }
-    std::cout << std::endl;
-
-    std::cout << "reach_prob:";
-    for (int pid = 0; pid < 4; pid++) {
-        std::cout << " " << float(reach_num[pid])/kyoku_num;
     }
     std::cout << std::endl;
 

@@ -53,7 +53,6 @@ void Tehai_State2::reset(){
 	for(int c=0;c<4;c++){
 		pon_kan_int[c] = 0;
 	}
-	set_reach(0);
 }
 
 void Tehai_State2::reset_fuuro(){
@@ -95,7 +94,7 @@ void Tehai_State2::reset_with(const Hai_Array& tehai, const Fuuro_Vector& fuuro)
 		pon_kan_int[i] = 0;
 	}
 	reach_aka_int = 0;
-	
+
 	for(int hc=0;hc<3;hc++){
 		if(tehai[10*(hc+1)]==1){
 			reach_aka_int += 1 << (hc+1);
@@ -115,15 +114,6 @@ void Tehai_State2::set_aka_inside(int color, int flag){
 
 void Tehai_State2::set_aka_outside(int color, int flag){
 	uint32_t bit = 1 << (color+4);
-	if(flag==1){
-		reach_aka_int = reach_aka_int | bit;
-	}else{
-		reach_aka_int = reach_aka_int & (~bit);
-	}
-}
-
-void Tehai_State2::set_reach(int flag){
-	uint32_t bit = 1;
 	if(flag==1){
 		reach_aka_int = reach_aka_int | bit;
 	}else{
@@ -185,10 +175,6 @@ void Tehai_State2::delete_one_fuuro(const Fuuro_Type fuuro_type, int smallest_ha
 	} else if (fuuro_type == FT_DAIMINKAN || fuuro_type == FT_KAKAN) {
 		delete_minkan(smallest_haikind);
 	}
-}
-
-int Tehai_State2::get_reach_flag() const {
-	return reach_aka_int & 1;
 }
 
 int Tehai_State2::get_chi_num(const int smallest_haikind) const {

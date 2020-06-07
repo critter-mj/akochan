@@ -28,7 +28,6 @@ Hai_Array cal_nokori_kind_array(const Hai_Array& visible_kind);
 std::array<bool, 38> get_sute_kind_flag(const Kawa& kawa);
 std::array<bool, 38> get_minogashi_flag(const Moves& game_record, const int target);
 std::array<bool, 38> get_minogashi_ar_flag(const Moves& game_record, const Game_State& game_state, const int target);
-std::array<bool, 38> get_sute_before_reach_flag(const Kawa& kawa);
 int count_tedashi_num(const Kawa& kawa);
 std::array<std::array<bool, 38>, 38> get_tas_flag(const Game_State& game_state, const int target);
 std::array<std::array<std::array<bool, 38>, 7>, 3> get_tas_ryoukei_flag(const Game_State& game_state, const int target);

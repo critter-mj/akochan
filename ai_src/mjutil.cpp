@@ -218,20 +218,6 @@ std::array<bool, 38> get_minogashi_ar_flag(const Moves& game_record, const Game_
 	return minogashi_ar_flag;
 }
 
-std::array<bool, 38> get_sute_before_reach_flag(const Kawa& kawa) {
-	std::array<bool, 38> sute_before_reach_flag;
-	std::fill(sute_before_reach_flag.begin(), sute_before_reach_flag.end(), false);
-
-	for (int i = 0; i < kawa.size(); i++) {
-		sute_before_reach_flag[kawa[i].hai] = true;
-		// to do 赤牌を切った時に、赤でないものをtrueにする必要があるか検証。
-		if (kawa[i].is_reach) {
-			break;
-		}
-	}
-	return sute_before_reach_flag;
-}
-
 int count_tedashi_num(const Kawa& kawa) {
 	int tedashi_num = 0;
 	for (int i = 0; i < kawa.size(); i++) {

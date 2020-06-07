@@ -48,8 +48,8 @@ class Fuuro_Choice {
 	Moves out_moves(const int my_pid, const int target) const;
 };
 
-std::array<std::array<std::array<float, 100>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode);
-std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode);
+std::array<std::array<std::array<float, 100>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const Tactics& tactics);
+std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const Tactics& tactics);
 int cal_tsumo_num_DP(const Moves& game_record, const int my_pid);
 
 void set_sarashi_hai(const Tehai_State2& dst_tehai_state, const Fuuro_Vector& present_fuuro, const int current_hai, int sarashi_hai[3]);

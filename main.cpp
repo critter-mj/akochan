@@ -330,8 +330,6 @@ int main(int argc,char* argv[]) {
                 recv["possible_actions"].array_items().size() != 0){
                 best_moves = mjai_interface.get_best_move(id, false);
                 response = best_moves[0];
-            } else if (type == "reach" && recv["actor"] == id) {
-                response = best_moves[1];
             } else if ((type == "pon" || type == "chi") && recv["actor"] == id){
                 response = best_moves[1];
             } else if (type == "error") {

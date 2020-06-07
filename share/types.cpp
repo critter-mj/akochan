@@ -36,9 +36,7 @@ int Tenpai_Info::shanten_num() const {
 	return std::min(mentu_shanten_num, titoi_shanten_num);
 }
 
-Sutehai::Sutehai(){
-	is_reach = false;
-}
+Sutehai::Sutehai(){}
 
 json11::Json hai_array_to_json(const Hai_Array& hai_array) {
     json11::Json::array arr;
