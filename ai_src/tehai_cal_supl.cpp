@@ -323,7 +323,7 @@ float get_coeff_for_ron_DP_ako(
 ) {
 	float get_coeff_reg = 1.0 + 2.0*pon_ron_flag[hai];
     if (ron_flag[hai] == 1) {
-        if (ta.get_fuuro_num() == 0 && ta.get_reach_flag() == 0) {
+        if (ta.get_fuuro_num() == 0) {
             if (hai>30) {
                 get_coeff_reg = dama_ron_ratio[0]/(1.0-dama_ron_ratio[0]);
             } else {
@@ -339,13 +339,9 @@ float get_coeff_for_ron_DP_ako(
 					x[2] += tenpai_prob_other[pid][tn];
 				}
 			}
-			if (ta.get_reach_flag() == 1) {
-				x[1] = houjuu_hai_prob[my_pid][hai];
-				tmp = logistic(reach_ron_ratio_para, x, 3);
-			} else {
-				x[1] = my_tenpai_prob*houjuu_hai_prob[my_pid][hai];
-				tmp = logistic(not_reach_ron_ratio_para, x, 3);
-			}
+			x[1] = my_tenpai_prob*houjuu_hai_prob[my_pid][hai];
+			tmp = logistic(not_reach_ron_ratio_para, x, 3);
+
 			if(tmp!=1.0){
 				get_coeff_reg = tmp/(1.0-tmp);
 			}
@@ -403,10 +399,7 @@ void exec_calc_DP(
 			tehai_calculator_work.tenpai_prob_to_work[loc_first][loc_second][0] = 1.0 * cal_tav[loc_first][loc_second].get_tenpai_flag();
 			tehai_calculator_work.agari_exp_work[loc_first][loc_second][0] = 0.0;
 			tehai_calculator_work.agari_exp_to_work[loc_first][loc_second][0] = 0.0;
-			if (cal_tav[loc_first][loc_second].get_reach_flag() == 1) {
-				tehai_calculator_work.ten_exp_work[loc_first][loc_second][0] = exp_ryuukyoku_ar;
-				tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][0] = exp_ryuukyoku_ar;
-			} else if (cal_tav[loc_first][loc_second].get_tenpai_flag() == 1) {
+			if (cal_tav[loc_first][loc_second].get_tenpai_flag() == 1) {
 				tehai_calculator_work.ten_exp_work[loc_first][loc_second][0] = exp_ryuukyoku[1];
 				tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][0] = exp_ryuukyoku[1];
 			} else {
@@ -487,17 +480,10 @@ void exec_calc_DP(
 				double prob_tmpbest_norisk[38], tenpai_tmpbest_norisk[38], agari_exp_tmpbest_norisk[38], exp_tmpbest_norisk[38];
 				for(int hai=0;hai<38;hai++){
 					if(hai%10!=0){
-						if(tactics.reach_regression_mode_default == 1 && cal_tav[loc_first][loc_second].get_reach_flag()==1){
-							prob_tmpbest[hai] = (1.0-reach_houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_prob_work[loc_first][loc_second][mod2tn_prev];
-							tenpai_tmpbest[hai] = (1.0-reach_houjuu_p_hai[tn-1][hai])*tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][mod2tn_prev];
-							agari_exp_tmpbest[hai] = (1.0-reach_houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_exp_work[loc_first][loc_second][mod2tn_prev];
-							exp_tmpbest[hai] = (1.0-reach_houjuu_p_hai[tn-1][hai])*tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn_prev] + reach_houjuu_e_hai[tn-1][hai];
-						}else{
-							prob_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_prob_work[loc_first][loc_second][mod2tn_prev];
-							tenpai_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][mod2tn_prev];
-							agari_exp_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_exp_work[loc_first][loc_second][mod2tn_prev];
-							exp_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn_prev] + houjuu_e_hai[tn-1][hai];
-						}
+						prob_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_prob_work[loc_first][loc_second][mod2tn_prev];
+						tenpai_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][mod2tn_prev];
+						agari_exp_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.agari_exp_work[loc_first][loc_second][mod2tn_prev];
+						exp_tmpbest[hai] = (1.0-houjuu_p_hai[tn-1][hai])*tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn_prev] + houjuu_e_hai[tn-1][hai];
 						if (norisk_ratio > 0.0) {
 							prob_tmpbest_norisk[hai] = tehai_calculator_work.agari_prob_work[loc_first][loc_second][mod2tn_prev];
 							tenpai_tmpbest_norisk[hai] = tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][mod2tn_prev];
@@ -588,7 +574,7 @@ void exec_calc_DP(
 
 				//if(ori_choice_flag==1 && ori_exp[cn][gn][tn] > ten_exp_to[cn][gn][tn]){
 				//if(ori_choice_mode>0 && cal_tav[loc_first][loc_second].get_reach_flag()==0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second][tn] > tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn]){
-				if(ori_choice_mode>0 && cal_tav[loc_first][loc_second].get_reach_flag()==0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second] > tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn]){
+				if(ori_choice_mode>0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second] > tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][mod2tn]){
 					if (tactics.use_ori_exp_at_dp_fuuro || cal_tav[loc_first][loc_second].get_fuuro_num() == game_state.player_state[my_pid].fuuro.size()) {
 						tehai_calculator_work.tenpai_prob_to_work[loc_first][loc_second][mod2tn] = 0.0;
 						tehai_calculator_work.agari_prob_to_work[loc_first][loc_second][mod2tn] = 0.0;
@@ -638,32 +624,30 @@ void exec_calc_DP(
 				}
 
 				//if(mode>0){
-				if(cal_tav[loc_first][loc_second].get_furiten_flag()==0){
-					const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn, gn);
-					for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
-						const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
-						if (agari.get_ten_ron(my_pid, game_state) > 0) {
-							if (using_haikind_array[agari.agari_info.get_hai()] - cal_tav[loc_first][loc_second].using_haikind_num(agari.agari_info.get_hai()) < 1){
-								if(agari.ron_exp > exp_tmpbest[agari.agari_info.get_hai()]){
-									tenpai_tmpbest[agari.agari_info.get_hai()] = 0.0;
-									prob_tmpbest[agari.agari_info.get_hai()] = 1.0;
-									agari_exp_tmpbest[agari.agari_info.get_hai()] = agari.ron_exp;
-									exp_tmpbest[agari.agari_info.get_hai()] = agari.ron_exp;
-									//if(candidates[cn].tav[gn].riich_flag==0){
-										pon_ron_flag[agari.agari_info.get_hai()] = 1;
-										ron_flag[agari.agari_info.get_hai()] = 1;
-									//}
-								}
-								if (norisk_ratio > 0.0) {
-									if (agari.ron_exp > exp_tmpbest[agari.agari_info.get_hai()]) {
-										tenpai_tmpbest_norisk[agari.agari_info.get_hai()] = 0.0;
-										prob_tmpbest_norisk[agari.agari_info.get_hai()] = 1.0;
-										agari_exp_tmpbest_norisk[agari.agari_info.get_hai()] = agari.ron_exp;
-										exp_tmpbest_norisk[agari.agari_info.get_hai()] = agari.ron_exp;
+				const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn, gn);
+				for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
+					const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
+					if (agari.get_ten_ron(my_pid, game_state) > 0) {
+						if (using_haikind_array[agari.agari_info.get_hai()] - cal_tav[loc_first][loc_second].using_haikind_num(agari.agari_info.get_hai()) < 1){
+							if(agari.ron_exp > exp_tmpbest[agari.agari_info.get_hai()]){
+								tenpai_tmpbest[agari.agari_info.get_hai()] = 0.0;
+								prob_tmpbest[agari.agari_info.get_hai()] = 1.0;
+								agari_exp_tmpbest[agari.agari_info.get_hai()] = agari.ron_exp;
+								exp_tmpbest[agari.agari_info.get_hai()] = agari.ron_exp;
+								//if(candidates[cn].tav[gn].riich_flag==0){
+									pon_ron_flag[agari.agari_info.get_hai()] = 1;
+									ron_flag[agari.agari_info.get_hai()] = 1;
+								//}
+							}
+							if (norisk_ratio > 0.0) {
+								if (agari.ron_exp > exp_tmpbest[agari.agari_info.get_hai()]) {
+									tenpai_tmpbest_norisk[agari.agari_info.get_hai()] = 0.0;
+									prob_tmpbest_norisk[agari.agari_info.get_hai()] = 1.0;
+									agari_exp_tmpbest_norisk[agari.agari_info.get_hai()] = agari.ron_exp;
+									exp_tmpbest_norisk[agari.agari_info.get_hai()] = agari.ron_exp;
 
-										pon_ron_flag_norisk[agari.agari_info.get_hai()] = 1;
-										ron_flag_norisk[agari.agari_info.get_hai()] = 1;
-									}
+									pon_ron_flag_norisk[agari.agari_info.get_hai()] = 1;
+									ron_flag_norisk[agari.agari_info.get_hai()] = 1;
 								}
 							}
 						}
@@ -760,10 +744,7 @@ void exec_calc_DP(
 				}
 
 				double other_end_prob_tmp, other_end_value_tmp;
-				if(tactics.reach_regression_mode_default==1 && cal_tav[loc_first][loc_second].get_reach_flag()==1){
-					other_end_prob_tmp = reach_other_end_prob[tn-1];
-					other_end_value_tmp = exp_other_ar;
-				} else if (cal_tav[loc_first][loc_second].get_kan_changed_flag() == 1) {
+				if (cal_tav[loc_first][loc_second].get_kan_changed_flag() == 1) {
 					other_end_prob_tmp = other_end_prob[tn-1];
 					other_end_value_tmp = exp_other_kan;
 				} else {
@@ -777,7 +758,7 @@ void exec_calc_DP(
 				tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn] = other_end_prob_tmp*other_end_value_tmp + (1.0 - other_end_prob_tmp)*tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn];
 
 				//if(ori_choice_mode>0 && cal_tav[loc_first][loc_second].get_reach_flag()==0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second][tn] > tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn]){
-				if(ori_choice_mode>0 && cal_tav[loc_first][loc_second].get_reach_flag()==0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second] > tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn]){
+				if(ori_choice_mode>0 && tehai_calculator_work.ori_exp_work[loc_first][loc_second] > tehai_calculator_work.ten_exp_work[loc_first][loc_second][mod2tn]){
 					if (tactics.use_ori_exp_at_dp_fuuro || cal_tav[loc_first][loc_second].get_fuuro_num() == game_state.player_state[my_pid].fuuro.size()) {
 						tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][mod2tn] = 0.0;
 						tehai_calculator_work.agari_prob_work[loc_first][loc_second][mod2tn] = 0.0;

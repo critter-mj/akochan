@@ -165,12 +165,5 @@ Agari_Info calc_agari(
     agari_info.han_tsumo = han_tsumo;
     agari_info.han_ron = han_ron;
 
-    std::pair<int, int> fu_pair = calc_fu(
-        bakaze_hai, jikaze_hai,
-        tehai, tehai_tate_cut, tehai_tate, tehai_tmp, fuuro,
-        machi_hai, machi_type, menzen_flag, pinfu_flag, titoi_flag
-    );
-    agari_info.fu_tsumo = fu_pair.first;
-    agari_info.fu_ron = fu_pair.second;
     return agari_info;
 }

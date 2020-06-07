@@ -342,43 +342,22 @@ int tsumo_agari(const int han, const int fu, const bool oya_flag){
 	}
 }
 
-std::array<int, 4> ten_move_hora(const int who, const int from_who, const int han, const int fu, const int oya, const int ba, int bou, const bool double_ron_after_flag) {
+std::array<int, 4> ten_move_hora(const int who, const int from_who, const int han) {
 	std::array<int, 4> ten_move;
-	if (double_ron_after_flag) {
-		bou = 0;
-	}
 	for (int pid = 0; pid < 4; pid++) {
 		ten_move[pid] = 0;
 	}
-
-	if (oya == who) {
-		if (who == from_who) {
-			for (int pid = 0; pid < 4;pid++) {
-				if (pid == who) {
-					ten_move[pid] += tsumo_agari(han, fu, true) + ba*300 + bou*1000;
-				}else{
-					ten_move[pid] -= tsumo_agari_loss(han, fu, true) + ba*100;
-				}
+	if (who == from_who) {
+		for (int pid = 0; pid < 4; pid++) {
+			if (pid == who) { 
+				ten_move[pid] += han * 3;
+			} else {
+				ten_move[pid] -= han;
 			}
-		} else {
-			ten_move[who] += ron_agari(han, fu, true) + ba*300 + bou*1000;
-			ten_move[from_who] -= ron_agari(han, fu, true) + ba*300;
 		}
 	} else {
-		if (who == from_who) {
-			for (int pid = 0; pid < 4;pid++) {
-				if (pid == who) {
-					ten_move[pid] += tsumo_agari(han, fu, false) + ba*300 + bou*1000;
-				} else if (pid == oya) {
-					ten_move[pid] -= tsumo_agari_loss(han, fu, true) + ba*100;
-				} else {
-					ten_move[pid] -= tsumo_agari_loss(han, fu, false) + ba*100;
-				}
-			}
-		} else {
-			ten_move[who] += ron_agari(han, fu, false) + ba*300 + bou*1000;
-			ten_move[from_who] -= ron_agari(han, fu, false) + ba*300;
-		}
+		ten_move[who] += han;
+		ten_move[from_who] -= han; 
 	}
 	return ten_move;
 }

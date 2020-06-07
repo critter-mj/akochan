@@ -71,24 +71,21 @@ void Tactics::set_common() {
     tsumo_enumerate_additional_minimum = 0;
     tsumo_enumerate_additional_priority = 0.0;
 
-    for (int han = 0; han < 14; han++) {
-        for (int fu = 0; fu < 12; fu++) {
-            hanfu_weight_tsumo[han][fu] = 0.0;
-            hanfu_weight_ron[han][fu] = 0.0;
-        }
-        han_shift_prob_kan[han] = 0.0;
+    for (int han = 0; han < 100; han++) {
+        hanfu_weight_tsumo[han] = 0.0;
+        //han_shift_prob_kan[han] = 0.0;
     }
-    hanfu_weight_tsumo[3][3] = 0.4;
-    hanfu_weight_tsumo[4][3] = 0.5;
-    hanfu_weight_tsumo[6][3] = 0.1;
+    hanfu_weight_tsumo[3] = 0.4;
+    hanfu_weight_tsumo[4] = 0.5;
+    hanfu_weight_tsumo[6] = 0.1;
 
-    hanfu_weight_ron[2][3] = 0.1;
-    hanfu_weight_ron[3][3] = 0.5;
-    hanfu_weight_ron[4][3] = 0.4;
+    hanfu_weight_ron[2] = 0.1;
+    hanfu_weight_ron[3] = 0.5;
+    hanfu_weight_ron[4] = 0.4;
 
-    han_shift_prob_kan[0] = 0.1;
-    han_shift_prob_kan[1] = 0.8;
-    han_shift_prob_kan[2] = 0.1;
+    //han_shift_prob_kan[0] = 0.1;
+    //han_shift_prob_kan[1] = 0.8;
+    //han_shift_prob_kan[2] = 0.1;
 
     betaori_est = "ako";
 }
@@ -170,69 +167,45 @@ void Tactics::set_from_json(const json11::Json& input_json) {
 	}
     
     const float eps = 1.0e-6;
-    if (!input_json["han_shift_prob_kan"].is_null()) {
-        const json11::Json::array han_shift_prob = input_json["han_shift_prob_kan"].array_items();
-	    assert_with_out(han_shift_prob.size() == 14, "tactics input_json han_shift_prob_kan error");
-        float sum = 0.0;
-        for (int han = 0; han < 14; han++) {
-            han_shift_prob_kan[han] = han_shift_prob[han].number_value();
-            sum += han_shift_prob_kan[han];
-        }
-        assert_with_out(fabs(sum - 1.0) < eps, "tactics input_json han_shift_prob_kan error sum != 1.0");
-    }
 
     if (!input_json["hanfu_weight_tsumo"].is_null()) {
         const json11::Json::array weight_array = input_json["hanfu_weight_tsumo"].array_items();
-        for (int han = 0; han < 14; han++) {
-            for (int fu = 0; fu < 12; fu++) {
-                hanfu_weight_tsumo[han][fu] = 0.0;
-            }
+        for (int han = 0; han < 100; han++) {
+            hanfu_weight_tsumo[han] = 0.0;
         }
         for (const json11::Json weight : weight_array) {
             assert_with_out(!weight["han"].is_null(), "tactics input_json hanfu_weight_tsumo error han is null:" + weight.dump());
-            assert_with_out(!weight["fu"].is_null(), "tactics input_json hanfu_weight_tsumo error fu is null:" + weight.dump());
             assert_with_out(!weight["value"].is_null(), "tactics input_json hanfu_weight_tsumo error fu is null:" + weight.dump());
             const int han = weight["han"].int_value();
-            const int fu = weight["fu"].int_value();
             const float value = weight["value"].number_value();
             assert_with_out(0 < han && han < 14, "tactics input_json hanfu_weight_tsumo error invalid han:" + weight.dump());
-            assert_with_out(0 < fu && fu < 14, "tactics input_json hanfu_weight_tsumo error invalid fu:" + weight.dump());
             assert_with_out(0.0 <= value && value <= 1.0 + eps, "tactics input_json hanfu_weight_tsumo error invalid value:" + weight.dump());
-            hanfu_weight_tsumo[han][fu] = value;
+            hanfu_weight_tsumo[han] = value;
         }
         float sum = 0.0;
-        for (int han = 0; han < 14; han++) {
-            for (int fu = 0; fu < 12; fu++) {
-                sum += hanfu_weight_tsumo[han][fu];
-            }
+        for (int han = 0; han < 100; han++) {
+            sum += hanfu_weight_tsumo[han];
         }
         assert_with_out(fabs(sum - 1.0) < eps, "tactics input_json hanfu_weight_tsumo error sum != 1.0");
     }
 
     if (!input_json["hanfu_weight_ron"].is_null()) {
         const json11::Json::array weight_array = input_json["hanfu_weight_ron"].array_items();
-        for (int han = 0; han < 14; han++) {
-            for (int fu = 0; fu < 12; fu++) {
-                hanfu_weight_ron[han][fu] = 0.0;
-            }
+        for (int han = 0; han < 100; han++) {
+            hanfu_weight_ron[han] = 0.0;
         }
         for (const json11::Json weight : weight_array) {
             assert_with_out(!weight["han"].is_null(), "tactics input_json hanfu_weight_ron error han is null:" + weight.dump());
-            assert_with_out(!weight["fu"].is_null(), "tactics input_json hanfu_weight_ron error fu is null:" + weight.dump());
             assert_with_out(!weight["value"].is_null(), "tactics input_json hanfu_weight_ron error fu is null:" + weight.dump());
             const int han = weight["han"].int_value();
-            const int fu = weight["fu"].int_value();
             const float value = weight["value"].number_value();
             assert_with_out(0 < han && han < 14, "tactics input_json hanfu_weight_ron error invalid han:" + weight.dump());
-            assert_with_out(0 < fu && fu < 14, "tactics input_json hanfu_weight_ron error invalid fu:" + weight.dump());
             assert_with_out(0.0 <= value && value <= 1.0 + eps, "tactics input_json hanfu_weight_ron error invalid value:" + weight.dump());
-            hanfu_weight_ron[han][fu] = value;
+            hanfu_weight_ron[han] = value;
         }
         float sum = 0.0;
-        for (int han = 0; han < 14; han++) {
-            for (int fu = 0; fu < 12; fu++) {
-                sum += hanfu_weight_ron[han][fu];
-            }
+        for (int han = 0; han < 100; han++) {
+            sum += hanfu_weight_ron[han];
         }
         assert_with_out(fabs(sum - 1.0) < eps, "tactics input_json hanfu_weight_ron error sum != 1.0");
     }

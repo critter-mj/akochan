@@ -91,12 +91,6 @@ class Tehai_Group{
 		std::array<boost::container::static_vector<Tehai_Analyzer_Basic, MAX_TA_NUM_PER_THREAD>, CAL_NUM_THREAD>& cal_tav
 	);
 
-	void add_reach(
-		boost::unordered_map<Tehai_State2, int>& ts_map,
-		std::array<boost::container::static_vector<Tehai_Analyzer_Basic, MAX_TA_NUM_PER_THREAD>, CAL_NUM_THREAD>& cal_tav,
-		const int thread_num
-	);
-
 	void analyze_all_agari(
 		const int my_pid, const Game_State& game_state,
 		std::array<boost::container::static_vector<Tehai_Analyzer_Basic, MAX_TA_NUM_PER_THREAD>, CAL_NUM_THREAD>& cal_tav,

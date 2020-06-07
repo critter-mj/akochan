@@ -39,7 +39,6 @@ Tehai_Analyzer::Tehai_Analyzer() : Tehai_Analyzer_Basic() {
 
 void Tehai_Analyzer_Basic::reset_tenpai(){
 	set_tenpai_flag(0);
-	set_furiten_flag(0);
 	set_mentu_shanten_num(8);
 	set_titoi_shanten_num(6);
 	set_agari_shanten_num(8);
@@ -126,20 +125,8 @@ bool Tehai_Analyzer_Basic::operator!=(const Tehai_Analyzer_Basic& rhs) const {
 	return !(*this==rhs);
 }
 
-void Tehai_Analyzer_Basic::set_reach(int flag){
-	tehai_state.set_reach(flag);
-}
-
-int Tehai_Analyzer_Basic::get_reach_flag() const {
-	return tehai_state.get_reach_flag();
-}
-
 int Tehai_Analyzer_Basic::get_tenpai_flag() const {
 	return num_and_flags & 1;
-}
-
-int Tehai_Analyzer_Basic::get_furiten_flag() const {
-	return ( num_and_flags >> 1 ) & 1;
 }
 
 int Tehai_Analyzer_Basic::get_neg_flag() const {
@@ -152,15 +139,6 @@ int Tehai_Analyzer_Basic::get_kan_changed_flag() const {
 
 void Tehai_Analyzer_Basic::set_tenpai_flag(const int flag) {
 	uint32_t bit = 1;
-	if (flag == 1) {
-		num_and_flags = num_and_flags | bit;
-	} else {
-		num_and_flags = num_and_flags & (~bit);
-	}
-}
-
-void Tehai_Analyzer_Basic::set_furiten_flag(const int flag) {
-	uint32_t bit = 1 << 1;
 	if (flag == 1) {
 		num_and_flags = num_and_flags | bit;
 	} else {
@@ -258,24 +236,8 @@ void Tehai_Analyzer_Basic::set_agari_shanten_num(const int num) {
 }
 
 int Tehai_Analyzer_Basic::count_hai(const int hai) const {
-	if(hai%10 == 0) {
-		assert(hai != 0);
-		assert(tehai_bit.count_hai(hai-5) >= tehai_state.get_aka_in_side(hai/10 - 1));
-		return tehai_state.get_aka_in_side(hai/10 - 1);
-	} else if (hai%10 == 5 && hai < 30) {
-		return tehai_bit.count_hai(hai) - tehai_state.get_aka_in_side(hai/10);
-	} else {
-		return tehai_bit.count_hai(hai);
-	}
-}
-
-int Tehai_Analyzer_Basic::count_haikind(const int hai) const {
-	assert(hai%10 != 0);
-	if (hai%10 == 5 && hai< 30) {
-		return count_hai(hai) + count_hai(hai+5);
-	} else {
-		return count_hai(hai);
-	}
+	assert_with_out(hai%10 != 0, "count_hai_error");
+	return tehai_bit.count_hai(hai);
 }
 	  
 void Tehai_Analyzer_Basic::add_hai(const int hai) {
@@ -348,9 +310,6 @@ void Tehai_Analyzer_Basic::set_fuuro(const Fuuro_Vector& fuuro){
 }
 
 bool Tehai_Analyzer_Basic::rule_base_decision(const int my_pid) {
-	if (get_reach_flag() == 1) {
-		return false;
-	}
 	if (get_shanten_num() >= 4) {
 		return true;
 	}
@@ -787,14 +746,6 @@ void Tehai_Analyzer_Basic::analyze_tenpai(const int my_pid_new, const Game_State
 	// 本当は、analyze_tehai(my_pid_new, false)としたいが、第二引数が参照のため、このようにできない。もう少しスマートな方法もあるはず。
 }
 
-bool Tehai_Analyzer_Basic::can_ankan_after_reach(const int tsumo_hai) const {
-	assert(get_reach_flag() == 1);
-	Ankan_After_Reach ankan_after_reach_checker;
-	Hai_Array tehai_kcp;
-	tehai_bit.insert_to_array38(tehai_kcp);
-	return ankan_after_reach_checker.check(tehai_kcp, haikind(tsumo_hai));
-}
-
 void Tehai_Analyzer_Basic::print_tehai() const {
 	//if (!out_console) return;
 
@@ -809,6 +760,76 @@ void Tehai_Analyzer_Basic::print_tehai() const {
 void Tehai_Analyzer_Basic::out_tenpai(){
 	if (!out_console) return;
 	printf("%d shanten\n", get_shanten_num());
+}
+
+int Tehai_Analyzer_Basic::using_haikind_num(int hai) const {
+	assert(hai%10 != 0);
+	const int res = count_hai(hai) + tehai_state.get_haikind_num(hai);
+	return res;
+}
+
+int Tehai_Analyzer_Basic::get_shanten_num() const {
+	return std::min(get_mentu_shanten_num(), get_titoi_shanten_num());
+}
+
+template <class Agari_Vector> void Tehai_Analyzer_Basic::agari_push_func_child(const Agari_Info agari, const int pid, const Game_State& game_state, Agari_Vector& agariv) {
+	assert(agariv.size() < 10);
+	agariv.push_back(agari);
+
+	// アガリに関する整理を行う。通常呼び出されることが無い（形込みでも10種待ちがあることは稀）ため、確実でないかもしれない。
+	if (agariv.size() == 10) {
+		for (int i = 9; 0 <= i; i--) {
+			for (int j = 0; j < i; j++) {
+				if (agariv[i].hai == agariv[j].hai) {
+					if (agariv[i].han_tsumo > agariv[j].han_tsumo) {
+						agariv[j].han_tsumo = agariv[i].han_tsumo;
+					}
+					if (agariv[i].han_ron > agariv[j].han_ron) {
+						agariv[j].han_ron = agariv[i].han_ron;
+					}
+					agariv.erase(agariv.begin() + i);
+					break;
+				}
+			}
+		}
+	}
+	assert(agariv.size() < 10); // 通常のテンパイ形の待ちの種類は9が最大のはず。
+}
+
+template <class Agari_Vector> void Tehai_Analyzer_Basic::agari_push_func(
+	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
+	const int mh, const Machi_Type mt, const bool ttf, Agari_Vector& agariv
+) {
+	const Tehai_State2 empty_tehai_state;
+	Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
+	Fuuro_Vector fuuro_kind = haikind(fuuro);
+	Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
+	
+	agari_push_func_child(agari_tmp, pid, game_state, agariv);
+}
+
+void Tehai_Analyzer_Basic::agari_push_func(
+	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
+	const int mh, const Machi_Type mt, const bool ttf, bool flag
+) {
+	assert(flag == false);
+	// agariのvectorをセットしない場合こちらの関数を呼ぶ。何もしない。
+}
+
+void Tehai_Analyzer_Basic::agari_push_func(
+	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
+	const int mh, const Machi_Type mt, const bool ttf, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv
+) {
+	if (agariv.size() < MAX_AGARI_NUM_PER_THREAD) {
+		const Tehai_State2 empty_tehai_state;
+		Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
+		Fuuro_Vector fuuro_kind = haikind(fuuro);
+		Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
+		
+		agariv.push_back(agari_info_to_agari_calc(agari_tmp));
+	} else {
+		// 何かアラートを出すべき…？
+	}
 }
 
 bool is_same_tehai_ta(const Hai_Array& tehai, const Tehai_Analyzer_Basic& tehai_analyzer) {
@@ -887,118 +908,5 @@ void get_tehai_kcp_ta(const Tehai_Analyzer_Basic& tehai_analyzer, int tehai_kcp[
 			tehai_kcp[i*10-5]++;
 			tehai_kcp[i*10] = 0;
 		}
-	}
-}
-
-int Tehai_Analyzer_Basic::using_haikind_num(int hai) const {
-	assert(hai%10 != 0);
-	const int res = count_haikind(hai) + tehai_state.get_haikind_num(hai);
-	return res;
-}
-
-int Tehai_Analyzer_Basic::get_shanten_num() const {
-	return std::min(get_mentu_shanten_num(), get_titoi_shanten_num());
-}
-
-template <class Agari_Vector> void Tehai_Analyzer_Basic::agari_push_func_child(const Agari_Info agari, const int pid, const Game_State& game_state, Agari_Vector& agariv) {
-	assert(agariv.size() < 10);
-	agariv.push_back(agari);
-
-	// アガリに関する整理を行う。通常呼び出されることが無い（形込みでも10種待ちがあることは稀）ため、確実でないかもしれない。
-	if (agariv.size() == 10) {
-		for (int i = 9; 0 <= i; i--) {
-			for (int j = 0; j < i; j++) {
-				if (agariv[i].hai == agariv[j].hai) {
-					if (tsumo_agari(agariv[i].han_tsumo, agariv[i].fu_tsumo, game_state.player_state[pid].jikaze == 0) > 
-						tsumo_agari(agariv[j].han_tsumo, agariv[j].fu_tsumo, game_state.player_state[pid].jikaze == 0)
-					) {
-						agariv[j].han_tsumo = agariv[i].han_tsumo;
-						agariv[j].fu_tsumo = agariv[i].fu_tsumo;
-					}
-					if (ron_agari(agariv[i].han_ron, agariv[i].fu_ron, game_state.player_state[pid].jikaze == 0) > 
-						ron_agari(agariv[j].han_ron, agariv[j].fu_ron, game_state.player_state[pid].jikaze == 0)
-					) {
-						agariv[j].han_ron = agariv[i].han_ron;
-						agariv[j].fu_ron = agariv[i].fu_ron;
-					}
-					agariv.erase(agariv.begin() + i);
-					break;
-				}
-			}
-		}
-	}
-	assert(agariv.size() < 10); // 通常のテンパイ形の待ちの種類は9が最大のはず。
-}
-
-template <class Agari_Vector> void Tehai_Analyzer_Basic::agari_push_func(
-	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-	const int mh, const Machi_Type mt, const bool ttf, Agari_Vector& agariv
-) {
-	const Tehai_State2 empty_tehai_state;
-	Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
-	Fuuro_Vector fuuro_kind = haikind(fuuro);
-	Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
-	if (tehai_state.get_reach_flag() == 1) {
-		agari_tmp.han_tsumo++;
-		agari_tmp.han_ron++;
-	}
-	int dora_num = count_dora(tkcp, fuuro, game_state.dora_marker);  // この関数は赤ドラも数える。
-    for(int dn = 0; dn < game_state.dora_marker.size(); dn++) {
-        if (dora_marker_to_dora(game_state.dora_marker[dn]) == agari_tmp.hai) {
-            dora_num++;
-        }
-    }
-    for(int i=0;i<3;i++){
-        dora_num += tehai_state.get_aka_in_side(i);
-    }
-	if (agari_tmp.han_tsumo > 0) {
-		agari_tmp.han_tsumo += dora_num;
-	}
-	if (agari_tmp.han_ron > 0) {
-		agari_tmp.han_ron += dora_num;
-	}
-
-	agari_push_func_child(agari_tmp, pid, game_state, agariv);
-}
-
-void Tehai_Analyzer_Basic::agari_push_func(
-	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-	const int mh, const Machi_Type mt, const bool ttf, bool flag
-) {
-	assert(flag == false);
-	// agariのvectorをセットしない場合こちらの関数を呼ぶ。何もしない。
-}
-
-void Tehai_Analyzer_Basic::agari_push_func(
-	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-	const int mh, const Machi_Type mt, const bool ttf, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv
-) {
-	if (agariv.size() < MAX_AGARI_NUM_PER_THREAD) {
-		const Tehai_State2 empty_tehai_state;
-		Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
-		Fuuro_Vector fuuro_kind = haikind(fuuro);
-		Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
-		if (tehai_state.get_reach_flag() == 1) {
-			agari_tmp.han_tsumo++;
-			agari_tmp.han_ron++;
-		}
-		int dora_num = count_dora(tkcp, fuuro, game_state.dora_marker);  // この関数は赤ドラも数える。
-		for(int dn = 0; dn < game_state.dora_marker.size(); dn++) {
-			if (dora_marker_to_dora(game_state.dora_marker[dn]) == agari_tmp.hai) {
-				dora_num++;
-			}
-		}
-		for(int i=0;i<3;i++){
-			dora_num += tehai_state.get_aka_in_side(i);
-		}
-		if (agari_tmp.han_tsumo > 0) {
-			agari_tmp.han_tsumo += dora_num;
-		}
-		if (agari_tmp.han_ron > 0) {
-			agari_tmp.han_ron += dora_num;
-		}
-		agariv.push_back(agari_info_to_agari_calc(agari_tmp));
-	} else {
-		// 何かアラートを出すべき…？
 	}
 }

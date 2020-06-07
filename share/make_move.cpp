@@ -244,7 +244,7 @@ json11::Json make_hora(const int actor, const int target, const int hai_hora) {
     return json11::Json(move);
 }
 
-json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const int fu, const std::vector<int>& uradora_markers, const std::array<int, 4>& scores) {
+json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::vector<int>& uradora_markers, const std::array<int, 4>& scores) {
     json11::Json::object move;
     move["type"] = "hora";
     move["actor"] = actor;
@@ -252,7 +252,6 @@ json11::Json make_hora(const int actor, const int target, const int hai_hora, co
     move["pai"] = hai_int_to_str(hai_hora);
     move["hora_tehais"] = hai_array_to_json(tehai);
     move["fan"] = han;
-    move["fu"] = fu;
     move["scores"] = json11::Json(scores);
 
     if (uradora_markers.size() > 0) {

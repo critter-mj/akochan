@@ -175,9 +175,7 @@ void Tehai_Group::add_fuuro_child(
 
 	assert(fuuro_type != FT_ANKAN);
 	assert(fuuro_type != FT_DAIMINKAN);
-	if(tehai_analyzer.get_reach_flag()==1 && fuuro_type!= FT_ANKAN){
-		return;
-	}
+	
 	tehai_analyzer.delete_hai(hai0);
 	tehai_analyzer.delete_hai(hai1);
 	tehai_analyzer.delete_hai(hai2);
@@ -316,7 +314,7 @@ void Tehai_Group::add_ankan(
 				// haiが4枚ある手牌の暗刻を槓子に置き換えてしまうと、haiが最終的に5枚になってしまうため不可能
 				const int ta_loc_gn_first = ta_loc[gn].get_first();
 				const int ta_loc_gn_second = ta_loc[gn].get_second();
-				if (cal_tav[ta_loc_gn_first][ta_loc_gn_second].count_haikind(hai) == 3 && cal_tav[ta_loc_gn_first][ta_loc_gn_second].using_haikind_num(hai) == 3) {
+				if (cal_tav[ta_loc_gn_first][ta_loc_gn_second].count_hai(hai) == 3 && cal_tav[ta_loc_gn_first][ta_loc_gn_second].using_haikind_num(hai) == 3) {
 					int hai2 = hai;
 					if (cal_tav[ta_loc_gn_first][ta_loc_gn_second].count_hai(hai) == 2) {
 						assert(cal_tav[ta_loc_gn_first][ta_loc_gn_second].tehai_state.get_aka_in_side(hai/10) == 1);
@@ -368,14 +366,12 @@ void Tehai_Group::add_daiminkan(
 	for (int gn = 0; gn < tav_size_tmp; gn++) {
 		const int ta_loc_gn_first = ta_loc[gn].get_first();
 		const int ta_loc_gn_second = ta_loc[gn].get_second();
-		if (cal_tav[ta_loc_gn_first][ta_loc_gn_second].get_reach_flag() == 1) {
-			continue;
-		}
+
 		for (int hai = 1; hai < 38; hai++) {
 			if (hai%10 != 0 && kan_cand[hai] == 1) {
 				// カンの派生手牌を考える際、派生する前の手牌では対象となる牌種がちょうど3枚である必要がある。
 				// haiが4枚ある手牌の暗刻を槓子に置き換えてしまうと、haiが最終的に5枚になってしまうため不可能
-				if (cal_tav[ta_loc_gn_first][ta_loc_gn_second].count_haikind(hai) == 3 && cal_tav[ta_loc_gn_first][ta_loc_gn_second].using_haikind_num(hai) == 3) {
+				if (cal_tav[ta_loc_gn_first][ta_loc_gn_second].count_hai(hai) == 3 && cal_tav[ta_loc_gn_first][ta_loc_gn_second].using_haikind_num(hai) == 3) {
 					int hai2 = hai;
 					if (cal_tav[ta_loc_gn_first][ta_loc_gn_second].count_hai(hai) == 2) {
 						assert(cal_tav[ta_loc_gn_first][ta_loc_gn_second].tehai_state.get_aka_in_side(hai/10) == 1);
@@ -439,7 +435,7 @@ void Tehai_Group::add_kakan(
 					return;
 				}
 
-				if(cal_tav[ta_loc_gn_first][ta_loc_gn_second].count_haikind(hai)==0 && cal_tav[ta_loc_gn_first][ta_loc_gn_second].using_haikind_num(hai) == 3){
+				if(cal_tav[ta_loc_gn_first][ta_loc_gn_second].count_hai(hai)==0 && cal_tav[ta_loc_gn_first][ta_loc_gn_second].using_haikind_num(hai) == 3){
 					cal_tav[thread_num].push_back(cal_tav[ta_loc_gn_first][ta_loc_gn_second]);
 					const int loc_second_new = cal_tav[thread_num].size() - 1;
 					cal_tav[thread_num][loc_second_new].change_pon_to_kakan(hai, hai);
@@ -483,35 +479,5 @@ void Tehai_Group::analyze_all_agari(
 		//cal_tav[ta_loc_gn_first][ta_loc_gn_second].analyze_tehai(my_pid, graph_agariv_cn[gn]);
 		cal_tav[ta_loc_gn_first][ta_loc_gn_second].analyze_tehai(my_pid, game_state, agari_graph);
 		agari_graph_loc[ta_loc_gn_first][ta_loc_gn_second][2] = agari_graph.size();
-	}
-}
-
-void Tehai_Group::add_reach(
-	boost::unordered_map<Tehai_State2, int>& ts_map,
-	std::array<boost::container::static_vector<Tehai_Analyzer_Basic, MAX_TA_NUM_PER_THREAD>, CAL_NUM_THREAD>& cal_tav,
-	const int thread_num
-){
-	int tav_size_tmp = ta_loc.size();
-	for(int gn=0;gn<tav_size_tmp;gn++){
-		const int ta_loc_gn_first = ta_loc[gn].get_first();
-		const int ta_loc_gn_second = ta_loc[gn].get_second();
-		if(cal_tav[ta_loc_gn_first][ta_loc_gn_second].get_tenpai_flag()==1 && cal_tav[ta_loc_gn_first][ta_loc_gn_second].get_fuuro_num() - cal_tav[ta_loc_gn_first][ta_loc_gn_second].get_ankan_num()==0){
-			assert(cal_tav[ta_loc_gn_first][ta_loc_gn_second].get_reach_flag()==0);
-			
-			if (cal_tav[thread_num].size() >= MAX_TA_NUM_PER_THREAD ||
-				ta_loc.size() >= MAX_TA_NUM_PER_GROUP
-			) {
-				// 何かアラートを出すべき？
-				return;
-			}
-
-			cal_tav[thread_num].push_back(cal_tav[ta_loc_gn_first][ta_loc_gn_second]);
-			const int loc_second_new = cal_tav[thread_num].size() - 1;
-			cal_tav[thread_num][loc_second_new].set_reach(1);
-			ta_loc.push_back(Tehai_Location(thread_num, loc_second_new));
-
-			const int gn_new = ta_loc.size()-1;
-			ts_map[cal_tav[thread_num][loc_second_new].tehai_state] = gn_new;
-		}
 	}
 }

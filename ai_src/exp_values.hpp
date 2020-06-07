@@ -26,7 +26,7 @@ float cal_target_value_child (
 );
 
 std::array<std::array<float, 4>, 4> cal_target_value(
-	const int my_pid, const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp, const float my_agari_value,
+	const int my_pid, const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp, const float my_agari_value,
 	const std::array<std::array<std::array<float, 12>, 14>, 4>& tsumo_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& ron_prob
 ); // あるプレイヤが誰かからアガリをするときの価値
 
@@ -40,8 +40,8 @@ std::array<float, 4> cal_risk_array(const int my_pid, const Game_State& game_sta
 
 float cal_exp(
 	const int my_pid, const Moves& game_record, const Game_State& game_state, const Hai_Array& result_tehai, const float agari_prob_sol, const float value_sol, const float value_not_agari, const float keiten_prob_sol,
-	const std::array<float, 4>& tenpai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& tsumo_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& ron_prob,
-	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp, const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp,
+	const std::array<float, 4>& tenpai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, const std::array<std::array<float, 100>, 4>& tsumo_prob, const std::array<std::array<float, 100>, 4>& ron_prob,
+	const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp, const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp,
 	const int dahai_inc, const int fuuro_inc
 );
 
@@ -52,8 +52,8 @@ float cal_passive_ryuukyoku_value(
 
 float cal_other_end_value(
 	const int my_pid, const Game_State& game_state, const std::array<float, 4>& tenpai_prob,
-	const std::array<std::array<std::array<float, 12>, 14>, 4>& tsumo_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& ron_prob,
-	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
+	const std::array<std::array<float, 100>, 4>& tsumo_prob, const std::array<std::array<float, 100>, 4>& ron_prob,
+	const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp
 );
 
 float cal_betaori_exp(

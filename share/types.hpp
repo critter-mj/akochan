@@ -53,9 +53,7 @@ class Agari_Info {
     public:
     int hai;
     int han_tsumo;
-    int fu_tsumo;
     int han_ron;
-    int fu_ron;
 
     Agari_Info();
 };

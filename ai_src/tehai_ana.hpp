@@ -23,9 +23,6 @@ public:
 };
 
 class Tehai_Analyzer_Basic {
-//private: // 最終的にはprivateにあるものは無くす想定
-	//int tehai[38];
-
 public:
 	Tehai_Analyzer_Basic();
 	void reset_tenpai();
@@ -44,12 +41,10 @@ public:
 
 	uint32_t num_and_flags; // tehai_stateは外部から見える情報が同一かどうかの判定に使うため、それ以外の情報格納用
 	int get_tenpai_flag() const;
-	int get_furiten_flag() const;
 	int get_neg_flag() const;
 	int get_kan_changed_flag() const;
 
 	void set_tenpai_flag(const int flag);
-	void set_furiten_flag(const int flag);
 	void set_neg_flag(const int flag);
 	void set_kan_changed_flag(const int flag);
 
@@ -79,11 +74,7 @@ public:
 	virtual int get_titoi_change_num_max() {return 0;}
 	virtual int get_mentu_change_num_max() {return 0;}
 
-	void set_reach(int flag);
-	int get_reach_flag() const;
-
 	int count_hai(const int hai) const;
-	int count_haikind(const int hai) const;
 	void add_hai(const int hai);
 	void delete_hai(const int hai);
 
@@ -92,7 +83,6 @@ public:
 	void add_ankan(const int haikind, const int hai2);
 	  
 	int using_haikind_num(int hai) const;
-
 	int get_shanten_num() const;
 
 	template <class Agari_Vector> void agari_push_func_child(const Agari_Info agari, const int pid, const Game_State& game_state, Agari_Vector& agariv);
@@ -114,8 +104,6 @@ public:
 	virtual void pattern_push_func(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kind, Tehai_Pattern_Source& tps);
 	virtual void pattern_titoi_push_func(Tehai_Pattern_Source& tps);
 
-	
-
 	template <class Agari_Vector> void tenpai_check(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tate_cut, Hai_Array& tehai_tmp, Agari_Vector& agariv);
 	void cut_tatu(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tate_cut, Hai_Array& tehai_tmp, int mentu_num, int head_num, int kouho_num, int start, Tehai_Pattern_Source& tps);
 	template <class Agari_Vector> void analyze_tatu(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tate_cut, Hai_Array& tehai_tmp, Tehai_Pattern_Source& tps, Agari_Vector& agariv);
@@ -131,7 +119,6 @@ public:
 	template <class Agari_Vector> void titoi_shanten(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tmp, Tehai_Pattern_Source& tps, Agari_Vector& agariv);
 
 	void analyze_tenpai(const int my_pid_new, const Game_State& game_state);
-	bool can_ankan_after_reach(const int tsumo_hai) const ;
 
 	void print_tehai() const;
 	void out_tenpai();

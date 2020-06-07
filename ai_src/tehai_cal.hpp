@@ -126,12 +126,12 @@ class Tehai_Calculator{
 
 	void set_agari_exp(
 		const Game_State& game_state,
-    	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
+    	const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp
 	);
 
 	void calc_agari_prob(
 		const int tsumo_num, const double exp_min, const Game_State& game_state,
-    	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp	
+    	const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp	
 	);
 
 	void calc_DP(
@@ -142,7 +142,7 @@ class Tehai_Calculator{
 		double my_tenpai_prob,
 		double ryuukyoku_prob_now,
 		const Hai_Array& hai_visible_kind, const Game_State& game_state,
-    	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp,
+    	const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp,
 		const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& exp_ryuukyoku,
 		const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& exp_ryuukyoku_ar,
 		const Tactics& tactics

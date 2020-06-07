@@ -304,20 +304,18 @@ std::array<std::array<float, 4>, 4> cal_target_prob_other(const int my_pid) {
 }
 
 float cal_target_value_child (
-	const std::array<std::array<float, 12>, 14>& kyoku_end_pt_exp, const std::array<std::array<float, 12>, 14>& han_prob
+	const std::array<float, 100>& kyoku_end_pt_exp, const std::array<float, 100>& han_prob
 ) {
 	float value = 0.0;
-	for (int han = 0; han < 14; han++) {
-		for (int fu = 0; fu < 12; fu++) {
-			value += kyoku_end_pt_exp[han][fu] * han_prob[han][fu];
-		}
+	for (int han = 0; han < 100; han++) {
+		value += kyoku_end_pt_exp[han] * han_prob[han];
 	}
 	return value;
 }
 
 std::array<std::array<float, 4>, 4> cal_target_value(
-	const int my_pid, const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp, const float my_agari_value,
-	const std::array<std::array<std::array<float, 12>, 14>, 4>& tsumo_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& ron_prob
+	const int my_pid, const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp, const float my_agari_value,
+	const std::array<std::array<float, 100>, 4>& tsumo_prob, const std::array<std::array<float, 100>, 4>& ron_prob
 ) {
 	std::array<std::array<float, 4>, 4> target_value;
 	for (int pid1 = 0; pid1 < 4; pid1++) {
@@ -419,8 +417,8 @@ std::array<float, 4> cal_risk_array(const int my_pid, const Game_State& game_sta
 
 float cal_exp(
 	const int my_pid, const Moves& game_record, const Game_State& game_state, const Hai_Array& result_tehai, const float agari_prob_sol, const float value_sol, const float value_not_agari, const float keiten_prob_sol,
-	const std::array<float, 4>& tenpai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& tsumo_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& ron_prob,
-	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp, const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp,
+	const std::array<float, 4>& tenpai_prob, const std::array<std::array<float, 38>, 4>& houjuu_hai_prob, const std::array<std::array<float, 100>, 4>& tsumo_prob, const std::array<std::array<float, 100>, 4>& ron_prob,
+	const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp, const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp,
 	const int dahai_inc, const int fuuro_inc
 ) {
 	const float my_agari_prob = cal_my_agari_prob(my_pid, game_record, agari_prob_sol, game_state, dahai_inc, tenpai_prob);
@@ -460,8 +458,8 @@ float cal_passive_ryuukyoku_value(
 
 float cal_other_end_value(
 	const int my_pid, const Game_State& game_state, const std::array<float, 4>& tenpai_prob,
-	const std::array<std::array<std::array<float, 12>, 14>, 4>& tsumo_prob, const std::array<std::array<std::array<float, 12>, 14>, 4>& ron_prob,
-	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
+	const std::array<std::array<float, 100>, 4>& tsumo_prob, const std::array<std::array<float, 100>, 4>& ron_prob,
+	const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp
 ) {
 	const std::array<float, 5> kyoku_result_prob = cal_kyoku_result_prob(my_pid, game_state, 0, 0.0, tenpai_prob, 0.0);
 	const std::array<std::array<float, 4>, 4> target_prob = cal_target_prob_other(my_pid);

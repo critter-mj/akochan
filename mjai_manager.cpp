@@ -206,26 +206,21 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
 
             for (int i = 0; i < tenpai_info.agari_vec.size(); i++) {
                 if (haikind(hai) == tenpai_info.agari_vec[i].hai &&
-                    han_add + tenpai_info.agari_vec[i].han_ron > 0
+                    han_add + tenpai_info.agari_vec[i].han_ron > agari_ten
                 ) {
-                    int agari_ten_tmp = ron_agari(han_add + tenpai_info.agari_vec[i].han_ron + dora_num, tenpai_info.agari_vec[i].fu_ron, game_state.player_state[actor].jikaze == 0);
-                    if (agari_ten_tmp > agari_ten) {
-                        agari_ten = agari_ten_tmp;
-                        agari_id = i;
-                    }
+                    agari_ten = han_add + tenpai_info.agari_vec[i].han_ron;
+                    agari_id = i;
                 }
             }
             const int han = han_add + tenpai_info.agari_vec[agari_id].han_ron + dora_num;
-            const int fu = tenpai_info.agari_vec[agari_id].fu_ron;
-            std::array<int, 4> ten_move = ten_move_hora(
-                actor, target, han, fu, get_oya(game_record), game_state.honba, get_kyotaku(game_record), false
-            );
+            std::array<int, 4> ten_move = ten_move_hora(actor, target, han);
+
             std::array<int, 4> scores;
             for (int pid = 0; pid < 4; pid++) {
                 scores[pid] = game_state.player_state[pid].score + ten_move[pid];
             }
             tehai[hai]--;
-            game_record.push_back(make_hora(actor, target, hai, tehai, han, fu, uradora_marker, scores));
+            game_record.push_back(make_hora(actor, target, hai, tehai, han, uradora_marker, scores));
             ron_flag = true;
         }
     }
@@ -305,26 +300,20 @@ void add_move_after_tsumo(const std::vector<int>& haiyama, Moves& game_record, c
 
         for (int i = 0; i < tenpai_info.agari_vec.size(); i++) {
             if (haikind(hai) == tenpai_info.agari_vec[i].hai &&
-                han_add + tenpai_info.agari_vec[i].han_tsumo > 0
+                han_add + tenpai_info.agari_vec[i].han_tsumo > agari_ten
             ) {
-                int agari_ten_tmp = tsumo_agari(han_add + tenpai_info.agari_vec[i].han_tsumo + dora_num, tenpai_info.agari_vec[i].fu_tsumo, game_state.player_state[actor].jikaze == 0);
-                if (agari_ten_tmp > agari_ten) {
-                    agari_ten = agari_ten_tmp;
-                    agari_id = i;
-                }
+                agari_ten = han_add + tenpai_info.agari_vec[i].han_tsumo;
+                agari_id = i;
             }
         }
         const int han = han_add + tenpai_info.agari_vec[agari_id].han_tsumo + dora_num;
-        const int fu = tenpai_info.agari_vec[agari_id].fu_tsumo;
-        std::array<int, 4> ten_move = ten_move_hora(
-            actor, actor, han, fu, get_oya(game_record), game_state.honba, get_kyotaku(game_record), false
-        );
+        std::array<int, 4> ten_move = ten_move_hora(actor, actor, han);
         std::array<int, 4> scores;
         for (int pid = 0; pid < 4; pid++) {
             scores[pid] = game_state.player_state[pid].score + ten_move[pid];
         }
         tehai[hai]--;
-        game_record.push_back(make_hora(actor, actor, hai, tehai, han, fu, uradora_marker, scores));
+        game_record.push_back(make_hora(actor, actor, hai, tehai, han, uradora_marker, scores));
     } else if (moves[0]["type"].string_value() == "ryukyoku" && moves[0]["reason"].string_value() == "kyushukyuhai") {
         const int actor = moves[0]["actor"].int_value();
         const Game_State game_state = get_game_state(game_record);

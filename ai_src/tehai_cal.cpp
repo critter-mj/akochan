@@ -124,7 +124,7 @@ void Tehai_Calculator::get_effective(const Game_State& game_state, Tehai_Analyze
 void Tehai_Calculator::set_inout_flag(Tehai_Analyzer ta_in){
 	if(ta_in.get_tehai_num() + ta_in.get_fuuro_num()*3==14){
 		for(int hai=0;hai<38;hai++){
-			if(hai%10 != 0 && ta_in.count_haikind(hai)>0){	
+			if(hai%10 != 0 && ta_in.count_hai(hai)>0){	
 				out_flag[hai] = 1;
 			}
 		}
@@ -133,7 +133,7 @@ void Tehai_Calculator::set_inout_flag(Tehai_Analyzer ta_in){
 			if(hai%10!=0){
 				in_flag[hai] = 1;
 			}
-			if(hai%10 != 0 && ta_in.count_haikind(hai)>0){
+			if(hai%10 != 0 && ta_in.count_hai(hai)>0){
 				out_flag[hai] = 1;
 			}
 		}
@@ -211,7 +211,7 @@ void Tehai_Calculator::set_tsumo_node_1out(
 	Tehai_Change tehai_change_tmp_new;
 	tehai_change_tmp_new.tehai_base = bit_hai_num;
 	for(int hai=0;hai<38;hai++){
-		if (hai%10 != 0 && ta_in.count_haikind(hai)) {
+		if (hai%10 != 0 && ta_in.count_hai(hai)) {
 			tehai_change_tmp_new.tehai_base.delete_hai(hai);
 			set_tsumo_node_exec(tehai_change_tmp_new, true, tehai_calculator_work.candidates_work, tcs, in0num);
 			tehai_change_tmp_new.tehai_base.add_hai(hai);
@@ -230,7 +230,7 @@ void Tehai_Calculator::set_tsumo_node_1in_1out(
 			if(hai_in%10!=0 && ta_in.using_haikind_num(hai_in)<4){
 				tehai_change_tmp_new.tehai_base.add_hai(hai_in);
 				for(int hai_out=0;hai_out<38;hai_out++){
-					if(hai_out%10 != 0 && ta_in.count_haikind(hai_out)) {
+					if(hai_out%10 != 0 && ta_in.count_hai(hai_out)) {
 						tehai_change_tmp_new.tehai_base.delete_hai(hai_out);
 						set_tsumo_node_exec(tehai_change_tmp_new, false, tehai_calculator_work.candidates_work, tcs, in0num);
 						tehai_change_tmp_new.tehai_base.add_hai(hai_out);
@@ -382,16 +382,7 @@ void Tehai_Calculator::set_cand_graph_sub_child(
 	//std::unordered_map<Tehai_State, int, Tehai_State_Hash>* ts_maps
 	const int thread_num
 ){
-	// 麻雀のルールで禁止されている手を行わないようにするための処理
-	if(get_const_ta_cgn(cn1, gn1).get_reach_flag()==1 && action_id!=AT_ANKAN){
-		return;
-	}else if(action_id!=AT_ANKAN && action_id!=AT_KAKAN && haikind(hai_out)==haikind(hai0)){
-		return;
-	}else if(is_chi_low(action_id) && haikind(hai_out)==haikind(hai0)+3){
-		return;
-	}else if(is_chi_high(action_id) && haikind(hai_out)==haikind(hai0)-3){
-		return;
-	}
+	// 麻雀のルールで禁止されている手を行わないようにするための処理 // 中国麻雀ではない？
 
 	// 赤牌を含むフーロを行い、赤牌を打牌する手を行わないようにするための処理（本来ここに来る前にはじかれるべきだと思われる）
 	if(hai_out%10==0 && hai_out>0 && action_id!=0){
@@ -463,7 +454,6 @@ void Tehai_Calculator::set_cand_graph_sub_child(
 		if((tehai_action.action_type==AT_TSUMO || tehai_action.action_type==AT_ANKAN)
 			&& get_const_ta_cgn(tehai_action.dst_group, tehai_action.dst_group_sub).get_tenpai_flag()==1
 			&& get_const_ta_cgn(tehai_action.dst_group, tehai_action.dst_group_sub).get_fuuro_num() - get_const_ta_cgn(tehai_action.dst_group, tehai_action.dst_group_sub).get_ankan_num()==0
-			&& get_const_ta_cgn(tehai_action.dst_group, tehai_action.dst_group_sub).get_reach_flag()==0
 		){
 			tehai_state.set_reach(1);
 			itr = ts_maps[tehai_action.dst_group].find(tehai_state);
@@ -832,14 +822,6 @@ void Tehai_Calculator::set_candidates3_multi_thread(const Moves& game_record, co
 		tehai_calculator_work.candidates_work[cn].analyze_all_tenpai(my_pid, game_state, tehai_calculator_work.cal_tav_work);
 	}
 
-	if (!game_state.player_state[my_pid].reach_declared && game_state.player_state[my_pid].score >= 1000 && count_tsumo_num_all(game_record) <= 66) {
-		#pragma omp parallel
-		#pragma omp for
-		for(int cn=0;cn<candidates_size();cn++){
-			tehai_calculator_work.candidates_work[cn].add_reach(ts_maps[cn], tehai_calculator_work.cal_tav_work, omp_get_thread_num());
-		}
-	}
-
 	/*
 	for (int cn = 0; cn < candidates_size(); cn++) {
 		assert(candidates[cn].tav.size() == group_size(cn));
@@ -872,29 +854,6 @@ void Tehai_Calculator::set_candidates3_multi_thread(const Moves& game_record, co
 
 	if (out_console) {
 		std::cout << "sub_num_all:" << get_sub_num_all() << std::endl;
-	}
-
-	for(int cn=0;cn<candidates_size();cn++){
-		std::vector<int> furiten_cand;
-		for(int hai=1;hai<38;hai++){
-			if(hai%10 != 0 && tehai_analyzer.using_haikind_num(hai) > get_const_ta_cgn(cn, 0).using_haikind_num(hai)){
-				furiten_cand.push_back(hai);
-			}
-		}
-		for(int gn=0;gn<group_size(cn);gn++){
-			const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn, gn);
-			for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
-				const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
-				if (sute_flag[agari.agari_info.get_hai()] == 1) {
-					get_ref_ta_cgn(cn, gn).set_furiten_flag(1);
-				}
-				for(int i=0;i<furiten_cand.size();i++){
-					if(furiten_cand[i] == agari.agari_info.get_hai()){
-						get_ref_ta_cgn(cn, gn).set_furiten_flag(1);
-					}
-				}
-			}
-		}
 	}
 
 	clock_t check3 = clock();
@@ -1119,7 +1078,7 @@ int Tehai_Calculator::get_fuuro_agari_shanten_num(const Game_State& game_state, 
 
 void Tehai_Calculator::set_agari_exp(
 	const Game_State& game_state,
-    const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
+    const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp
 ) {
 	const Hai_Array hai_visible_kind = haikind(get_hai_visible_me(my_pid, game_state)); // ako ではこのようになっている。
 	#pragma omp parallel
@@ -1129,7 +1088,7 @@ void Tehai_Calculator::set_agari_exp(
 			const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn, gn);
 			for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
 				Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
-				const std::array<double, 4> ten_exp = agari.get_ten_exp(my_pid, get_const_ta_cgn(cn, gn).tehai_bit, get_const_ta_cgn(cn, gn).tehai_state, hai_visible_kind, game_state, kyoku_end_pt_exp);
+				const std::array<float, 2> ten_exp = agari.get_ten_exp(my_pid, get_const_ta_cgn(cn, gn).tehai_bit, get_const_ta_cgn(cn, gn).tehai_state, hai_visible_kind, game_state, kyoku_end_pt_exp);
 				agari.tsumo_exp = ten_exp[0];
 				agari.ron_exp = ten_exp[1];
 				// 後退解析時は赤ドラを考えない。赤ドラを考える場合、この部分は修正する必要がある。
@@ -1140,7 +1099,7 @@ void Tehai_Calculator::set_agari_exp(
 
 void Tehai_Calculator::calc_agari_prob(
 	const int tsumo_num, const double exp_min, const Game_State& game_state,
-    const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
+    const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp
 ) {
 	clock_t check0 = clock();
 	const int nokori_hai_num = get_nokori_hai_num(my_pid, game_state);
@@ -1161,13 +1120,9 @@ void Tehai_Calculator::calc_agari_prob(
 				tehai_calculator_work.agari_prob_to_work[loc_first][loc_second][0] = 0.0;
 				tehai_calculator_work.tenpai_prob_work[loc_first][loc_second][0] = 1.0*get_const_ta_cgn(cn, gn).get_tenpai_flag();
 				tehai_calculator_work.tenpai_prob_to_work[loc_first][loc_second][0] = 1.0*get_const_ta_cgn(cn, gn).get_tenpai_flag();
-				if(get_const_ta_cgn(cn, gn).get_reach_flag()==1){
-					tehai_calculator_work.ten_exp_work[loc_first][loc_second][0] = exp_min;
-					tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][0] = exp_min;
-				}else{
-					tehai_calculator_work.ten_exp_work[loc_first][loc_second][0] = exp_min;
-					tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][0] = exp_min;
-				}
+				
+				tehai_calculator_work.ten_exp_work[loc_first][loc_second][0] = exp_min;
+				tehai_calculator_work.ten_exp_to_work[loc_first][loc_second][0] = exp_min;
 
 				for(int han=0;han<5;han++){
 					tehai_calculator_work.agari_han_prob_work[loc_first][loc_second][0][han] = 0.0;
@@ -1309,29 +1264,27 @@ void Tehai_Calculator::calc_agari_prob(
 
 
 					//if(mode>0){
-						if(get_const_ta_cgn(cn, gn).get_furiten_flag()==0){
-							const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn, gn);
-							for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
-								const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
-								if (agari.get_ten_ron(my_pid, game_state) > 0) {
-									if (using_haikind_array[agari.agari_info.get_hai()] - get_const_ta_cgn(cn, gn).using_haikind_num(agari.agari_info.get_hai()) < 1) {
-										if (agari.ron_exp > exp_tmpbest[agari.agari_info.get_hai()]){
-											hai_effective_flag[agari.agari_info.get_hai()] = 1;
-											prob_tmpbest[agari.agari_info.get_hai()] = 1.0;
-											exp_tmpbest[agari.agari_info.get_hai()] = agari.ron_exp;
+						const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn, gn);
+						for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
+							const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
+							if (agari.get_ten_ron(my_pid, game_state) > 0) {
+								if (using_haikind_array[agari.agari_info.get_hai()] - get_const_ta_cgn(cn, gn).using_haikind_num(agari.agari_info.get_hai()) < 1) {
+									if (agari.ron_exp > exp_tmpbest[agari.agari_info.get_hai()]){
+										hai_effective_flag[agari.agari_info.get_hai()] = 1;
+										prob_tmpbest[agari.agari_info.get_hai()] = 1.0;
+										exp_tmpbest[agari.agari_info.get_hai()] = agari.ron_exp;
 
-											for(int han=0;han<5;han++){
-												han_prob_tmpbest[han][agari.agari_info.get_hai()] = 0.0;
-											}
-											int agari_han = agari.agari_info.get_han_ron();
-											han_prob_tmpbest[std::min(4,agari_han)][agari.agari_info.get_hai()] = 1.0;
-											// 裏ドラについて考えるべきかもしれない。（そもそもhan_prob_tmpbestは使われていないが。）
-
-
-											//if(candidates[cn].tav[gn].riich_flag==0){
-												pon_ron_flag[agari.agari_info.get_hai()] = 1;
-											//}
+										for(int han=0;han<5;han++){
+											han_prob_tmpbest[han][agari.agari_info.get_hai()] = 0.0;
 										}
+										int agari_han = agari.agari_info.get_han_ron();
+										han_prob_tmpbest[std::min(4,agari_han)][agari.agari_info.get_hai()] = 1.0;
+										// 裏ドラについて考えるべきかもしれない。（そもそもhan_prob_tmpbestは使われていないが。）
+
+
+										//if(candidates[cn].tav[gn].riich_flag==0){
+											pon_ron_flag[agari.agari_info.get_hai()] = 1;
+										//}
 									}
 								}
 							}
@@ -1421,7 +1374,7 @@ void Tehai_Calculator::calc_DP(
 	double my_tenpai_prob,
 	double ryuukyoku_prob_now,
 	const Hai_Array& hai_visible_kind, const Game_State& game_state,
-    const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp,
+    const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp,
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp,
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2>& ryuukyoku_pt_exp_ar,
 	const Tactics& tactics

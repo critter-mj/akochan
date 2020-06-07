@@ -99,62 +99,30 @@ Moves Fuuro_Choice::out_moves(const int my_pid, const int target) const {
 	return moves;
 }
 
-std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode, const Tactics& tactics) {
-	int riibou = game_state.kyotaku;
-    for (int pid = 0; pid < 4; pid++) {
-        if (game_state.player_state[pid].reach_declared && !game_state.player_state[pid].reach_accepted) {
-            riibou++;
-        }
-        // リーチに関して、declared_flagを用いる。（宣言牌に対する副露判断を適切なものにするため）
-	    // 宣言牌に対するロンに関しては、個別に期待利得を計算する。
-    }
+std::array<std::array<std::array<float, 100>, 4>, 4> cal_kyoku_end_pt_exp(const Moves& game_record, const Game_State& game_state, const int my_pid, const bool reach_mode, const Tactics& tactics) {
 	const int kyoku_mod = get_kyoku_first(game_record) + game_state.bakaze*4 + game_state.kyoku - 1;
     const int oyaid = get_oya(game_record);
 
-	std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> kyoku_end_pt_exp = {};
+	std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp = {};
     #pragma omp parallel
 	#pragma omp for
 	for (int pid1 = 0; pid1 < 4; pid1++) {
 		for (int pid2 = 0; pid2 < 4; pid2++) {
-			for (int han = 1; han <= 13; han++) {
-				for (int fu = 1; fu <= 11; fu++) {
-					if (fu > 2 && han >= 5) {
-                        kyoku_end_pt_exp[pid1][pid2][han][fu] = kyoku_end_pt_exp[pid1][pid2][han][2];
-						// マンガン以上は、符は点数に寄与しないためコピーする。
-					} else {
-                        kyoku_end_pt_exp[pid1][pid2][han][fu] = 0;
-                        int fu_mod = 0;
-                        if (fu == 1 && pid1 != pid2) { continue; } // 他家からピンフツモはない
-                        if (fu == 1 && pid1 == pid2 && han == 1) { continue; } // ピンフツモで1ハンはない
-                        if (fu == 2 && pid1 == pid2 && han < 3) { continue; } // 七対子ツモは3ハン以上
-                        if (fu == 2 && pid1 != pid2 && han == 1) { continue; } // 七対子ロンは2ハン以上
-                        
-                        if (fu == 1) {
-                            fu_mod = 20;
-                        } else if (fu == 2) {
-                            fu_mod = 25;
-                        } else {
-                            fu_mod = fu * 10;
-                        }
-						
-						const std::array<int, 4> ten_move = ten_move_hora(pid1, pid2, han, fu_mod, oyaid, game_state.honba, riibou, false);
-                        std::array<int, 4> ten_tmp;
-                        for (int pid = 0; pid < 4; pid++) {
-							ten_tmp[pid] = game_state.player_state[pid].score + ten_move[pid];
-                            if ((game_state.player_state[pid].reach_declared || (pid == my_pid && reach_mode)) && !game_state.player_state[pid].reach_accepted) {
-                                ten_tmp[pid] -= 1000;
-								ten_tmp[pid1] += 1000;
-                            }
-                        }
+			for (int han = 0; han < 100; han++) {
+				kyoku_end_pt_exp[pid1][pid2][han] = 0;
+				
+				const std::array<int, 4> ten_move = ten_move_hora(pid1, pid2, han);
+				std::array<int, 4> ten_tmp;
+				for (int pid = 0; pid < 4; pid++) {
+					ten_tmp[pid] = game_state.player_state[pid].score + ten_move[pid];
+				}
 
-						assert(oyaid - kyoku_mod + 12 >= 0);
-						const int kyoku_mod_next = (pid1 == oyaid) ? kyoku_mod : kyoku_mod + 1;
-						const int oyaid_next = (pid1 == oyaid) ? oyaid : (oyaid + 1) % 4;
-						const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next, pid1 == oyaid, tactics_json[my_pid]);
-                        for (int j = 0; j < 4; j++) {
-                            kyoku_end_pt_exp[pid1][pid2][han][fu] += jun_prob[my_pid][j] * tactics.jun_pt[j];
-                        }
-					}
+				assert(oyaid - kyoku_mod + 12 >= 0);
+				const int kyoku_mod_next = (pid1 == oyaid) ? kyoku_mod : kyoku_mod + 1;
+				const int oyaid_next = (pid1 == oyaid) ? oyaid : (oyaid + 1) % 4;
+				const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next);
+				for (int j = 0; j < 4; j++) {
+					kyoku_end_pt_exp[pid1][pid2][han] += jun_prob[my_pid][j] * tactics.jun_pt[j];
 				}
 			}
         }
@@ -198,7 +166,7 @@ std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_
 					assert(oyaid - kyoku_mod + 12 >= 0);
 					const int kyoku_mod_next = tenpai_flag[oyaid] ? kyoku_mod : kyoku_mod + 1;
 					const int oyaid_next = tenpai_flag[oyaid] ? oyaid : (oyaid + 1) % 4;
-					const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next, tenpai_flag[oyaid], tactics_json[my_pid]);
+					const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next);
 					for (int j = 0; j < 4; j++) {
 						ryuukyoku_pt_exp[t0][t1][t2][t3] += jun_prob[my_pid][j] * tactics.jun_pt[j];
 					}
@@ -341,8 +309,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const Hai_Array hai_visible_all_kind = haikind(hai_visible_all);
 	const Hai_Array hai_visible_kind = sum_hai_array(hai_visible_all_kind, current_tehai_kind);
 
-	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> kyoku_end_pt_exp = cal_kyoku_end_pt_exp(game_record, game_state, my_pid, false, tactics);
-	const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4> kyoku_end_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? kyoku_end_pt_exp : cal_kyoku_end_pt_exp(game_record, game_state, my_pid, true, tactics);
+	const std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp = cal_kyoku_end_pt_exp(game_record, game_state, my_pid, false, tactics);
+	const std::array<std::array<std::array<float, 100>, 4>, 4> kyoku_end_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? kyoku_end_pt_exp : cal_kyoku_end_pt_exp(game_record, game_state, my_pid, true, tactics);
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp = cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, false, tactics);
 	const std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> ryuukyoku_pt_exp_ar = game_state.player_state[my_pid].reach_accepted ? ryuukyoku_pt_exp : cal_ryuukyoku_pt_exp(game_record, game_state, my_pid, true, tactics);
 
@@ -412,9 +380,9 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const std::array<std::array<float, 38>, 4>& houjuu_hai_value = houjuu_hai_prob_value.second;
 	const std::array<std::array<float, 38>, 4>& houjuu_hai_prob_now = houjuu_hai_prob_value_now.first;
 	const std::array<std::array<float, 38>, 4>& houjuu_hai_value_now = houjuu_hai_prob_value_now.second;
-	const std::array<std::array<std::array<float, 12>, 14>, 4> tsumo_hanfu_prob = cal_agari_hanfu_prob_array(tenpai_estimator, true);
-	const std::array<std::array<std::array<float, 12>, 14>, 4> ron_hanfu_prob = cal_agari_hanfu_prob_array(tenpai_estimator, false);
-	const std::array<std::array<std::array<float, 12>, 14>, 4> tsumo_hanfu_prob_kan = cal_hanfu_prob_kan(tsumo_hanfu_prob, tactics.han_shift_prob_kan);
+	const std::array<std::array<float, 100>, 4> tsumo_hanfu_prob = cal_agari_hanfu_prob_array(tenpai_estimator, true);
+	const std::array<std::array<float, 100>, 4> ron_hanfu_prob = cal_agari_hanfu_prob_array(tenpai_estimator, false);
+	//const std::array<std::array<float, 100>, 4> tsumo_hanfu_prob_kan = cal_hanfu_prob_kan(tsumo_hanfu_prob, tactics.han_shift_prob_kan);
 	//const std::array<std::array<std::array<float, 12>, 14>, 4> ron_hanfu_prob_kan = cal_hanfu_prob_kan(ron_hanfu_prob, tactics.han_shift_prob_kan);
 
 
@@ -462,14 +430,15 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	assert_with_out(!tactics_json[my_pid]["use_other_end_ar"].is_null(), "use_other_end_ar is null");
 	const double other_end_value_ar = tactics_json[my_pid]["use_other_end_ar"].bool_value() ?
 		cal_other_end_value(my_pid, game_state, tenpai_prob_array, tsumo_hanfu_prob, ron_hanfu_prob, kyoku_end_pt_exp_ar) : other_end_value;
-	const double other_end_value_kan = cal_other_end_value(my_pid, game_state, tenpai_prob_array, tsumo_hanfu_prob_kan, ron_hanfu_prob, kyoku_end_pt_exp);
+	const double other_end_value_kan = other_end_value;
+	//const double other_end_value_kan = cal_other_end_value(my_pid, game_state, tenpai_prob_array, tsumo_hanfu_prob_kan, ron_hanfu_prob, kyoku_end_pt_exp);
 
 	const int tsumo_num_exp = std::min(cal_tsumo_num_exp(my_pid, game_state, 1, tenpai_prob_array), cal_tsumo_num_DP(game_record, my_pid)); // to do ツモの時と副露の時でdahai_incは異なると思われる。
 	assert(tsumo_num_exp >= 0);
 
 	if (out_console) {
 		std::cout << "passive_ryuukyoku_prob:" << passive_ryuukyoku_prob << std::endl;
-		std::cout << "other_end_value:" << other_end_value << " " << other_end_value_ar << " " << other_end_value_kan << std::endl;
+		std::cout << "other_end_value:" << other_end_value << " " << other_end_value_ar << std::endl;
 	}
 
 	if (rule_base_flag) {
@@ -620,9 +589,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 						Hai_Choice hai_choice_tmp;
 						hai_choice_tmp.action_type = AT_DAHAI;
 						hai_choice_tmp.hai = hai;
-						if (haikind(hai) == haikind(current_hai) &&
-							(tehai_calculator.get_const_ta_cgn(cn, gn).get_reach_flag() == 1) == game_state.player_state[my_pid].reach_accepted
-						) {
+						if (haikind(hai) == haikind(current_hai)) {
 							Hai_Choice tsumo_agari_choice;
 							tsumo_agari_choice.hai = current_hai;
 							tsumo_agari_choice.pt_exp_total = -200;
@@ -631,7 +598,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 								const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
 								if(haikind(current_hai) == agari.agari_info.get_hai() && agari.agari_info.get_han_tsumo() > 0){
 									tsumo_agari_choice.action_type = AT_TSUMO_AGARI;
-									const std::array<double, 4> ten_exp = agari.get_ten_exp(
+									const std::array<float, 2> ten_exp = agari.get_ten_exp(
 										my_pid, tehai_calculator.get_const_ta_cgn(cn, gn).tehai_bit, tehai_calculator.get_const_ta_cgn(cn, gn).tehai_state,
 										hai_visible_kind, game_state, kyoku_end_pt_exp
 									);
@@ -646,9 +613,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 							}
 						}
 
-						if(tehai_calculator.get_const_ta_cgn(cn, gn).get_reach_flag() == 1){
-							hai_choice_tmp.action_type = AT_REACH_DECLARE;
-						}
 						hai_choice_tmp.pt_exp_after_ori = tehai_calculator.get_ori_exp(cn, gn, tsumo_num_DP);
 						hai_choice_tmp.pt_exp_after = tehai_calculator.get_ten_exp(cn, gn, tsumo_num_DP);
 
@@ -662,9 +626,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 									if ((!tactics.do_ankan_inclusive && ac_tmp.action_type == AT_ANKAN) ||
 										(!tactics.do_kakan_inclusive && ac_tmp.action_type == AT_KAKAN)
 									) {
-										continue;
-									}
-									if (game_state.player_state[my_pid].reach_accepted && !tehai_calculator.get_const_ta_cgn(cn, gn).can_ankan_after_reach(hai)) {
 										continue;
 									}
 									Hai_Choice kan_choice;
@@ -718,26 +679,23 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			double ron_pt_exp = -200.0;
 			bool doujun_furiten_flag = false;
 			const std::array<bool, 38> furiten_flags = get_furiten_flags(game_record, game_state, my_pid, true);
-			if (tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).get_furiten_flag() == 0) {
-				const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn_fuuro_neg, gn_fuuro_neg);
-				for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
-					const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
-					if (furiten_flags[agari.agari_info.get_hai()]) {
-						doujun_furiten_flag = true;
-					}
-					if (haikind(current_hai) == agari.agari_info.get_hai() && agari.agari_info.get_han_ron()){
-						fuuro_choice_tmp.fuuro_action_type = AT_RON_AGARI;
-						fuuro_choice_tmp.fuuro_hai = current_hai;
-						const std::array<double, 2> ten_exp = agari.get_ten_exp_direct(
-							my_pid, current_action["actor"].int_value(), current_action["type"] == "kakan" ? 1 : 0,
-							tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_bit, tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_state,
-							hai_visible_kind, game_state, kyoku_end_pt_exp
-						);
-						const double agari_exp = is_aka_hai(current_hai) ? ten_exp[1] : ten_exp[0];
-						if(agari_exp > ron_pt_exp){
-							ron_pt_exp = agari_exp;
-							fuuro_choice_tmp.pt_exp_total = ron_pt_exp;
-						}
+			const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn_fuuro_neg, gn_fuuro_neg);
+			for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
+				const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
+				if (furiten_flags[agari.agari_info.get_hai()]) {
+					doujun_furiten_flag = true;
+				}
+				if (haikind(current_hai) == agari.agari_info.get_hai() && agari.agari_info.get_han_ron()){
+					fuuro_choice_tmp.fuuro_action_type = AT_RON_AGARI;
+					fuuro_choice_tmp.fuuro_hai = current_hai;
+					const float ten_exp = agari.get_ten_exp_direct(
+						my_pid, current_action["actor"].int_value(), current_action["type"] == "kakan" ? 1 : 0,
+						tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_bit, tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_state,
+						hai_visible_kind, game_state, kyoku_end_pt_exp
+					);
+					if(ten_exp > ron_pt_exp){
+						ron_pt_exp = ten_exp;
+						fuuro_choice_tmp.pt_exp_total = ron_pt_exp;
 					}
 				}
 			}
@@ -816,7 +774,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 						const int hai_out = find_hai_out_ta(game_state.player_state[my_pid].tehai, tehai_calculator.get_const_ta_cgn(cn, gn));
 						Hai_Choice hai_choice_tmp;
 						hai_choice_tmp.hai = hai_out;
-						hai_choice_tmp.action_type = tehai_calculator.get_const_ta_cgn(cn, gn).get_reach_flag() ? AT_REACH_DECLARE : AT_DAHAI;
+						hai_choice_tmp.action_type = AT_DAHAI;
 
 						const auto& kyoku_end_pt_exp_tmp = hai_choice_tmp.action_type == AT_REACH_DECLARE ? kyoku_end_pt_exp_ar : kyoku_end_pt_exp;
 						const auto& ryuukyoku_pt_exp_tmp = hai_choice_tmp.action_type == AT_REACH_DECLARE ? ryuukyoku_pt_exp_ar : ryuukyoku_pt_exp;
@@ -848,9 +806,6 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 							for (int acn = tsumo_edge_loc[1]; acn < tsumo_edge_loc[2]; acn++) {
 								const Tehai_Action& ac_tmp = tehai_calculator_work.cand_graph_sub_tsumo_work[tsumo_edge_loc[0]][acn];
 								if (ac_tmp.hai_out == hai_out && (ac_tmp.action_type == AT_ANKAN || ac_tmp.action_type == AT_KAKAN)) {
-									if (game_state.player_state[my_pid].reach_accepted && !tehai_calculator.get_const_ta_cgn(cn, gn).can_ankan_after_reach(hai_out)) {
-										continue;
-									}
 									Hai_Choice kan_choice;
 									kan_choice.hai = hai_out;
 									kan_choice.action_type = ac_tmp.action_type;
@@ -862,7 +817,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 									kan_choice.pt_exp_after = cal_exp(
 										my_pid, game_record, game_state, kan_tehai, tehai_calculator.get_agari_prob(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp), tehai_calculator.get_ten_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp),
 										other_end_value, tehai_calculator.get_tenpai_prob(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp),
-										tenpai_prob_array, houjuu_hai_prob, tsumo_hanfu_prob_kan, ron_hanfu_prob,
+										tenpai_prob_array, houjuu_hai_prob, tsumo_hanfu_prob, ron_hanfu_prob,
 										kyoku_end_pt_exp_tmp, ryuukyoku_pt_exp_tmp, 0, 0
 									);
 									kan_choice.pt_exp_after_ori = cal_betaori_exp(

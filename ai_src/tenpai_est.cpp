@@ -865,43 +865,25 @@ void Tehai_Estimator::normalize2 (
 	}
 }
 
-std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_teev(const std::vector<Tehai_Estimator_Element>& teev, const bool is_tsumo, const bool is_now) {
-	std::array<std::array<std::array<float, 12>, 14>, 38> hai_prob;
+std::array<std::array<float, 100>, 38> cal_hai_prob_from_teev(const std::vector<Tehai_Estimator_Element>& teev, const bool is_tsumo, const bool is_now) {
+	std::array<std::array<float, 100>, 38> hai_prob;
 	for (int hai = 0; hai < 38; hai++) {
-		for (int han = 0; han < 14; han++) {
-			for (int fu = 0; fu < 12; fu++) {
-				hai_prob[hai][han][fu] = 0.0;
-			}
+		for (int han = 0; han < 100; han++) {
+			hai_prob[hai][han] = 0.0;
 		}
 	}
 	for (int i = 0; i < teev.size(); i++) {
 		for (int an = 0; an < teev[i].agariv.size(); an++) {
 			const int han = teev[i].agariv[an].han;
 			if (han > 0) {
-				int fu;
-				if (is_tsumo) {
-					fu = (teev[i].agariv[an].fu + 2 + 9) / 10;
-				} else {
-					fu = (teev[i].agariv[an].fu + 9) / 10;
-					if (fu == 2) { fu = 3; }
-				}
 				if (is_now) {
-					hai_prob[teev[i].agariv[an].hai][han][fu] += teev[i].prob_now;
+					hai_prob[teev[i].agariv[an].hai][han] += teev[i].prob_now;
 				} else {
-					hai_prob[teev[i].agariv[an].hai][han][fu] += teev[i].prob;
+					hai_prob[teev[i].agariv[an].hai][han] += teev[i].prob;
 				}
 			}
 		}
 	}
-	if (!is_tsumo) {
-		for (int c = 0; c < 3; c++) {
-			for (int han = 0; han < 14; han++) {
-				for (int fu = 0; fu < 12; fu++) {
-					hai_prob[10*c + 10][std::min(han + 1, 13)][fu] += hai_prob[10*c + 5][han][fu];
-				}
-			}
-		}
-	}	
 	return hai_prob;
 }
 
@@ -1243,39 +1225,31 @@ void Machi_Coeff::std_coeff(){
 	}
 }
 
-std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_machi_coeff(
-	const Game_State& game_state, const Machi_Coeff& machi_coeff, const std::array<std::array<double, 12>, 14>& hanfu_weight, const bool is_tsumo
+std::array<std::array<float, 100>, 38> cal_hai_prob_from_machi_coeff(
+	const Game_State& game_state, const Machi_Coeff& machi_coeff, const std::array<float, 100>& hanfu_weight, const bool is_tsumo
 ) {
-	std::array<std::array<std::array<float, 12>, 14>, 38> hai_prob;
+	std::array<std::array<float, 100>, 38> hai_prob;
 	for (int hai = 0; hai < 38; hai++) {
-		for (int han = 0; han < 14; han++) {
-			for (int fu = 0; fu < 12; fu++) {
-				hai_prob[hai][han][fu] = (machi_coeff.katachi_prob[1]*machi_coeff.syabo_coeff[hai] + machi_coeff.katachi_prob[2]*machi_coeff.tanki_coeff[hai]) * hanfu_weight[han][fu];
-			}
+		for (int han = 0; han < 100; han++) {
+			hai_prob[hai][han] = (machi_coeff.katachi_prob[1]*machi_coeff.syabo_coeff[hai] + machi_coeff.katachi_prob[2]*machi_coeff.tanki_coeff[hai]) * hanfu_weight[han];
 		}
 	}
 	for (int j = 0; j < 3; j++) {
 		for (int i = 1; i <= 6; i++) {
-			for (int han = 0; han < 14; han++) {
-				for (int fu = 0; fu < 12; fu++) {
-					hai_prob[j*10+i][han][fu] += machi_coeff.katachi_prob[0] * machi_coeff.ryanmen_coeff[j][i] * hanfu_weight[han][fu];
-					hai_prob[j*10+i+3][han][fu] += machi_coeff.katachi_prob[0] * machi_coeff.ryanmen_coeff[j][i] * hanfu_weight[han][fu];
-				}
+			for (int han = 0; han < 100; han++) {
+				hai_prob[j*10+i][han] += machi_coeff.katachi_prob[0] * machi_coeff.ryanmen_coeff[j][i] * hanfu_weight[han];
+				hai_prob[j*10+i+3][han] += machi_coeff.katachi_prob[0] * machi_coeff.ryanmen_coeff[j][i] * hanfu_weight[han];
 			}
 		}
 		for (int i = 2; i <= 8; i++) {
-			for (int han = 0; han < 14; han++) {
-				for (int fu = 0; fu < 12; fu++) {
-					hai_prob[j*10+i][han][fu] += machi_coeff.katachi_prob[3] * machi_coeff.kanchan_coeff[j][i] * hanfu_weight[han][fu];
-				}
+			for (int han = 0; han < 100; han++) {
+				hai_prob[j*10+i][han] += machi_coeff.katachi_prob[3] * machi_coeff.kanchan_coeff[j][i] * hanfu_weight[han];
 			}
 		}
 
-		for (int han = 0; han < 14; han++) {
-			for (int fu = 0; fu < 12; fu++) {
-				hai_prob[j*10+3][han][fu] += machi_coeff.katachi_prob[3] * machi_coeff.penchan_coeff[j][0] * hanfu_weight[han][fu];
-				hai_prob[j*10+7][han][fu] += machi_coeff.katachi_prob[3] * machi_coeff.penchan_coeff[j][1] * hanfu_weight[han][fu];
-			}
+		for (int han = 0; han < 100; han++) {
+			hai_prob[j*10+3][han] += machi_coeff.katachi_prob[3] * machi_coeff.penchan_coeff[j][0] * hanfu_weight[han];
+			hai_prob[j*10+7][han] += machi_coeff.katachi_prob[3] * machi_coeff.penchan_coeff[j][1] * hanfu_weight[han];
 		}
 	}
 	if (!is_tsumo) {
@@ -1329,27 +1303,8 @@ std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_machi_co
 		for (int hai = 0; hai < 38; hai++) {
 			if (hai % 10 != 0) {
 				float sum = 0.0;
-				for (int han = 0; han < 14; han++) {
-					for (int fu = 0; fu < 12; fu++) {
-						sum += hai_prob[hai][han][fu];
-					}
-				}
-				if (sum > 0.0) {
-					for (int han = 0; han < 14; han++) {
-						dora_shift_prob[hai][han] = dora_shift_prob[hai][han] / sum;
-					}
-				}
-			}
-		}
-		for (int hai = 0; hai < 38; hai++) {
-			hanfu_prob_han_shift_with_prob(hai_prob[hai], dora_shift_prob[hai]);
-		}
-
-		// ロンあがりに関しては、赤牌の値も計算し、ドラ周辺の牌は高く設定する。（ツモでもこのようにすべきかもしれないが一旦akoに合わせて保留）
-		for (int c = 0; c < 3; c++) {
-			for (int han = 0; han < 14; han++) {
-				for (int fu = 0; fu < 12; fu++) {
-					hai_prob[10*c + 10][std::min(han + 1, 13)][fu] += hai_prob[10*c + 5][han][fu];
+				for (int han = 0; han < 100; han++) {
+					sum += hai_prob[hai][han];
 				}
 			}
 		}
@@ -1357,28 +1312,22 @@ std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_machi_co
 	return hai_prob;
 }
 
-std::array<std::array<float, 12>, 14> cal_agari_hanfu_prob(const std::array<std::array<std::array<float, 12>, 14>, 38>& hai_prob) {
-	std::array<std::array<float, 12>, 14> agari_prob;
-	for (int han = 0; han < 14; han++) {
-		for (int fu = 0; fu < 12; fu++) {
-			agari_prob[han][fu] = 0.0;
-		}
+std::array<float, 100> cal_agari_hanfu_prob(const std::array<std::array<float, 100>, 38>& hai_prob) {
+	std::array<float, 100> agari_prob;
+	for (int han = 0; han < 100; han++) {
+		agari_prob[han] = 0.0;
 	}
 
 	float den = 0.0;
-	for (int han = 1; han < 14; han++) {
-		for (int fu = 0; fu < 12; fu++) {
-			for (int hai = 0; hai < 38; hai++) {
-				agari_prob[han][fu] += hai_prob[hai][han][fu];
-				den += hai_prob[hai][han][fu];
-			}
+	for (int han = 1; han < 100; han++) {
+		for (int hai = 0; hai < 38; hai++) {
+			agari_prob[han] += hai_prob[hai][han];
+			den += hai_prob[hai][han];
 		}
 	}
 	if(den > 0) {
-		for (int han = 1; han < 14; han++) {
-			for (int fu = 0; fu < 12; fu++) {
-				agari_prob[han][fu] = agari_prob[han][fu] / den;
-			}
+		for (int han = 1; han < 100; han++) {
+			agari_prob[han] = agari_prob[han] / den;
 		}
 	}
 	return agari_prob;
@@ -1441,11 +1390,6 @@ void Tenpai_Estimator_Simple::set_tenpai_estimator(const Moves& game_record, con
 		hai_ron_prob = cal_hai_prob_from_machi_coeff(game_state, machi_coeff, tactics.hanfu_weight_ron, false);
 		hai_tsumo_prob = cal_hai_prob_from_machi_coeff(game_state, machi_coeff, tactics.hanfu_weight_tsumo, true);
 		hai_ron_prob_now = cal_hai_prob_from_machi_coeff(game_state, machi_coeff_now, tactics.hanfu_weight_ron, false);
-		if (game_state.player_state[target].reach_declared && is_ippatsu_valid(game_record, target)) {
-			for (int hai = 1; hai < 38; hai++) {
-				hanfu_prob_han_shift(hai_ron_prob_now[hai], 1);
-			}
-		}
 	} else {
 		Tehai_Estimator tehai_estimator;
 		const std::vector<Tehai_Estimator_Element> teev = tehai_estimator.cal_teev_with_prob (
@@ -1465,31 +1409,29 @@ std::array<float, 4> get_tenpai_prob_array (const std::array<Tenpai_Estimator_Si
 	return tenpai_prob_array;
 }
 
-std::array<std::array<std::array<float, 12>, 14>, 4> cal_agari_hanfu_prob_array(const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator, const bool is_tsumo) {
-	std::array<std::array<std::array<float, 12>, 14>, 4> agari_hanfu_prob_array;
+std::array<std::array<float, 100>, 4> cal_agari_hanfu_prob_array(const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator, const bool is_tsumo) {
+	std::array<std::array<float, 100>, 4> agari_hanfu_prob_array;
 	for (int pid = 0; pid < 4; pid++) {
-		const std::array<std::array<std::array<float, 12>, 14>, 38>& hai_prob = is_tsumo ? tenpai_estimator[pid].hai_tsumo_prob : tenpai_estimator[pid].hai_ron_prob;
+		const std::array<std::array<float, 100>, 38>& hai_prob = is_tsumo ? tenpai_estimator[pid].hai_tsumo_prob : tenpai_estimator[pid].hai_ron_prob;
 		agari_hanfu_prob_array[pid] = cal_agari_hanfu_prob(hai_prob);
 	}
 	return agari_hanfu_prob_array;
 }
 
 std::pair<std::array<std::array<float, 38>, 4>, std::array<std::array<float, 38>, 4>> cal_houjuu_hai_prob_value(
-	const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator, const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp,
+	const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator, const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp,
 	const int my_pid, const bool is_now
 ) {
 	std::array<std::array<float, 38>, 4> houjuu_hai_prob, houjuu_hai_value;
 	for (int pid = 0; pid < 4; pid++) {
-		const std::array<std::array<std::array<float, 12>, 14>, 38>& houjuu_hai_hanfu_prob = is_now ?
+		const std::array<std::array<float, 100>, 38>& houjuu_hai_hanfu_prob = is_now ?
 			tenpai_estimator[pid].hai_ron_prob_now : tenpai_estimator[pid].hai_ron_prob;
 		for (int hai = 0; hai < 38; hai++) {
 			houjuu_hai_prob[pid][hai] = 0.0;
 			houjuu_hai_value[pid][hai] = 0.0;
-			for (int han = 0; han < 14; han++) {
-				for (int fu = 0; fu < 12; fu++) {
-					houjuu_hai_prob[pid][hai] += houjuu_hai_hanfu_prob[hai][han][fu];
-					houjuu_hai_value[pid][hai] += houjuu_hai_hanfu_prob[hai][han][fu] * kyoku_end_pt_exp[pid][my_pid][han][fu];
-				}
+			for (int han = 0; han < 100; han++) {
+				houjuu_hai_prob[pid][hai] += houjuu_hai_hanfu_prob[hai][han];
+				houjuu_hai_value[pid][hai] += houjuu_hai_hanfu_prob[hai][han] * kyoku_end_pt_exp[pid][my_pid][han];
 			}
 			if (houjuu_hai_prob[pid][hai] > 0.0) {
 				houjuu_hai_value[pid][hai] = houjuu_hai_value[pid][hai] / houjuu_hai_prob[pid][hai];

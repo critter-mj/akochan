@@ -83,76 +83,7 @@ bool chan_end_oya_w4(const std::array<int, 4>& ten, const int oyaid) {
 	return true;
 }
 
-std::array<std::array<float, 4>, 4> calc_jun_prob(const int kyoku, const std::array<int,4>& ten, const int oya, const bool is_renchan, const json11::Json& tactics_json) {
+std::array<std::array<float, 4>, 4> calc_jun_prob(const int kyoku, const std::array<int,4>& ten, const int oya) {
 	const int oya_first = (12 + oya - kyoku) % 4;
-	if (is_renchan) {
-		if ((kyoku >= 7 && chan_end_oya(ten, oya)) ||
-			(kyoku == 11 && chan_end_oya_w4(ten, oya))
-		) {
-			return calc_jun_prob_end(ten, oya_first);
-		}
-	}
-
-	if (tactics_json["jun_est"] == "instant") {
-		return calc_jun_prob_end(ten, oya_first);
-	}
-
-	std::array<std::array<float, 4>, 4> jun_prob, jun_prob_tmp;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4;j++) {
-			jun_prob[i][j] = 0.0;
-			jun_prob_tmp[i][j] = 0.0;
-		}
-	}
-
-	if((kyoku<8 && ten[0]>=0 && ten[1]>=0 && ten[2]>=0 && ten[3]>=0)
-		|| (kyoku<12 && ten[0]>=0 && ten[1]>=0 && ten[2]>=0 && ten[3]>=0 && ten[0]<30000 && ten[1]<30000 && ten[2]<30000 && ten[3]<30000)
-	){
-		std::array<int, 4> x;
-		for (int i = 0; i < 4; i++) {
-			x[i] = ten[(oya_first + i) % 4];
-		}
-
-		const std::array<float, 24> pk = [&] {
-			// to do. kyoku_mod_next = 4 の時、データが不足しているせいでモデルが良くない。kyoku_mod_next = 4 の時は5にしてしまうか、東南戦をまじめにやるか。
-			if (tactics_json["jun_est"] == "ako") { return infer_game_result_prob_ako(x, kyoku); }
-			else {
-				assert_with_out(false, "cal_kyoku_end_pt_exp_error");
-				return infer_game_result_prob_ako(x, kyoku);
-			}
-		}();
-
-		int jun[4];
-		for (int i = 0; i < 24; i++) {
-			for (int j = 0; j < 4; j++) {
-				jun[j] = j;
-			}
-			for(int m=0;m<3;m++){
-				int k = (i%factorial(4-m))/factorial(3-m);
-				int tmp = jun[k+m];
-				for(int n=0;n<k;n++){
-					jun[k-n+m] = jun[k-n+m-1];
-				}
-				jun[m] = tmp;
-			}
-			//printf("junc:%d %d %d %d %d %lf\n", i, jun[0], jun[1], jun[2], jun[3], pk[i]);
-
-			for (int j = 0; j < 4; j++) {
-				for (int k = 0; k < 4; k++) {
-					if (jun[k] == j) {
-						jun_prob_tmp[j][k] += pk[i];
-					}
-				}
-			}
-		}
-		for (int pid = 0; pid < 4; pid++) {
-			for (int i = 0; i < 4; i++) {
-				jun_prob[pid][i] = jun_prob_tmp[mod_pid(kyoku, oya, pid)][i];
-				//printf("%d %d %d %d %d %lf\n", kyoku, oya, pid, i, mod_pid(kyoku, oya, pid), jun_prob[pid][i]);
-			}
-		}
-		return jun_prob;
-	} else {
-		return calc_jun_prob_end(ten, oya_first);
-	}
+	return calc_jun_prob_end(ten, oya_first);
 }

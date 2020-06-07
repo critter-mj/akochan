@@ -15,11 +15,7 @@ PG_Kyoku_Init get_next_kyoku_init(const PG_Kyoku_Init& kyoku_init, const PG_Kyok
     }
     std::array<int, 4> ten_move;
     if (kyoku_result.hora_player < 4) {
-        ten_move = ten_move_hora(
-            kyoku_result.hora_player, kyoku_result.target_player,
-            kyoku_result.han, kyoku_result.fu,
-            oya, kyoku_init.honba, next_kyoku_init.kyotaku, false
-        );
+        ten_move = ten_move_hora(kyoku_result.hora_player, kyoku_result.target_player, kyoku_result.han);
         next_kyoku_init.kyotaku = 0;
     } else {
         ten_move = ten_move_ryukyoku(kyoku_result.tenpai);

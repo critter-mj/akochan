@@ -90,7 +90,7 @@ class Tehai_Estimator {
     );
 };
 
-std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_teev(const std::vector<Tehai_Estimator_Element>& teev, const bool is_tsumo, const bool is_now);
+std::array<std::array<float, 100>, 38> cal_hai_prob_from_teev(const std::vector<Tehai_Estimator_Element>& teev, const bool is_tsumo, const bool is_now);
 
 class Machi_Coeff {
 	public:
@@ -111,11 +111,11 @@ class Machi_Coeff {
 	void std_coeff();
 };
 
-std::array<std::array<std::array<float, 12>, 14>, 38> cal_hai_prob_from_machi_coeff(
-    const Game_State& game_state, const Machi_Coeff& machi_coeff, const std::array<std::array<double, 12>, 14>& hanfu_weight, const bool is_tsumo
+std::array<std::array<float, 100>, 38> cal_hai_prob_from_machi_coeff(
+    const Game_State& game_state, const Machi_Coeff& machi_coeff, const std::array<float, 100>& hanfu_weight, const bool is_tsumo
 );
 
-std::array<std::array<float, 12>, 14> cal_agari_hanfu_prob(const std::array<std::array<std::array<float, 12>, 14>, 38>& hai_prob);
+std::array<float, 100> cal_agari_hanfu_prob(const std::array<std::array<float, 100>, 38>& hai_prob);
 Hai_Array sum_hai_array(const Hai_Array& hai_array1, const Hai_Array& hai_array2);
 Hai_Array cal_nokori_kind_array(const Hai_Array& visible_kind);
 std::array<bool, 38> get_sute_kind_flag(const Kawa& kawa);
@@ -123,9 +123,9 @@ std::array<bool, 38> get_sute_kind_flag(const Kawa& kawa);
 class Tenpai_Estimator_Simple {
 	public:
 	double tenpai_prob; // 現在のテンパイ確率
-	std::array<std::array<std::array<float, 12>, 14>, 38> hai_tsumo_prob; // ツモアガリすると仮定したときの各牌、ハン、フの確率。
-	std::array<std::array<std::array<float, 12>, 14>, 38> hai_ron_prob; // ロンアガリすると仮定したときの各牌、ハン、フの確率。
-    std::array<std::array<std::array<float, 12>, 14>, 38> hai_ron_prob_now; // 今捨てる牌によりロンアガリすると仮定したときの各牌、ハン、フの確率。
+	std::array<std::array<float, 100>, 38> hai_tsumo_prob; // ツモアガリすると仮定したときの各牌、ハン、フの確率。
+	std::array<std::array<float, 100>, 38> hai_ron_prob; // ロンアガリすると仮定したときの各牌、ハン、フの確率。
+    std::array<std::array<float, 100>, 38> hai_ron_prob_now; // 今捨てる牌によりロンアガリすると仮定したときの各牌、ハン、フの確率。
 	//double tsumo_prob[14][12];
 	//double ron_prob[14][12];
 	//double hai_ron_prob_sum[38], hai_ron_prob_sum_now[38];
@@ -136,10 +136,10 @@ class Tenpai_Estimator_Simple {
 };
 
 std::array<float, 4> get_tenpai_prob_array (const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator);
-std::array<std::array<std::array<float, 12>, 14>, 4> cal_agari_hanfu_prob_array(const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator, const bool is_tsumo);
+std::array<std::array<float, 100>, 4> cal_agari_hanfu_prob_array(const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator, const bool is_tsumo);
 
 std::pair<std::array<std::array<float, 38>, 4>, std::array<std::array<float, 38>, 4>> cal_houjuu_hai_prob_value(
-	const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator, const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp,
+	const std::array<Tenpai_Estimator_Simple, 4>& tenpai_estimator, const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp,
 	const int my_pid, const bool is_now
 );
 
