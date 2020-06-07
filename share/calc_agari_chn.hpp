@@ -7,11 +7,15 @@
 class Agari_Result_Chn {
     public:
     // 88 points
-    bool big_four_winds, big_three_dragons;
+    bool big_four_winds, big_three_dragons, four_kongs;
+    // 64 points
+    bool four_concealed_pungs;
+    // 32 points
+    bool three_kongs;
     // 24 points
     bool seven_pairs, all_even_pungs, full_flush, pure_triple_chow, pure_shifted_pungs, upper_tiles, middle_tiles, lower_tiles; // Greater Honors and Knitted Tiles
     // 16 points
-    bool pure_straight, three_suited_terminal_chows, pure_shifted_chows, all_fives, triple_pung, three_concealed_pung;
+    bool pure_straight, three_suited_terminal_chows, pure_shifted_chows, all_fives, triple_pung, three_concealed_pungs;
     // 12 points
     bool upper_four, lower_four, big_three_winds; // lesser_honors_and_knitted_tiles, knitted_straight;
     // 8 points
@@ -21,13 +25,13 @@ class Agari_Result_Chn {
     // 4 points
     bool outside_hand, fully_concealed, two_melded_kongs; // , last_tile
     // 2 points bool
-    bool dragon_pung, prevalent_wind, seat_wind, all_chows, two_concealed_pungs, concealed_kong, all_simples; //concealed_hand,
+    bool dragon_pung, prevalent_wind, seat_wind, all_chows, two_concealed_pungs, concealed_kong, all_simples, concealed_hand;
     // 1 point bool
-    bool one_voided_suit, no_honors, edge_wait, closed_wait, single_wait, self_drawn;
+    bool melded_kong, one_voided_suit, no_honors, edge_wait, closed_wait, single_wait, self_drawn;
     // 2 points int
     int tile_hog_num, double_pung_num;
     // 1 point int
-    int pure_double_chow_num, mixed_double_chow_num, short_straight_num, two_terminal_chows_num, pung_of_terminals_or_honors_num, meld_kong_num;
+    int pure_double_chow_num, mixed_double_chow_num, short_straight_num, two_terminal_chows_num, pung_of_terminals_or_honors_num;
 
     Agari_Result_Chn();
     int calc_point();

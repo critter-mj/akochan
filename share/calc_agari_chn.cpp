@@ -2,11 +2,15 @@
 
 Agari_Result_Chn::Agari_Result_Chn() {
     // 88 points
-    big_four_winds = false; big_three_dragons = false;
+    big_four_winds = false; big_three_dragons = false, four_kongs = false;
+    // 64 points
+    four_concealed_pungs = false;
+    // 32 points
+    three_kongs = false;
     // 24 points
     seven_pairs = false; all_even_pungs = false; full_flush = false; pure_triple_chow = false; pure_shifted_pungs = false; upper_tiles = false; middle_tiles = false; lower_tiles = false; // Greater Honors and Knitted Tiles
     // 16 points
-    pure_straight = false; three_suited_terminal_chows = false; pure_shifted_chows = false; all_fives = false; triple_pung = false; three_concealed_pung = false;
+    pure_straight = false; three_suited_terminal_chows = false; pure_shifted_chows = false; all_fives = false; triple_pung = false; three_concealed_pungs = false;
     // 12 points
     upper_four = false; lower_four = false; big_three_winds = false; // lesser_honors_and_knitted_tiles, knitted_straight;
     // 8 points
@@ -18,17 +22,20 @@ Agari_Result_Chn::Agari_Result_Chn() {
     // 2 points bool
     dragon_pung = false; prevalent_wind = false; seat_wind = false; all_chows = false; two_concealed_pungs = false; concealed_kong = false; all_simples = false; //concealed_hand,
     // 1 point bool
-    one_voided_suit = false; no_honors = false;
+    melded_kong = false; one_voided_suit = false; no_honors = false;
     // 2 points int
     tile_hog_num = 0; double_pung_num = 0;
     // 1 point int
-    pure_double_chow_num = 0; mixed_double_chow_num = 0; short_straight_num = 0; two_terminal_chows_num = 0; pung_of_terminals_or_honors_num = 0; meld_kong_num = 0;
+    pure_double_chow_num = 0; mixed_double_chow_num = 0; short_straight_num = 0; two_terminal_chows_num = 0; pung_of_terminals_or_honors_num = 0;
 }
 
 int Agari_Result_Chn::calc_point() {
     int ret = 0;
     if (big_four_winds) { ret += 88; }
     if (big_three_dragons) { ret += 88; }
+    if (four_kongs) { ret += 88; }
+    if (four_concealed_pungs) { ret += 64; }
+    if (three_kongs) { ret += 32; }
     if (seven_pairs) { ret += 24; }
     if (all_even_pungs) { ret += 24; }
     if (full_flush) { ret += 24; }
@@ -42,7 +49,7 @@ int Agari_Result_Chn::calc_point() {
     if (pure_shifted_chows) { ret += 16; }
     if (all_fives) { ret += 16; }
     if (triple_pung) { ret += 16; }
-    if (three_concealed_pung) { ret += 16; }
+    if (three_concealed_pungs) { ret += 16; }
     if (upper_four) { ret += 12; }
     if (lower_four) { ret += 12; }
     if (big_three_winds) { ret += 12; }
@@ -67,10 +74,12 @@ int Agari_Result_Chn::calc_point() {
     if (two_concealed_pungs) { ret += 2; }
     if (concealed_kong) { ret += 2; }
     if (all_simples) { ret += 2; }
+    if (concealed_hand) { ret += 2; }
+    if (melded_kong) { ret += 1; }
     if (one_voided_suit) { ret += 1; }
     if (no_honors) { ret += 1; }
     ret += (tile_hog_num + double_pung_num) * 2;
-    ret += pure_double_chow_num + mixed_double_chow_num + short_straight_num + two_terminal_chows_num + pung_of_terminals_or_honors_num + meld_kong_num;
+    ret += pure_double_chow_num + mixed_double_chow_num + short_straight_num + two_terminal_chows_num + pung_of_terminals_or_honors_num;
     return ret;
 }
 
@@ -115,6 +124,7 @@ Agari_Info_Chn calc_agari_chn(
 
     if (titoi_flag) {
         tsumo_res.seven_pairs = true;
+        ron_res = tsumo_res;
     } else {
         tsumo_res.all_even_pungs = all_even_pungs_check(tehai, tehai_tate_cut, fuuro, tehai_tmp, machi_type);
         tsumo_res.all_pungs = tsumo_res.all_even_pungs ? false : all_pungs_check(tehai_tate_cut, fuuro, tehai_tmp, machi_type);
@@ -323,15 +333,70 @@ Agari_Info_Chn calc_agari_chn(
                 }
             }
         }
+
+        const int kan_num = kan_num_count(fuuro);
+        const int ankan_num = ankan_num_count(fuuro);
+        switch (kan_num) {
+            case 4:
+                tsumo_res.four_kongs = true;
+                break;
+            case 3:
+                tsumo_res.three_kongs = true;
+                break;
+            case 2:
+                if (ankan_num != 2) { tsumo_res.two_melded_kongs = true; }
+                break;
+            case 1:
+                if (ankan_num != 1) { tsumo_res.melded_kong = true; }
+                break;
+            default:
+                break;
+        }
+        switch (ankan_num) {
+            case 2:
+                tsumo_res.two_concealed_kongs = true;
+                break;
+            case 1:
+                tsumo_res.concealed_kong = true;
+                break;
+            default:
+                break;
+        }
+
+        ron_res = tsumo_res;
+        const int anko_num = anko_num_count(tehai_tate, fuuro);
+        switch (anko_num) {
+            case 4:
+                tsumo_res.four_concealed_pungs = true;
+                ron_res.four_concealed_pungs = true;
+                break;
+            case 3:
+                if (machi_type == MT_SHABO) { tsumo_res.four_concealed_pungs = true; } else { tsumo_res.three_concealed_pungs = true; }
+                ron_res.three_concealed_pungs = true;
+                break;
+            case 2:
+                if (machi_type == MT_SHABO) { tsumo_res.three_concealed_pungs = true; } else { tsumo_res.two_concealed_pungs = !tsumo_res.two_concealed_kongs; }
+                ron_res.two_concealed_pungs = !ron_res.two_concealed_kongs;
+                break;
+            case 1:
+                if (machi_type == MT_SHABO) { tsumo_res.two_concealed_pungs = true; }
+                break;
+            default:
+                break;
+        }
+
+        if (menzen_check(fuuro)) {
+            tsumo_res.fully_concealed = true;
+            ron_res.concealed_kong = true;
+        } else {
+            tsumo_res.self_drawn = true;
+            if (melded_hand_check(fuuro)) {
+                ron_res.melded_hand = true;
+            }
+        }
     }
-
-    // to do . anko_num etc
-
-    ron_res = tsumo_res;
 
     agari_info.han_tsumo = tsumo_res.calc_point();
     agari_info.han_ron = ron_res.calc_point();
     return agari_info;
-
-
 }

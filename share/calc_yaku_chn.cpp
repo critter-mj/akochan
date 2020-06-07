@@ -363,3 +363,13 @@ bool no_honors_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro, const in
     };
     return all_tile_check(tehai, fuuro, machi_hai, is_not_honor);
 }
+
+int ankan_num_count(const Fuuro_Vector& fuuro) {
+    int ankan_num = 0;
+    for (int fn = 0; fn < fuuro.size(); fn++) {
+        if (fuuro[fn].type == FT_ANKAN) {
+            ankan_num++;
+        }
+    }
+    return ankan_num;
+}

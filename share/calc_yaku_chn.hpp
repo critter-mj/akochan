@@ -65,3 +65,5 @@ bool all_simples_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro, const 
 // 1 point
 bool one_voided_suit_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro, const int machi_hai);
 bool no_honors_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro, const int machi_hai);
+
+int ankan_num_count(const Fuuro_Vector& fuuro);
