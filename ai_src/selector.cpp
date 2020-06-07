@@ -413,7 +413,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	const double other_end_value_kan = other_end_value;
 	//const double other_end_value_kan = cal_other_end_value(my_pid, game_state, tenpai_prob_array, tsumo_hanfu_prob_kan, ron_hanfu_prob, kyoku_end_pt_exp);
 
-	const int tsumo_num_exp = std::min(cal_tsumo_num_exp(my_pid, game_state, 1, tenpai_prob_array), cal_tsumo_num_DP(game_record, my_pid)); // to do ツモの時と副露の時でdahai_incは異なると思われる。
+	const int tsumo_num_exp = std::min(cal_tsumo_num_exp(my_pid, game_state, 1, tenpai_prob_array), cal_tsumo_num_DP(game_record, my_pid)); // to do チE��の時と副露の時でdahai_incは異なると思われる、E
 	assert(tsumo_num_exp >= 0);
 
 	if (out_console) {
@@ -530,10 +530,10 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	tehai_calculator.set_candidates3_multi_thread(game_record, game_state, sute_kind_flag, tehai_analyzer, tactics);
 	// selector.set_tsumo_num();
 
-	/* get_agari_shanten_num(chi_flag, cand_hai); あまり必要でないかもしれないので保留。 */
+	/* get_agari_shanten_num(chi_flag, cand_hai); あまり忁E��でなぁE��もしれなぁE�Eで保留、E*/
 	const bool chi_flag = current_action["type"] == "dahai" ? ((current_action["actor"].int_value() + 1)%4 == my_pid) : false;
 	const int fuuro_agari_shanten_num = tehai_calculator.get_fuuro_agari_shanten_num(game_state, current_tehai, chi_flag);
-	// 副露時のみget_fuuro_agari_shanten_numの内部のset_agari_shanten_numが呼ばれる。おそらく問題は無い。
+	// 副露時�Eみget_fuuro_agari_shanten_numの冁E��のset_agari_shanten_numが呼ばれる。おそらく問題�E無ぁE��E
 	
 	const bool DP_flag = cal_dp_flag(tehai_analyzer.get_shanten_num(), fuuro_agari_shanten_num, current_action["type"] == "dahai", tactics);
 
@@ -678,10 +678,10 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			}
 
 			fuuro_choice_tmp.fuuro_action_type = AT_FUURO_PASS;
-			fuuro_choice_tmp.pt_exp_total = std::max(tehai_calculator.get_ten_exp(cn_fuuro_neg, gn_fuuro_neg, tsumo_num_DP), not_agari_value); // to do 元はnot_agari_valueのかわりにpassive_valueだった。
+			fuuro_choice_tmp.pt_exp_total = std::max(tehai_calculator.get_ten_exp(cn_fuuro_neg, gn_fuuro_neg, tsumo_num_DP), not_agari_value); // to do 允E�Enot_agari_valueのかわりにpassive_valueだった、E
 			fuuro_choice.push_back(fuuro_choice_tmp);
 
-			if (current_action["type"] == "dahai" && count_tsumo_num_all(game_record) < 70) { // ハイテイ牌をフーロしないための処理
+			if (current_action["type"] == "dahai" && count_tsumo_num_all(game_record) < 70) { // ハイチE��牌をフ�EロしなぁE��め�E処琁E
 				const std::array<int, 3>& fuuro_edge_loc = tehai_calculator_work.get_const_fuuro_edge_loc(cn_fuuro_neg, gn_fuuro_neg);
 				for (int acn = fuuro_edge_loc[1]; acn < fuuro_edge_loc[2]; acn++) {
 					const Tehai_Action& ac_tmp = tehai_calculator_work.cand_graph_sub_fuuro_work[fuuro_edge_loc[0]][acn];
@@ -736,7 +736,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 			std::cout << "other_end_value:" << other_end_value << std::endl;
 			std::cout << "passive_ryuukyoku_value:" << passive_ryuukyoku_value << std::endl;
 		}
-		tehai_calculator.calc_agari_prob(tsumo_num_exp, other_end_value, game_state, kyoku_end_pt_exp); // ako に合わせているが、 other_end_value でよいか。
+		tehai_calculator.calc_agari_prob(tsumo_num_exp, other_end_value, game_state, kyoku_end_pt_exp); // ako に合わせてぁE��が、Eother_end_value でよいか、E
 		if (out_console) {
 			std::cout << "calc_agari_prob_input:" << other_end_value << " " << tsumo_num_exp << std::endl;
 		}
@@ -785,8 +785,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 									Hai_Array kan_tehai = tehai_tmp;
 									kan_tehai[hai_out] = 0;
 									kan_tehai[haikind(hai_out)] = 0;
-									// other_end_value は後退解析の基準値として用いるものなので、other_end_value_kanに変えないほうがよいはず。
-									// dahai_inc を0にすべきかは要検討。
+									// other_end_value は後退解析�E基準値として用ぁE��も�Eなので、other_end_value_kanに変えなぁE��ぁE��よいはず、E
+									// dahai_inc めEにすべきかは要検討、E
 									kan_choice.pt_exp_after = cal_exp(
 										my_pid, game_record, game_state, kan_tehai, tehai_calculator.get_agari_prob(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp), tehai_calculator.get_ten_exp(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp),
 										other_end_value, tehai_calculator.get_tenpai_prob(ac_tmp.dst_group, ac_tmp.dst_group_sub, tsumo_num_exp),
@@ -861,7 +861,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 			fuuro_choice.push_back(pass_choice);
 
-			if (count_tsumo_num_all(game_record) < 70) { // ハイテイ牌をフーロしないための処理		
+			if (count_tsumo_num_all(game_record) < 70) { // ハイチE��牌をフ�EロしなぁE��め�E処琁E	
 				const std::array<int, 3>& fuuro_edge_loc = tehai_calculator_work.get_const_fuuro_edge_loc(cn_fuuro_neg, gn_fuuro_neg);
 				for (int acn = fuuro_edge_loc[1]; acn < fuuro_edge_loc[2]; acn++) {
 					const Tehai_Action& ac_tmp = tehai_calculator_work.cand_graph_sub_fuuro_work[fuuro_edge_loc[0]][acn];
@@ -878,7 +878,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 							fuuro_choice_tmp.fuuro_action_type = ac_tmp.action_type;
 							fuuro_choice_tmp.hai_out = ac_tmp.hai_out;
 
-							for (int i = 0; i < 3; i++) { // to do. sarashi_haiをvectorに変える。
+							for (int i = 0; i < 3; i++) { // to do. sarashi_haiをvectorに変える、E
 								fuuro_choice_tmp.sarashi_hai[i] = 0;
 							}
 							set_sarashi_hai(tehai_calculator.get_const_ta_cgn(ac_tmp.dst_group, ac_tmp.dst_group_sub).tehai_state, game_state.player_state[my_pid].fuuro, current_hai, fuuro_choice_tmp.sarashi_hai);
@@ -902,7 +902,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 								tenpai_prob_array, houjuu_hai_prob, tsumo_hanfu_prob, ron_hanfu_prob,
 								kyoku_end_pt_exp, ryuukyoku_pt_exp, 0, 1
 							);
-							// to do tehai_cal以外のもののtsumo_numも1引いた値で計算。
+							// to do tehai_cal以外�Eも�Eのtsumo_numめE引いた値で計算、E
 							fuuro_choice.push_back(fuuro_choice_tmp);
 						}
 					}

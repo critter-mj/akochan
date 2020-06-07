@@ -71,6 +71,7 @@ void Tactics::set_common() {
 
     for (int han = 0; han < 100; han++) {
         hanfu_weight_tsumo[han] = 0.0;
+        hanfu_weight_ron[han] = 0.0;
         //han_shift_prob_kan[han] = 0.0;
     }
     hanfu_weight_tsumo[3] = 0.4;
