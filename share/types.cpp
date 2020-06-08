@@ -203,17 +203,17 @@ Fuuro_Vector haikind(Fuuro_Vector fuuro) {
 }
 
 int get_hai38(const int hai136) {
-	if (hai136 == 16) {
-		return 10;
-	} else if(hai136 == 52) {
-		return 20;
-	} else if(hai136 == 88) {
-		return 30;
-	} else {
+	//if (hai136 == 16) {
+	//	return 10;
+	//} else if(hai136 == 52) {
+	//	return 20;
+	//} else if(hai136 == 88) {
+	//	return 30;
+	//} else {
 		int haic = hai136/36;
 		int hain = (hai136%36)/4 + 1;
 		return 10*haic + hain;
-	}
+	//}
 }
 
 int kaze_str_to_int(const std::string kaze_str) {
