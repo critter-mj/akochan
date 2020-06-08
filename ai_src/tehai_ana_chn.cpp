@@ -775,7 +775,7 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic_Chn::agari_push_func(
 	const Tehai_State2 empty_tehai_state;
 	Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
 	Fuuro_Vector fuuro_kind = haikind(fuuro);
-	Agari_Info agari_tmp = calc_agari_chn(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
+	Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
 	
 	agari_push_func_child(agari_tmp, pid, game_state, agariv);
 }
@@ -796,7 +796,7 @@ void Tehai_Analyzer_Basic_Chn::agari_push_func(
 		const Tehai_State2 empty_tehai_state;
 		Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
 		Fuuro_Vector fuuro_kind = haikind(fuuro);
-		Agari_Info agari_tmp = calc_agari_chn(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
+		Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
 		
 		agariv.push_back(agari_info_to_agari_calc(agari_tmp));
 	} else {
