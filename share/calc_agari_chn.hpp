@@ -37,14 +37,7 @@ class Agari_Result_Chn {
     int calc_point();
 };
 
-class Agari_Info_Chn {
-    public:
-    int hai, han_tsumo, han_ron;
-
-    Agari_Info_Chn();
-};
-
-Agari_Info_Chn calc_agari_chn(
+Agari_Info calc_agari_chn(
     const int bakaze_hai, const int jikaze_hai,
     const Hai_Array& tehai, const Hai_Array& tehai_tate_cut, const Hai_Array& tehai_tmp, const Fuuro_Vector& fuuro,
     const int machi_hai, const Machi_Type machi_type, const bool titoi_flag

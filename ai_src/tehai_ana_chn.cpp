@@ -707,8 +707,8 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic_Chn::analyze_tehai(const
 	}
 }
 
-template void Tehai_Analyzer_Basic_Chn::analyze_tehai<boost::container::static_vector<Agari_Info_Chn, 10>>(const int my_pid_new, const Game_State& game_state, boost::container::static_vector<Agari_Info_Chn, 10>& agariv);
-template void Tehai_Analyzer_Basic_Chn::analyze_tehai<boost::container::static_vector<Agari_Calc_Chn, MAX_AGARI_NUM_PER_THREAD>>(const int my_pid_new, const Game_State& game_state, boost::container::static_vector<Agari_Calc_Chn, MAX_AGARI_NUM_PER_THREAD>& agariv);
+template void Tehai_Analyzer_Basic_Chn::analyze_tehai<boost::container::static_vector<Agari_Info, 10>>(const int my_pid_new, const Game_State& game_state, boost::container::static_vector<Agari_Info, 10>& agariv);
+template void Tehai_Analyzer_Basic_Chn::analyze_tehai<boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>>(const int my_pid_new, const Game_State& game_state, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv);
 template void Tehai_Analyzer_Basic_Chn::analyze_tehai<bool>(const int my_pid_new, const Game_State& game_state, bool& agariv);
 
 
@@ -744,7 +744,7 @@ int Tehai_Analyzer_Basic_Chn::get_shanten_num() const {
 	return std::min(get_mentu_shanten_num(), get_titoi_shanten_num());
 }
 
-template <class Agari_Vector> void Tehai_Analyzer_Basic_Chn::agari_push_func_child(const Agari_Info_Chn agari, const int pid, const Game_State& game_state, Agari_Vector& agariv) {
+template <class Agari_Vector> void Tehai_Analyzer_Basic_Chn::agari_push_func_child(const Agari_Info agari, const int pid, const Game_State& game_state, Agari_Vector& agariv) {
 	assert(agariv.size() < 10);
 	agariv.push_back(agari);
 
@@ -775,7 +775,7 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic_Chn::agari_push_func(
 	const Tehai_State2 empty_tehai_state;
 	Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
 	Fuuro_Vector fuuro_kind = haikind(fuuro);
-	Agari_Info_Chn agari_tmp = calc_agari_chn(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
+	Agari_Info agari_tmp = calc_agari_chn(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
 	
 	agari_push_func_child(agari_tmp, pid, game_state, agariv);
 }
@@ -790,13 +790,13 @@ void Tehai_Analyzer_Basic_Chn::agari_push_func(
 
 void Tehai_Analyzer_Basic_Chn::agari_push_func(
 	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-	const int mh, const Machi_Type mt, const bool ttf, boost::container::static_vector<Agari_Calc_Chn, MAX_AGARI_NUM_PER_THREAD>& agariv
+	const int mh, const Machi_Type mt, const bool ttf, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv
 ) {
 	if (agariv.size() < MAX_AGARI_NUM_PER_THREAD) {
 		const Tehai_State2 empty_tehai_state;
 		Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
 		Fuuro_Vector fuuro_kind = haikind(fuuro);
-		Agari_Info_Chn agari_tmp = calc_agari_chn(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
+		Agari_Info agari_tmp = calc_agari_chn(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
 		
 		agariv.push_back(agari_info_to_agari_calc(agari_tmp));
 	} else {

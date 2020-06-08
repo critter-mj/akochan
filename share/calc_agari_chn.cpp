@@ -83,11 +83,7 @@ int Agari_Result_Chn::calc_point() {
     return ret;
 }
 
-Agari_Info_Chn::Agari_Info_Chn() {
-    hai = 0; han_tsumo = 0; han_ron = 0;
-}
-
-Agari_Info_Chn calc_agari_chn(
+Agari_Info calc_agari_chn(
     const int bakaze_hai, const int jikaze_hai,
     const Hai_Array& tehai, const Hai_Array& tehai_tate_cut, const Hai_Array& tehai_tmp, const Fuuro_Vector& fuuro,
     const int machi_hai, const Machi_Type machi_type, const bool titoi_flag
@@ -97,7 +93,7 @@ Agari_Info_Chn calc_agari_chn(
         tehai_tate[hai] = tehai[hai] - tehai_tate_cut[hai];
     }
     
-    Agari_Info_Chn agari_info;
+    Agari_Info agari_info;
     agari_info.hai = machi_hai;
     Agari_Result_Chn tsumo_res, ron_res;
 
