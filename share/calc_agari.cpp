@@ -1,6 +1,6 @@
 #include "calc_agari.hpp"
 
-Agari_Result_Chn::Agari_Result_Chn() {
+Agari_Result::Agari_Result() {
     // 88 points
     big_four_winds = false; big_three_dragons = false, four_kongs = false;
     // 64 points
@@ -29,7 +29,7 @@ Agari_Result_Chn::Agari_Result_Chn() {
     pure_double_chow_num = 0; mixed_double_chow_num = 0; short_straight_num = 0; two_terminal_chows_num = 0; pung_of_terminals_or_honors_num = 0;
 }
 
-int Agari_Result_Chn::calc_point() {
+int Agari_Result::calc_point() {
     int ret = 0;
     if (big_four_winds) { ret += 88; }
     if (big_three_dragons) { ret += 88; }
@@ -83,7 +83,14 @@ int Agari_Result_Chn::calc_point() {
     return ret;
 }
 
-Agari_Info calc_agari(
+Agari_Info_Detail::Agari_Info_Detail(){}
+Agari_Info_Detail::Agari_Info_Detail(const int hai_in, const Agari_Result& result_tsumo_in, const Agari_Result& result_ron_in){
+    hai = hai_in;
+    result_tsumo = result_tsumo_in;
+    result_ron = result_ron_in;
+}
+
+Agari_Info_Detail calc_agari_detail(
     const int bakaze_hai, const int jikaze_hai,
     const Hai_Array& tehai, const Hai_Array& tehai_tate_cut, const Hai_Array& tehai_tmp, const Fuuro_Vector& fuuro,
     const int machi_hai, const Machi_Type machi_type, const bool titoi_flag
@@ -92,11 +99,8 @@ Agari_Info calc_agari(
     for(int hai = 0; hai < 38; hai++) {
         tehai_tate[hai] = tehai[hai] - tehai_tate_cut[hai];
     }
-    
-    Agari_Info agari_info;
-    agari_info.hai = machi_hai;
-    Agari_Result_Chn tsumo_res, ron_res;
 
+    Agari_Result tsumo_res, ron_res;
     tsumo_res.full_flush = full_flush_check(tehai, fuuro);
 
     tsumo_res.upper_tiles = upper_tiles_check(tehai, fuuro, machi_hai);
@@ -392,7 +396,18 @@ Agari_Info calc_agari(
         }
     }
 
-    agari_info.han_tsumo = tsumo_res.calc_point();
-    agari_info.han_ron = ron_res.calc_point();
+    return Agari_Info_Detail(machi_hai, tsumo_res, ron_res);
+}
+
+Agari_Info calc_agari(
+    const int bakaze_hai, const int jikaze_hai,
+    const Hai_Array& tehai, const Hai_Array& tehai_tate_cut, const Hai_Array& tehai_tmp, const Fuuro_Vector& fuuro,
+    const int machi_hai, const Machi_Type machi_type, const bool titoi_flag
+) {
+    Agari_Info_Detail detail = calc_agari_detail(bakaze_hai, jikaze_hai, tehai, tehai_tate_cut, tehai_tmp, fuuro, machi_hai, machi_type, titoi_flag);
+    Agari_Info agari_info;
+    agari_info.hai = machi_hai;
+    agari_info.han_tsumo = detail.result_tsumo.calc_point();
+    agari_info.han_ron = detail.result_ron.calc_point();
     return agari_info;
 }

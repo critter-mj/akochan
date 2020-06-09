@@ -5,7 +5,7 @@
 //#include "calc_yaku.hpp"
 #include "calc_yaku_chn.hpp"
 
-class Agari_Result_Chn {
+class Agari_Result {
     public:
     // 88 points
     bool big_four_winds, big_three_dragons, four_kongs;
@@ -34,9 +34,25 @@ class Agari_Result_Chn {
     // 1 point int
     int pure_double_chow_num, mixed_double_chow_num, short_straight_num, two_terminal_chows_num, pung_of_terminals_or_honors_num;
 
-    Agari_Result_Chn();
+    Agari_Result();
     int calc_point();
 };
+
+class Agari_Info_Detail {
+    public:
+    int hai;
+    Agari_Result result_tsumo;
+    Agari_Result result_ron;
+
+    Agari_Info_Detail();
+    Agari_Info_Detail(const int hai_in, const Agari_Result& result_tsumo_in, const Agari_Result& result_ron_in);
+};
+
+Agari_Info_Detail calc_agari_detail(
+    const int bakaze_hai, const int jikaze_hai,
+    const Hai_Array& tehai, const Hai_Array& tehai_tate_cut, const Hai_Array& tehai_tmp, const Fuuro_Vector& fuuro,
+    const int machi_hai, const Machi_Type machi_type, const bool titoi_flag
+);
 
 Agari_Info calc_agari(
     const int bakaze_hai, const int jikaze_hai,
