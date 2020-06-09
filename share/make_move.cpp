@@ -222,7 +222,7 @@ json11::Json make_hora(const int actor, const int target, const int hai_hora) {
     return json11::Json(move);
 }
 
-json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::array<int, 4>& scores) {
+json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::array<int, 4>& scores, const json11::Json& hora_info) {
     json11::Json::object move;
     move["type"] = "hora";
     move["actor"] = actor;
@@ -231,6 +231,7 @@ json11::Json make_hora(const int actor, const int target, const int hai_hora, co
     move["hora_tehais"] = hai_array_to_json(tehai);
     move["fan"] = han;
     move["scores"] = json11::Json(scores);
+    move["info"] = hora_info;
 
     return json11::Json(move);
 }

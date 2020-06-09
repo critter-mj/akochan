@@ -40,7 +40,7 @@ json11::Json make_chi_high_default(const int actor, const int target, const int 
 json11::Json make_chi_high_aka(const int actor, const int target, const int hai);
 
 json11::Json make_hora(const int actor, const int target, const int hai_hora);
-json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::array<int, 4>& scores);
+json11::Json make_hora(const int actor, const int target, const int hai_hora, const Hai_Array& tehai, const int han, const std::array<int, 4>& scores, const json11::Json& hora_info);
 json11::Json make_ryukyoku_fanpai(const std::array<bool, 4>& tenpai, const std::array<json11::Json, 4>& tehais, const std::array<int, 4>& scores);
 json11::Json make_kyushukyuhai(const int actor);
 json11::Json make_kyushukyuhai(const int actor, const Hai_Array& tehai, const std::array<int, 4>& scores);
