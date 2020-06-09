@@ -46,7 +46,7 @@ Agari_Result::Agari_Result() {
     // 4 points
     outside_hand = false; fully_concealed = false; two_melded_kongs = false; // , last_tile
     // 2 points bool
-    dragon_pung = false; prevalent_wind = false; seat_wind = false; all_chows = false; two_concealed_pungs = false; concealed_kong = false; all_simples = false; //concealed_hand,
+    dragon_pung = false; prevalent_wind = false; seat_wind = false; all_chows = false; two_concealed_pungs = false; concealed_kong = false; all_simples = false, concealed_hand = false;
     // 1 point bool
     melded_kong = false; one_voided_suit = false; no_honors = false;
     // 2 points int

@@ -104,12 +104,13 @@ Agari_Info_Detail calc_agari_detail(
                 for (int hai = 0; hai < 30; hai++) {
                     if (syuntu_used[hai] < syuntu[hai]) {
                         for (int c = 0; c < 3; c++) {
-                            if (c == hai % 10) { continue; }
+                            if (c == hai / 10) { continue; }
                             const int cand = c * 10 + hai % 10;
                             if (0 < syuntu[cand] && syuntu_used[cand] == syuntu[cand]) {
                                 tsumo_res.mixed_double_chow_num++;
                                 syuntu_used[hai]++;
                                 found = true;
+                                break;
                             }  
                         }
                     }
@@ -152,13 +153,14 @@ Agari_Info_Detail calc_agari_detail(
                 for (int hai = 0; hai < 30; hai++) {
                     if (syuntu_used[hai] < syuntu[hai]) {
                         for (int c = 0; c < 3; c++) {
-                            if (c == hai % 10) { continue; }
+                            if (c == hai / 10) { continue; }
                             const int cand = c * 10 + hai % 10;
                             if (0 < syuntu[cand] && syuntu_used[cand] < syuntu[cand]) {
                                 tsumo_res.mixed_double_chow_num++;
                                 syuntu_used[hai]++;
                                 syuntu_used[cand]++;
                                 found = true;
+                                break;
                             }  
                         }
                     }
@@ -297,7 +299,7 @@ Agari_Info_Detail calc_agari_detail(
 
         if (menzen_check(fuuro)) {
             tsumo_res.fully_concealed = true;
-            ron_res.concealed_kong = true;
+            ron_res.concealed_hand = true;
         } else {
             tsumo_res.self_drawn = true;
             if (melded_hand_check(fuuro)) {
