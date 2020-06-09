@@ -26,6 +26,162 @@ Fuuro_Elem::Fuuro_Elem() {
 
 Agari_Info::Agari_Info(){}
 
+Agari_Result::Agari_Result() {
+    // 88 points
+    big_four_winds = false; big_three_dragons = false, four_kongs = false;
+    // 64 points
+    four_concealed_pungs = false;
+    // 32 points
+    three_kongs = false;
+    // 24 points
+    seven_pairs = false; all_even_pungs = false; full_flush = false; pure_triple_chow = false; pure_shifted_pungs = false; upper_tiles = false; middle_tiles = false; lower_tiles = false; // Greater Honors and Knitted Tiles
+    // 16 points
+    pure_straight = false; three_suited_terminal_chows = false; pure_shifted_chows = false; all_fives = false; triple_pung = false; three_concealed_pungs = false;
+    // 12 points
+    upper_four = false; lower_four = false; big_three_winds = false; // lesser_honors_and_knitted_tiles, knitted_straight;
+    // 8 points
+    mixed_straight = false; reversible_tiles = false; mixed_triple_chow = false; mixed_shifted_pungs = false; two_concealed_kongs = false; //, chicken_hand, last_tile_draw, last_tile_claim, out_with_replacement_tile, robbing_the_kongs;
+    // 6 points
+    all_pungs = false; half_flush = false; mixed_shifted_chows = false; all_types = false; melded_hand = false; two_dragon_pungs = false;
+    // 4 points
+    outside_hand = false; fully_concealed = false; two_melded_kongs = false; // , last_tile
+    // 2 points bool
+    dragon_pung = false; prevalent_wind = false; seat_wind = false; all_chows = false; two_concealed_pungs = false; concealed_kong = false; all_simples = false; //concealed_hand,
+    // 1 point bool
+    melded_kong = false; one_voided_suit = false; no_honors = false;
+    // 2 points int
+    tile_hog_num = 0; double_pung_num = 0;
+    // 1 point int
+    pure_double_chow_num = 0; mixed_double_chow_num = 0; short_straight_num = 0; two_terminal_chows_num = 0; pung_of_terminals_or_honors_num = 0;
+}
+
+int Agari_Result::calc_point() const {
+    int ret = 0;
+    if (big_four_winds) { ret += 88; }
+    if (big_three_dragons) { ret += 88; }
+    if (four_kongs) { ret += 88; }
+    if (four_concealed_pungs) { ret += 64; }
+    if (three_kongs) { ret += 32; }
+    if (seven_pairs) { ret += 24; }
+    if (all_even_pungs) { ret += 24; }
+    if (full_flush) { ret += 24; }
+    if (pure_triple_chow) { ret += 24; }
+    if (pure_shifted_pungs) { ret += 24; }
+    if (upper_tiles) { ret += 24; }
+    if (middle_tiles) { ret += 24; }
+    if (lower_tiles) { ret += 24; }
+    if (pure_straight) { ret += 16; }
+    if (three_suited_terminal_chows) { ret += 16; }
+    if (pure_shifted_chows) { ret += 16; }
+    if (all_fives) { ret += 16; }
+    if (triple_pung) { ret += 16; }
+    if (three_concealed_pungs) { ret += 16; }
+    if (upper_four) { ret += 12; }
+    if (lower_four) { ret += 12; }
+    if (big_three_winds) { ret += 12; }
+    if (mixed_straight) { ret += 8; }
+    if (reversible_tiles) { ret += 8; }
+    if (mixed_triple_chow) { ret += 8; }
+    if (mixed_shifted_pungs) { ret += 8; }
+    if (two_concealed_pungs) { ret += 8; }
+    if (all_pungs) { ret += 6; }
+    if (half_flush) { ret += 6; }
+    if (mixed_shifted_chows) { ret += 6; }
+    if (all_types) { ret += 6; }
+    if (melded_hand) { ret += 6; }
+    if (two_dragon_pungs) { ret += 6; }
+    if (outside_hand) { ret += 4; }
+    if (fully_concealed) { ret += 4; }
+    if (two_melded_kongs) { ret += 4; }
+    if (dragon_pung) { ret += 2; }
+    if (prevalent_wind) { ret += 2; }
+    if (seat_wind) { ret += 2; }
+    if (all_chows) { ret += 2; }
+    if (two_concealed_pungs) { ret += 2; }
+    if (concealed_kong) { ret += 2; }
+    if (all_simples) { ret += 2; }
+    if (concealed_hand) { ret += 2; }
+    if (melded_kong) { ret += 1; }
+    if (one_voided_suit) { ret += 1; }
+    if (no_honors) { ret += 1; }
+    ret += (tile_hog_num + double_pung_num) * 2;
+    ret += pure_double_chow_num + mixed_double_chow_num + short_straight_num + two_terminal_chows_num + pung_of_terminals_or_honors_num;
+    return ret;
+}
+
+json11::Json Agari_Result::to_json() const {
+    json11::Json::array bools;
+    if (big_four_winds) { bools.push_back("big_four_winds"); }
+    if (big_three_dragons) { bools.push_back("big_three_dragons"); }
+    if (four_kongs) { bools.push_back("four_kongs"); }
+    if (four_concealed_pungs) { bools.push_back("four_concealed_pungs"); }
+    if (three_kongs) { bools.push_back("three_kongs"); }
+    if (seven_pairs) { bools.push_back("seven_pairs"); }
+    if (all_even_pungs) { bools.push_back("all_even_pungs"); }
+    if (full_flush) { bools.push_back("full_flush"); }
+    if (pure_triple_chow) { bools.push_back("pure_triple_chow"); }
+    if (pure_shifted_pungs) { bools.push_back("pure_shifted_pungs"); }
+    if (upper_tiles) { bools.push_back("upper_tiles"); }
+    if (middle_tiles) { bools.push_back("middle_tiles"); }
+    if (lower_tiles) { bools.push_back("lower_tiles"); }
+    if (pure_straight) { bools.push_back("pure_straight"); }
+    if (three_suited_terminal_chows) { bools.push_back("three_suited_terminal_chows"); }
+    if (pure_shifted_chows) { bools.push_back("pure_shifted_chows"); }
+    if (all_fives) { bools.push_back("all_fives"); }
+    if (triple_pung) { bools.push_back("triple_pung"); }
+    if (three_concealed_pungs) { bools.push_back("three_concealed_pungs"); }
+    if (upper_four) { bools.push_back("upper_four"); }
+    if (lower_four) { bools.push_back("lower_four"); }
+    if (big_three_winds) { bools.push_back("big_three_winds"); }
+    if (mixed_straight) { bools.push_back("mixed_straight"); }
+    if (reversible_tiles) { bools.push_back("reversible_tiles"); }
+    if (mixed_triple_chow) { bools.push_back("mixed_triple_chow"); }
+    if (mixed_shifted_pungs) { bools.push_back("mixed_shifted_pungs"); }
+    if (two_concealed_pungs) { bools.push_back("two_concealed_pungs"); }
+    if (all_pungs) { bools.push_back("all_pungs"); }
+    if (half_flush) { bools.push_back("half_flush"); }
+    if (mixed_shifted_chows) { bools.push_back("mixed_shifted_chows"); }
+    if (all_types) { bools.push_back("all_types"); }
+    if (melded_hand) { bools.push_back("melded_hand"); }
+    if (two_dragon_pungs) { bools.push_back("two_dragon_pungs"); }
+    if (outside_hand) { bools.push_back("outside_hand"); }
+    if (fully_concealed) { bools.push_back("fully_concealed"); }
+    if (two_melded_kongs) { bools.push_back("two_melded_kongs"); }
+    if (dragon_pung) { bools.push_back("dragon_pung"); }
+    if (prevalent_wind) { bools.push_back("prevalent_wind"); }
+    if (seat_wind) { bools.push_back("seat_wind"); }
+    if (all_chows) { bools.push_back("all_chows"); }
+    if (two_concealed_pungs) { bools.push_back("two_concealed_pungs"); }
+    if (concealed_kong) { bools.push_back("concealed_kong"); }
+    if (all_simples) { bools.push_back("all_simples"); }
+    if (concealed_hand) { bools.push_back("concealed_hand"); }
+    if (melded_kong) { bools.push_back("melded_kong"); }
+    if (one_voided_suit) { bools.push_back("one_voided_suit"); }
+    if (no_honors) { bools.push_back("no_honors"); }
+
+    json11::Json::object integers;
+    if (0 < tile_hog_num) { integers["tile_hog"] = tile_hog_num; }
+    if (0 < double_pung_num) { integers["double_pung"] = double_pung_num; }
+    if (0 < pure_double_chow_num) { integers["pure_double_chow"] = pure_double_chow_num; }
+    if (0 < mixed_double_chow_num) { integers["mixed_double_chow"] = mixed_double_chow_num; }
+    if (0 < short_straight_num) { integers["short_straight"] = short_straight_num; }
+    if (0 < two_terminal_chows_num) { integers["two_terminal_chows"] = two_terminal_chows_num; }
+    if (0 < pung_of_terminals_or_honors_num) { integers["pung_of_terminals_or_honors"] = pung_of_terminals_or_honors_num; }
+
+    json11::Json::object ret;
+    ret["total_point"] = calc_point();
+    ret["bools"] = bools;
+    ret["integers"] = integers;
+    return json11::Json(ret);
+}
+
+Agari_Info_Detail::Agari_Info_Detail(){}
+Agari_Info_Detail::Agari_Info_Detail(const int hai_in, const Agari_Result& result_tsumo_in, const Agari_Result& result_ron_in){
+    hai = hai_in;
+    result_tsumo = result_tsumo_in;
+    result_ron = result_ron_in;
+}
+
 Tenpai_Info::Tenpai_Info() {
 	mentu_shanten_num = 8;
     titoi_shanten_num = 6; // 副露手では別の値にするべきかもしれないが、特に不都合はでないはず。

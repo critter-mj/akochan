@@ -29,7 +29,7 @@ void tenpai_check(
 		for (int hai = 0; hai < 38;hai++) {
 			if (tehai_tmp[hai] == 1 && using_array[hai] != 4) {
                 tenpai_info.mentu_shanten_num = 0;
-				tenpai_info.agari_vec.push_back(calc_agari(
+				tenpai_info.agari_vec.push_back(calc_agari_detail(
 					bakaze_hai, jikaze_hai,
 					tehai, tehai_tate_cut, tehai_tmp, fuuro,
     				hai, MT_TANKI, false
@@ -40,7 +40,7 @@ void tenpai_check(
 		for (int hai = 0; hai < 38; hai++) {
 			if (tehai_tmp[hai] == 2 && using_array[hai] != 4) {
 				tenpai_info.mentu_shanten_num = 0;
-				tenpai_info.agari_vec.push_back(calc_agari(
+				tenpai_info.agari_vec.push_back(calc_agari_detail(
 					bakaze_hai, jikaze_hai,
 					tehai, tehai_tate_cut, tehai_tmp, fuuro,
     				hai, MT_SHABO, false
@@ -52,7 +52,7 @@ void tenpai_check(
 				if (hai % 10 == 1) {
 					if (using_array[hai+2] != 4) {
 						tenpai_info.mentu_shanten_num = 0;
-						tenpai_info.agari_vec.push_back(calc_agari(
+						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
 							hai + 2, MT_PENCHAN, false
@@ -61,7 +61,7 @@ void tenpai_check(
 				} else if (hai % 10 == 8) {
 					if (using_array[hai-1] != 4) {
 						tenpai_info.mentu_shanten_num = 0;
-						tenpai_info.agari_vec.push_back(calc_agari(
+						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
 							hai - 1, MT_PENCHAN, false
@@ -70,7 +70,7 @@ void tenpai_check(
 				} else {
 					if (using_array[hai-1] != 4) {
 						tenpai_info.mentu_shanten_num = 0;
-						tenpai_info.agari_vec.push_back(calc_agari(
+						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
 							hai - 1, MT_RYANMEN, false
@@ -78,7 +78,7 @@ void tenpai_check(
 					}
 					if (using_array[hai+2] != 4) {
 						tenpai_info.mentu_shanten_num = 0;
-						tenpai_info.agari_vec.push_back(calc_agari(
+						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
 							hai + 2, MT_RYANMEN, false
@@ -90,7 +90,7 @@ void tenpai_check(
 				if (hai % 10 != 9) {
 					if (using_array[hai+1] != 4) {
 						tenpai_info.mentu_shanten_num = 0;
-						tenpai_info.agari_vec.push_back(calc_agari(
+						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
 							hai + 1, MT_KANCHAN, false
@@ -198,7 +198,7 @@ void titoi_shanten(const int bakaze_hai, const int jikaze_hai, const Hai_Array& 
 		for (int hai = 0; hai < 38;hai++) {
 			if (tehai[hai] == 1) {
                 tenpai_info.titoi_shanten_num = 0;
-				tenpai_info.agari_vec.push_back(calc_agari(
+				tenpai_info.agari_vec.push_back(calc_agari_detail(
     				bakaze_hai, jikaze_hai,
     				tehai, tehai, tehai, fuuro,
     				hai, MT_TANKI, true

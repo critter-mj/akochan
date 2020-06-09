@@ -176,13 +176,13 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
 
             for (int i = 0; i < tenpai_info.agari_vec.size(); i++) {
                 if (haikind(hai) == tenpai_info.agari_vec[i].hai &&
-                    han_add + tenpai_info.agari_vec[i].han_ron > agari_ten
+                    han_add + tenpai_info.agari_vec[i].result_ron.calc_point() > agari_ten
                 ) {
-                    agari_ten = han_add + tenpai_info.agari_vec[i].han_ron;
+                    agari_ten = han_add + tenpai_info.agari_vec[i].result_ron.calc_point();
                     agari_id = i;
                 }
             }
-            const int han = han_add + tenpai_info.agari_vec[agari_id].han_ron;
+            const int han = han_add + tenpai_info.agari_vec[agari_id].result_ron.calc_point();
             std::array<int, 4> ten_move = ten_move_hora(actor, target, han);
 
             std::array<int, 4> scores;
@@ -253,13 +253,13 @@ void add_move_after_tsumo(const std::vector<int>& haiyama, Moves& game_record, c
 
         for (int i = 0; i < tenpai_info.agari_vec.size(); i++) {
             if (haikind(hai) == tenpai_info.agari_vec[i].hai &&
-                han_add + tenpai_info.agari_vec[i].han_tsumo > agari_ten
+                han_add + tenpai_info.agari_vec[i].result_tsumo.calc_point() > agari_ten
             ) {
-                agari_ten = han_add + tenpai_info.agari_vec[i].han_tsumo;
+                agari_ten = han_add + tenpai_info.agari_vec[i].result_tsumo.calc_point();
                 agari_id = i;
             }
         }
-        const int han = han_add + tenpai_info.agari_vec[agari_id].han_tsumo;
+        const int han = han_add + tenpai_info.agari_vec[agari_id].result_tsumo.calc_point();
         std::array<int, 4> ten_move = ten_move_hora(actor, actor, han);
         std::array<int, 4> scores;
         for (int pid = 0; pid < 4; pid++) {
