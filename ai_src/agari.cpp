@@ -45,7 +45,7 @@ float Agari_Basic::get_ten_exp_direct(
     const std::array<std::array<std::array<float, 100>, 4>, 4>& kyoku_end_pt_exp
 ) const {
     const int agari_han = (my_pid == target) ? agari_info.get_han_tsumo() : (agari_info.get_han_ron() + chankan_han);
-    if (agari_han > 0) {
+    if (6 <= agari_han) {
         return kyoku_end_pt_exp[my_pid][target][std::min(agari_han, 99)];
     } else {
         return -200.0;
@@ -61,11 +61,11 @@ std::array<float, 2> Agari_Basic::get_ten_exp(
     for (int i = 0; i < 2; i++) { result[i] = -200.0; }
 
     const int han_tsumo = agari_info.get_han_tsumo();
-    if (0 < han_tsumo) {
+    if (6 <= han_tsumo) {
         result[0] = kyoku_end_pt_exp[my_pid][my_pid][std::min(han_tsumo, 99)];
     }
     const int han_ron = agari_info.get_han_ron();
-    if (0 < han_ron) {
+    if (6 <= han_ron) {
         float tmp = 0.0;
         for (int pid = 0;pid < 4; pid++) {
             if (pid != my_pid) {
