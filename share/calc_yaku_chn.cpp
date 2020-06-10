@@ -251,7 +251,7 @@ bool half_flush_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro) {
 // Mixed Shifted Chows -> at agari
 
 bool all_types_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro, const int machi_hai) {
-    std::array<bool, 5> flags;
+    std::array<bool, 5> flags = {};
     auto get_type = [](const int hai) {
              if (hai <= 10) { return 0; }
         else if (hai <= 20) { return 1; }
