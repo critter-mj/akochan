@@ -19,7 +19,7 @@ int cal_tsumo_num_exp(const int my_pid, const Game_State& game_state, const int 
 	// dahai_inc は本来取り入れる要素と思われるが、現状利用されていない。
 	if (tactics_json[my_pid]["tsumo_num_est"] == "instant") {
 		const int acn = game_state.player_state[my_pid].kawa.size();
-		return ceil(std::max(18 - acn, 0) * 0.7);
+		return ceil(std::max(21 - acn, 0) * 0.7);
 	} else if (tactics_json[my_pid]["tsumo_num_est"] == "ako") {
 		const int acn = std::min(std::max(1, (int)game_state.player_state[my_pid].kawa.size()), 16);
 		float w[4]; float x[4] = {}; int rp = 0;
@@ -41,7 +41,7 @@ int cal_tsumo_num_exp(const int my_pid, const Game_State& game_state, const int 
 			x[1] = 1.0;
 		}
 		x[3] = tp;
-		return ceil(logistic(w, x, 4) * (18 - acn));
+		return ceil(logistic(w, x, 4) * (21 - acn));
 	} else {
 		assert_with_out(false, "tsumo_num_est error!");
 		return 0;
@@ -97,7 +97,7 @@ float cal_my_agari_value(const float agari_prob_sol, const float value_sol, cons
 
 float cal_ryuukyoku_prob(const int my_pid, const Game_State& game_state, const float my_agari_prob, const std::array<float, 4>& tenpai_prob, const int dahai_inc) {
 	if (tactics_json[my_pid]["ryukyoku_prob_est"] == "instant") {
-		return 1.0 - 0.75 * std::max(18 - (int)game_state.player_state[my_pid].kawa.size() - dahai_inc, 0) / 18.0;
+		return 1.0 - 0.75 * std::max(21 - (int)game_state.player_state[my_pid].kawa.size() - dahai_inc, 0) / 21.0;
 	} else if (tactics_json[my_pid]["ryukyoku_prob_est"] == "ako") {
 		const int act_num = game_state.player_state[my_pid].kawa.size() + dahai_inc;
 		std::string file_name;

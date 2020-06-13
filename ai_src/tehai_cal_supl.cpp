@@ -413,8 +413,9 @@ void exec_calc_DP(
 		read_parameters(dama_ron_ratio, 6, "params/ron_ratio/ako/dama_ron_ratio.txt");
 	} 
 	if (tactics_json[my_pid]["inclusive_fold_est"] == "ako") {
-		for (int t = 2; t <= 18; t++) {
-			read_parameters(wa[t], 3, "params/inclusive_fold/ako/betaori_houjuu_para" + std::to_string(t) + "_3000.txt");
+		for (int t = 2; t <= 21; t++) {
+			const int t2 = std::min(std::max(2, t), 18);
+			read_parameters(wa[t], 3, "params/inclusive_fold/ako/betaori_houjuu_para" + std::to_string(t2) + "_3000.txt");
 		}
 	}
 

@@ -17,7 +17,7 @@ const int MAX_TSUMO_EDGE_NUM_PER_THREAD = 100000 * 16;
 const int MAX_TA_NUM_PER_GROUP = 128;
 const int BUF_FOR_REACH_PER_GROUP = 10;
 
-const int MAX_TSUMO_NUM = 20;
+const int MAX_TSUMO_NUM = 22;
 // ツモ数は2でないが、メモリ的には2あれば十分なのでこのようになった。十分でないときは要修正
 
 class Tehai_Location {
