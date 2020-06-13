@@ -248,6 +248,7 @@ Tenpai_Info cal_tenpai_info(const int bakaze, const int jikaze, const Hai_Array&
 	Tenpai_Info tenpai_info;
 
 	analyze_tehai(bakaze_hai, jikaze_hai, using_hai_array(tehai_kind, fuuro_kind), tehai_kind, fuuro_kind, tenpai_info);
+	tenpai_info.check_wait();
     return tenpai_info;
 }
 

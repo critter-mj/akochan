@@ -48,7 +48,7 @@ Agari_Result::Agari_Result() {
     // 2 points bool
     dragon_pung = false; prevalent_wind = false; seat_wind = false; all_chows = false; two_concealed_pungs = false; concealed_kong = false; all_simples = false, concealed_hand = false;
     // 1 point bool
-    melded_kong = false; one_voided_suit = false; no_honors = false;
+    melded_kong = false; one_voided_suit = false; no_honors = false; edge_wait = false; closed_wait = false; single_wait = false; self_drawn = false;
     // 2 points int
     tile_hog_num = 0; double_pung_num = 0;
     // 1 point int
@@ -104,6 +104,10 @@ int Agari_Result::calc_point() const {
     if (melded_kong) { ret += 1; }
     if (one_voided_suit) { ret += 1; }
     if (no_honors) { ret += 1; }
+    if (edge_wait) { ret += 1; }
+    if (closed_wait) { ret += 1; }
+    if (single_wait) { ret += 1; }
+    if (self_drawn) { ret += 1; }
     ret += (tile_hog_num + double_pung_num) * 2;
     ret += pure_double_chow_num + mixed_double_chow_num + short_straight_num + two_terminal_chows_num + pung_of_terminals_or_honors_num;
     return ret;
@@ -158,6 +162,10 @@ json11::Json Agari_Result::to_json() const {
     if (melded_kong) { bools.push_back("melded_kong"); }
     if (one_voided_suit) { bools.push_back("one_voided_suit"); }
     if (no_honors) { bools.push_back("no_honors"); }
+    if (edge_wait) { bools.push_back("edge_wait"); }
+    if (closed_wait) { bools.push_back("closed_wait"); }
+    if (single_wait) { bools.push_back("single_wait"); }
+    if (self_drawn) { bools.push_back("self_drawn"); }
 
     json11::Json::object integers;
     if (0 < tile_hog_num) { integers["tile_hog"] = tile_hog_num; }
@@ -176,8 +184,9 @@ json11::Json Agari_Result::to_json() const {
 }
 
 Agari_Info_Detail::Agari_Info_Detail(){}
-Agari_Info_Detail::Agari_Info_Detail(const int hai_in, const Agari_Result& result_tsumo_in, const Agari_Result& result_ron_in){
+Agari_Info_Detail::Agari_Info_Detail(const int hai_in, const Machi_Type machi_type_in, const Agari_Result& result_tsumo_in, const Agari_Result& result_ron_in){
     hai = hai_in;
+    machi_type = machi_type_in;
     result_tsumo = result_tsumo_in;
     result_ron = result_ron_in;
 }
@@ -190,6 +199,34 @@ Tenpai_Info::Tenpai_Info() {
 
 int Tenpai_Info::shanten_num() const {
 	return std::min(mentu_shanten_num, titoi_shanten_num);
+}
+
+void Tenpai_Info::check_wait() {
+    std::set<int> st;
+    for (const Agari_Info_Detail& agari : agari_vec) {
+        st.insert(agari.hai);
+        if (agari.machi_type == MT_OTHER) { return; }
+        if (agari.result_tsumo.seven_pairs) { return; }
+    }
+    if (st.size() != 1) { return; }
+    for (Agari_Info_Detail& agari : agari_vec) {
+        switch (agari.machi_type) {
+            case MT_PENCHAN:
+                agari.result_tsumo.edge_wait = true;
+                agari.result_ron.edge_wait = true;
+                break;
+            case MT_KANCHAN:
+                agari.result_tsumo.closed_wait = true;
+                agari.result_ron.closed_wait = true;
+                break;
+            case MT_TANKI:
+                agari.result_tsumo.single_wait = true;
+                agari.result_ron.single_wait = true;
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 Sutehai::Sutehai(){}
@@ -660,9 +697,9 @@ std::pair<int, int> count_tsumo_num(const Moves& game_record) {
         }
         if (action_json["type"].string_value() == "tsumo") {
             assert(i > 0);
-            assert(game_record[i-1]["type"].string_value() != "ankan");
             if (game_record[i-1]["type"].string_value() == "daiminkan" ||
-                game_record[i-1]["type"].string_value() == "kakan"
+                game_record[i-1]["type"].string_value() == "kakan" ||
+                game_record[i-1]["type"].string_value() == "ankan"
             ) {
                 tsumo_rinshan++;
             } else {
@@ -838,14 +875,7 @@ int cal_next_oya(const Moves& game_record) {
     const json11::Json& kyoku_result = game_record[game_record.size()-1];
     assert(kyoku_result["type"].string_value() == "hora" || kyoku_result["type"].string_value() == "ryukyoku");
     const int oya = get_oya(game_record);
-    if ((kyoku_result["type"].string_value() == "hora" && kyoku_result["actor"].int_value() == oya) ||
-        (kyoku_result["type"].string_value() == "ryukyoku" && kyoku_result["reason"].string_value() == "kyushukyuhai") ||
-        (kyoku_result["type"].string_value() == "ryukyoku" && kyoku_result["tenpais"].array_items()[oya].bool_value())
-    ) {
-        return oya;
-    } else {
-        return (oya + 1) % 4;
-    }
+    return (oya + 1) % 4;
 }
 
 bool is_menzen(const Moves& game_record, const int pid) {

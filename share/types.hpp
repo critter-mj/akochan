@@ -34,6 +34,7 @@ enum Machi_Type {
     MT_TANKI = 2,
     MT_KANCHAN = 3,
     MT_PENCHAN = 4,
+    MT_OTHER = 5, // Knitted Straight, Greater Honors and Knitted Tiles のような特殊役
 };
 
 Color_Type hai_color(const int hai);
@@ -95,11 +96,12 @@ class Agari_Result {
 class Agari_Info_Detail {
     public:
     int hai;
+    Machi_Type machi_type;
     Agari_Result result_tsumo;
     Agari_Result result_ron;
 
     Agari_Info_Detail();
-    Agari_Info_Detail(const int hai_in, const Agari_Result& result_tsumo_in, const Agari_Result& result_ron_in);
+    Agari_Info_Detail(const int hai_in, const Machi_Type machi_type_in, const Agari_Result& result_tsumo_in, const Agari_Result& result_ron_in);
 };
 
 class Tenpai_Info {
@@ -110,6 +112,7 @@ class Tenpai_Info {
 
     Tenpai_Info();
     int shanten_num() const;
+    void check_wait(); // calculation of Edge Wait, Closed Wait, Single Wait
 };
 
 class Sutehai {

@@ -41,7 +41,7 @@ int cal_tsumo_num_exp(const int my_pid, const Game_State& game_state, const int 
 			x[1] = 1.0;
 		}
 		x[3] = tp;
-		return ceil(logistic(w, x, 4) * (21 - acn));
+		return ceil(logistic(w, x, 4) * std::max(21 - acn, 0));
 	} else {
 		assert_with_out(false, "tsumo_num_est error!");
 		return 0;

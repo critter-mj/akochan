@@ -308,7 +308,7 @@ Agari_Info_Detail calc_agari_detail(
         }
     }
 
-    return Agari_Info_Detail(machi_hai, tsumo_res, ron_res);
+    return Agari_Info_Detail(machi_hai, machi_type, tsumo_res, ron_res);
 }
 
 Agari_Info calc_agari(

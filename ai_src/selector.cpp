@@ -163,11 +163,11 @@ std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_
 
 int cal_tsumo_num_DP(const Moves& game_record, const int my_pid) {
 	const int tsumo_num_all = count_tsumo_num_all(game_record);
-	const int result_tmp = (70 - tsumo_num_all) / 4;
+	const int result_tmp = (84 - tsumo_num_all) / 4;
 	const json11::Json& last_action = game_record[game_record.size()-1];
 
 	const int next_tsumo_player = last_action["type"] == "dahai" ? next_player(last_action["actor"].int_value(), 1) : next_player(my_pid, 1);
-	if ((70 - tsumo_num_all)%4 > (4 + my_pid - next_tsumo_player)%4) {
+	if ((84 - tsumo_num_all)%4 > (4 + my_pid - next_tsumo_player)%4) {
 		return result_tmp + 1;
 	} else {
 		return result_tmp;
