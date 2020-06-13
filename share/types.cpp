@@ -670,7 +670,7 @@ std::pair<int, int> count_tsumo_num(const Moves& game_record) {
             }
         }
     }
-    assert(tsumo_haiyama + tsumo_rinshan <= 70);
+    assert(tsumo_haiyama + tsumo_rinshan <= 84);
     return std::pair<int, int> (tsumo_haiyama, tsumo_rinshan);
 }
 

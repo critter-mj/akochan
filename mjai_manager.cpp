@@ -195,11 +195,11 @@ void add_move_after_dahai(const std::vector<int>& haiyama, Moves& game_record, c
         }
     }
     if (ron_flag) { return; }
-    if (count_tsumo_num_all(game_record) == 70) {
+    if (count_tsumo_num_all(game_record) == 84) {
         add_ryukyoku_fanpai(game_record);
         return;
     } else if (current_move["type"].string_value() == "kakan") {
-        // 最後の牌はカカンできないため、count_tsumo_num_all(game_record) == 70にはならない。
+        // 最後の牌はカカンできないため、count_tsumo_num_all(game_record) == 84にはならない。
         add_rinshan_tsumo(haiyama, game_record, target);
         return;
     }

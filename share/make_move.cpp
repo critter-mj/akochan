@@ -422,7 +422,7 @@ bool is_legal_chi(const Moves& game_record, const Game_State& game_state, const 
     if (last_action["pai"].int_value() != action_json["pai"].int_value()) { return false; }
 
     const int actor = action_json["actor"].int_value();
-    if (count_tsumo_num_all(game_record) == 70) { return false; }
+    if (count_tsumo_num_all(game_record) == 84) { return false; }
 
     const int consumed0 = hai_str_to_int(action_json["consumed"][0].string_value());
     const int consumed1 = hai_str_to_int(action_json["consumed"][1].string_value());
@@ -438,7 +438,7 @@ bool is_legal_pon(const Moves& game_record, const Game_State& game_state, const 
     if (last_action["pai"].int_value() != action_json["pai"].int_value()) { return false; }
 
     const int actor = action_json["actor"].int_value();
-    if (count_tsumo_num_all(game_record) == 70) { return false; }
+    if (count_tsumo_num_all(game_record) == 84) { return false; }
 
     const int consumed0 = hai_str_to_int(action_json["consumed"][0].string_value());
     const int consumed1 = hai_str_to_int(action_json["consumed"][1].string_value());
@@ -458,7 +458,7 @@ bool is_legal_daiminkan(const Moves& game_record, const Game_State& game_state, 
     if (last_action["pai"].int_value() != action_json["pai"].int_value()) { return false; }
 
     const int actor = action_json["actor"].int_value();
-    if (count_tsumo_num_all(game_record) == 70) { return false; }
+    if (count_tsumo_num_all(game_record) == 84) { return false; }
 
     const int consumed0 = hai_str_to_int(action_json["consumed"][0].string_value());
     const int consumed1 = hai_str_to_int(action_json["consumed"][1].string_value());
@@ -477,7 +477,7 @@ bool is_legal_ankan(const Moves& game_record, const Game_State& game_state, cons
     if (last_action["type"].string_value() == "tsumo") {
         const int actor = action_json["actor"].int_value();
         if (actor != last_action["actor"].int_value()) { return false; }
-        if (count_tsumo_num_all(game_record) > 70) { return false; } // ハイチE��はアンカンできなぁE��E
+        if (count_tsumo_num_all(game_record) == 84) { return false; } // ハイチE��はアンカンできなぁE��E
         // to do リーチ時のアンカン条件
 
         Hai_Array tehai = game_state.player_state[actor].tehai;
@@ -501,7 +501,7 @@ bool is_legal_kakan(const Moves& game_record, const Game_State& game_state, cons
     if (last_action["type"].string_value() == "tsumo") {
         const int actor = action_json["actor"].int_value();
         if (actor != last_action["actor"].int_value()) { return false; }
-        if (count_tsumo_num_all(game_record) > 70) { return false; } // ハイチE��はカカンできなぁE��E
+        if (count_tsumo_num_all(game_record) == 84) { return false; } // ハイチE��はカカンできなぁE��E
 
         const int hai = hai_str_to_int(action_json["pai"].string_value());
         Fuuro_Vector fuuro = game_state.player_state[actor].fuuro;
@@ -532,7 +532,7 @@ bool is_legal_hora(const Moves& game_record, const Game_State& game_state, const
     const int hai = hai_str_to_int(action_json["pai"].string_value());
     const json11::Json& last_action = game_record[game_record.size() - 1];
     int han_add = 0;
-    if (count_tsumo_num_all(game_record) == 70) {
+    if (count_tsumo_num_all(game_record) == 84) {
         han_add++;
     }
     if (last_action["type"].string_value() == "tsumo") {
