@@ -477,5 +477,21 @@ void Tehai_Group::analyze_all_agari(
 		//cal_tav[ta_loc_gn_first][ta_loc_gn_second].analyze_tehai(my_pid, graph_agariv_cn[gn]);
 		cal_tav[ta_loc_gn_first][ta_loc_gn_second].analyze_tehai(my_pid, game_state, agari_graph);
 		agari_graph_loc[ta_loc_gn_first][ta_loc_gn_second][2] = agari_graph.size();
+		check_wait_of_agari(agari_graph, agari_graph_loc[ta_loc_gn_first][ta_loc_gn_second][1], agari_graph_loc[ta_loc_gn_first][ta_loc_gn_second][2]);
+	}
+}
+
+void Tehai_Group::check_wait_of_agari(
+	boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agari_graph, const int agari_begin, const int agari_end
+) {
+	std::set<int> st;
+	for (int an = agari_begin; an < agari_end; an++) {
+		st.insert(agari_graph[an].agari_info.get_hai());
+		if (agari_graph[an].agari_info.get_wait_flag() == 0) { return; }
+	}
+	if (st.size() != 1) { return; }
+	for (int an = agari_begin; an < agari_end; an++) {
+		agari_graph[an].agari_info.set_han_tsumo(agari_graph[an].agari_info.get_han_tsumo() + 1);
+		agari_graph[an].agari_info.set_han_ron(agari_graph[an].agari_info.get_han_ron() + 1);
 	}
 }

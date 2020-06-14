@@ -53,6 +53,7 @@ class Fuuro_Elem {
 class Agari_Info {
     public:
     int hai;
+    Machi_Type machi_type;
     int han_tsumo;
     int han_ron;
 

@@ -319,6 +319,7 @@ Agari_Info calc_agari(
     Agari_Info_Detail detail = calc_agari_detail(bakaze_hai, jikaze_hai, tehai, tehai_tate_cut, tehai_tmp, fuuro, machi_hai, machi_type, titoi_flag);
     Agari_Info agari_info;
     agari_info.hai = machi_hai;
+    agari_info.machi_type = machi_type;
     agari_info.han_tsumo = detail.result_tsumo.calc_point();
     agari_info.han_ron = detail.result_ron.calc_point();
     return agari_info;

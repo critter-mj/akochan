@@ -99,4 +99,8 @@ class Tehai_Group{
 		std::array<std::array<std::array<int, 3>, MAX_TA_NUM_PER_THREAD>, CAL_NUM_THREAD>& agari_graph_loc,
 		const int thread_num
 	);
+
+	void check_wait_of_agari(
+		boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agari_graph, const int agari_begin, const int agari_end
+	);
 };

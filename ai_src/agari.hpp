@@ -21,9 +21,11 @@ public:
     int get_han_tsumo() const;
     int get_han_ron() const;
     int get_hai() const;
+    int get_wait_flag() const;
     void set_han_tsumo(const int han);
     void set_han_ron(const int han);
     void set_hai(const int hai);
+    void set_wait_flag(const int flag);
 };
 
 class Agari_Basic {
@@ -52,5 +54,5 @@ class Agari_Calc : public Agari_Basic {
     float ron_exp;
 };
 
-Agari_Basic agari_info_to_agari_basic(const Agari_Info& agari_info);
-Agari_Calc agari_info_to_agari_calc(const Agari_Info& agari_info);
+Agari_Basic agari_info_detail_to_agari_basic(const Agari_Info_Detail& agari_info);
+Agari_Calc agari_info_detail_to_agari_calc(const Agari_Info_Detail& agari_info);

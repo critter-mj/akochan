@@ -824,9 +824,10 @@ void Tehai_Analyzer_Basic::agari_push_func(
 		const Tehai_State2 empty_tehai_state;
 		Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
 		Fuuro_Vector fuuro_kind = haikind(fuuro);
-		Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
-		
-		agariv.push_back(agari_info_to_agari_calc(agari_tmp));
+		Agari_Info_Detail agari_tmp = calc_agari_detail(
+			31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf
+		);
+		agariv.push_back(agari_info_detail_to_agari_calc(agari_tmp));
 	} else {
 		// 何かアラートを出すべき…？
 	}

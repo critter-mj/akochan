@@ -20,6 +20,10 @@ int Agari_Info_Bit::get_hai() const {
     return (data & 0x00FF0000) >> 16;
 }
 
+int Agari_Info_Bit::get_wait_flag() const {
+    return (data & 0xFF000000) >> 24;
+}
+
 void Agari_Info_Bit::set_han_tsumo(const int han) {
     data = (data & 0xFFFFFF00) + uint32_t(std::min(han, 256));
 }
@@ -31,6 +35,11 @@ void Agari_Info_Bit::set_han_ron(const int han) {
 void Agari_Info_Bit::set_hai(const int hai) {
     assert(0 <= hai && hai < 38);
     data = (data & 0xFF00FFFF) + (uint32_t(hai) << 16);
+}
+
+void Agari_Info_Bit::set_wait_flag(const int flag) {
+    assert(flag == 0 || flag == 1);
+    data = (data & 0x00FFFFFF) + (uint32_t(flag) << 24);
 }
 
 Agari_Basic::Agari_Basic() {
@@ -78,11 +87,37 @@ std::array<float, 2> Agari_Basic::get_ten_exp(
     return result;
 }
 
+Agari_Basic agari_info_detail_to_agari_basic(const Agari_Info_Detail& agari_info) {
+    Agari_Basic agari_basic;
+    agari_basic.agari_info.set_han_tsumo(agari_info.result_tsumo.calc_point());
+    agari_basic.agari_info.set_han_ron(agari_info.result_ron.calc_point());
+    agari_basic.agari_info.set_hai(agari_info.hai);
+    if (!agari_info.result_tsumo.seven_pairs) {
+        if (agari_info.machi_type == MT_KANCHAN || agari_info.machi_type == MT_PENCHAN || agari_info.machi_type == MT_TANKI) {
+            agari_basic.agari_info.set_wait_flag(1);
+        }
+    }
+    return agari_basic;
+}
+
+Agari_Calc agari_info_detail_to_agari_calc(const Agari_Info_Detail& agari_info) {
+    Agari_Calc agari_calc;
+    agari_calc.agari_info.data = agari_info_detail_to_agari_basic(agari_info).agari_info.data;
+    agari_calc.tsumo_exp = -200.0;
+    agari_calc.ron_exp = -200.0;
+    return agari_calc;
+}
+
 Agari_Basic agari_info_to_agari_basic(const Agari_Info& agari_info) {
     Agari_Basic agari_basic;
     agari_basic.agari_info.set_han_tsumo(agari_info.han_tsumo);
     agari_basic.agari_info.set_han_ron(agari_info.han_ron);
     agari_basic.agari_info.set_hai(agari_info.hai);
+    if (agari_info.machi_type == MT_KANCHAN || agari_info.machi_type == MT_PENCHAN || agari_info.machi_type == MT_TANKI) {
+        agari_basic.agari_info.set_wait_flag(1);
+    } else {
+        agari_basic.agari_info.set_wait_flag(0);
+    }
     return agari_basic;
 }
 
