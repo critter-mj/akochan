@@ -659,7 +659,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					doujun_furiten_flag = true;
 				}
 				if (haikind(current_hai) == agari.agari_info.get_hai() &&
-					6 <= agari.agari_info.get_han_ron()
+					8 <= agari.agari_info.get_han_ron()
 				) {
 					fuuro_choice_tmp.fuuro_action_type = AT_RON_AGARI;
 					fuuro_choice_tmp.fuuro_hai = current_hai;
