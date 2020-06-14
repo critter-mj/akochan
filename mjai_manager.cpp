@@ -138,10 +138,9 @@ void add_ryukyoku_fanpai(Moves& game_record) {
             tehais[pid] = json11::Json(t);
         }
     }
-    std::array<int, 4> deltas = ten_move_ryukyoku(tenpai_flag);
     std::array<int, 4> scores;
     for (int pid = 0; pid < 4; pid++) {
-        scores[pid] = game_state.player_state[pid].score + deltas[pid];
+        scores[pid] = game_state.player_state[pid].score;
     }
     game_record.push_back(make_ryukyoku_fanpai(tenpai_flag, tehais, scores));
 }
