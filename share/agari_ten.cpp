@@ -372,15 +372,15 @@ std::array<int, 4> ten_move_ryukyoku(const std::array<bool, 4>& tenpai_flag) {
 
 	if (tenpai_num == 1) {
 		for (int pid = 0; pid < 4; pid++) {
-			ten_move[pid] = tenpai_flag[pid] ? 3000 : -1000;
+			ten_move[pid] = tenpai_flag[pid] ? 3 : -1;
 		}
 	} else if (tenpai_num == 2) {
 		for (int pid = 0; pid < 4; pid++) {
-			ten_move[pid] = tenpai_flag[pid] ? 1500 : -1500;
+			ten_move[pid] = tenpai_flag[pid] ? 2 : -2;
 		}
 	} else if (tenpai_num == 3) {
 		for (int pid = 0; pid < 4; pid++) {
-			ten_move[pid] = tenpai_flag[pid] ? 1000 : -3000;
+			ten_move[pid] = tenpai_flag[pid] ? 1 : -3;
 		}
 	}
     return ten_move;
