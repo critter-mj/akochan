@@ -83,7 +83,7 @@ int Agari_Result::calc_point() const {
     if (reversible_tiles) { ret += 8; }
     if (mixed_triple_chow) { ret += 8; }
     if (mixed_shifted_pungs) { ret += 8; }
-    if (two_concealed_pungs) { ret += 8; }
+    if (two_concealed_kongs) { ret += 8; }
     if (all_pungs) { ret += 6; }
     if (half_flush) { ret += 6; }
     if (mixed_shifted_chows) { ret += 6; }
@@ -141,7 +141,7 @@ json11::Json Agari_Result::to_json() const {
     if (reversible_tiles) { bools.push_back("reversible_tiles"); }
     if (mixed_triple_chow) { bools.push_back("mixed_triple_chow"); }
     if (mixed_shifted_pungs) { bools.push_back("mixed_shifted_pungs"); }
-    if (two_concealed_pungs) { bools.push_back("two_concealed_pungs"); }
+    if (two_concealed_kongs) { bools.push_back("two_concealed_kongs"); }
     if (all_pungs) { bools.push_back("all_pungs"); }
     if (half_flush) { bools.push_back("half_flush"); }
     if (mixed_shifted_chows) { bools.push_back("mixed_shifted_chows"); }
