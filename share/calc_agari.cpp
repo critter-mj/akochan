@@ -41,7 +41,6 @@ Agari_Info_Detail calc_agari_detail(
 
         Hai_Array syuntu = get_syuntu_array(tehai_tate_cut, fuuro, tehai_tmp, machi_hai, machi_type);
         Hai_Array kotu = get_kotu_array(tehai_tate, fuuro, machi_hai, machi_type);
-        std::array<std::array<int, 3>, 6> all_perm = {{{0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}}};
 
         tsumo_res.three_suited_terminal_chows = three_suited_terminal_chows_check(tehai_tate, syuntu, machi_hai, machi_type);
 
@@ -72,7 +71,7 @@ Agari_Info_Detail calc_agari_detail(
                     syuntu_used[20+i] = 1;
                 }
             }
-            for (const auto& perm : all_perm) {
+            for (const auto& perm : ALL_PERM) {
                 if (0 < syuntu[10*perm[0] + 1] && 0 < syuntu[10*perm[1] + 4] && 0 < syuntu[10*perm[2] + 7]) {
                     tsumo_res.mixed_straight = true;
                     syuntu_used[10*perm[0] + 1] = 1;
@@ -232,7 +231,7 @@ Agari_Info_Detail calc_agari_detail(
             if (i == 1 || i == 9) {
                 tsumo_res.pung_of_terminals_or_honors_num += kotu[i] + kotu[10+i] + kotu[20+i]; // true for triple_pung or double_pung ?
             }
-            for (const auto& perm : all_perm) {
+            for (const auto& perm : ALL_PERM) {
                 if (0 < kotu[10*perm[0] + i] && 0 < kotu[10*perm[1] + i + 1] && 0 < kotu[10*perm[2] + i + 2]) {
                     tsumo_res.mixed_shifted_pungs = true;
                 }

@@ -4,6 +4,8 @@
 #include "types.hpp"
 #include "calc_yaku.hpp"
 
+const std::array<std::array<int, 3>, 6> ALL_PERM = {{{0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}}};
+
 template<class Fn> bool all_tile_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro, const int machi_hai, Fn check);
 template<class Fn> bool all_include_check(const Hai_Array& tehai, const Hai_Array& tehai_tate, const Fuuro_Vector& fuuro, const Hai_Array& tehai_tmp, const int machi_hai, Fn check);
 

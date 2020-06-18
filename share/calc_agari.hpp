@@ -2,7 +2,6 @@
 
 #include "include.hpp"
 #include "types.hpp"
-//#include "calc_yaku.hpp"
 #include "calc_yaku_chn.hpp"
 
 Agari_Info_Detail calc_agari_detail(
