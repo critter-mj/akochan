@@ -10,6 +10,24 @@
 
 void push_back_all(std::vector<int>& v1, const std::vector<int>& v2);
 
+class Tehai_Pattern_Honors_And_Knitted {
+	public:
+	Tehai_Pattern_Honors_And_Knitted();
+	Tehai_Pattern_Honors_And_Knitted(const int perm_id_in, const std::array<bool, 8>& honors_in, const std::array<bool, 10>& knitted_in, const std::vector<int>& remain_in);
+	void reset_all();
+	int perm_id;
+	std::array<bool, 10> knitted;
+	std::array<bool, 8> honors;
+	std::vector<int> remain;
+	int shanten_num;
+
+	std::vector< std::vector<int> > hai_in_pattern;
+	void cal_shanten();
+	void cal_hai_in_pattern();
+
+	void out_info();
+};
+
 class Tehai_Pattern_Titoi{
 	public:
 	Tehai_Pattern_Titoi();

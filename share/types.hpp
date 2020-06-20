@@ -40,6 +40,7 @@ enum Machi_Type {
 enum Hora_Type {
     HT_DEFAULT = 0,
     HT_TITOI = 1,
+    HT_HONORS_AND_KNITTED = 2,
 };
 
 Color_Type hai_color(const int hai);
@@ -74,11 +75,11 @@ class Agari_Result {
     // 32 points
     bool three_kongs;
     // 24 points
-    bool seven_pairs, all_even_pungs, full_flush, pure_triple_chow, pure_shifted_pungs, upper_tiles, middle_tiles, lower_tiles; // Greater Honors and Knitted Tiles
+    bool seven_pairs, all_even_pungs, full_flush, pure_triple_chow, pure_shifted_pungs, upper_tiles, middle_tiles, lower_tiles, greater_honors_and_knitted_tiles;
     // 16 points
     bool pure_straight, three_suited_terminal_chows, pure_shifted_chows, all_fives, triple_pung, three_concealed_pungs;
     // 12 points
-    bool upper_four, lower_four, big_three_winds; // lesser_honors_and_knitted_tiles, knitted_straight;
+    bool upper_four, lower_four, big_three_winds, lesser_honors_and_knitted_tiles; // knitted_straight;
     // 8 points
     bool mixed_straight, reversible_tiles, mixed_triple_chow, mixed_shifted_pungs, two_concealed_kongs; //, chicken_hand, last_tile_draw, last_tile_claim, out_with_replacement_tile, robbing_the_kongs;
     // 6 points
@@ -114,6 +115,7 @@ class Tenpai_Info {
     public:
     int mentu_shanten_num;
     int titoi_shanten_num;
+    int honors_and_knitted_shanten_num;
     std::vector<Agari_Info_Detail> agari_vec;
 
     Tenpai_Info();

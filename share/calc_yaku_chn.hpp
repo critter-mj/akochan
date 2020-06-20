@@ -69,3 +69,6 @@ bool one_voided_suit_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro, co
 bool no_honors_check(const Hai_Array& tehai, const Fuuro_Vector& fuuro, const int machi_hai);
 
 int ankan_num_count(const Fuuro_Vector& fuuro);
+
+int knitted_tiles_count(const Hai_Array& tehai, const int machi_hai, const std::array<int, 3>& perm);
+int honors_and_knitted_tiles_check(const Hai_Array& tehai, const int machi_hai);

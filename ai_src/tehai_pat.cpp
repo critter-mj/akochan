@@ -8,6 +8,103 @@ void push_back_all(std::vector<int>& v1, const std::vector<int>& v2){
 	}
 }
 
+Tehai_Pattern_Honors_And_Knitted::Tehai_Pattern_Honors_And_Knitted(){}
+
+Tehai_Pattern_Honors_And_Knitted::Tehai_Pattern_Honors_And_Knitted(
+	const int perm_id_in, const std::array<bool, 8>& honors_in, const std::array<bool, 10>& knitted_in, const std::vector<int>& remain_in
+) {
+	perm_id = perm_id_in;
+	knitted = knitted_in;
+	honors = honors_in;
+	remain = remain_in;
+}
+
+void Tehai_Pattern_Honors_And_Knitted::reset_all() {
+	remain.clear();
+	perm_id = -1;
+	for (int i = 0; i < 10; i++) {
+		knitted[i] = false;
+	}
+	for (int i = 0; i < 8; i++) {
+		honors[i] = false;
+	}
+}
+
+void Tehai_Pattern_Honors_And_Knitted::cal_shanten() {
+	int cnt = 0;
+	for (int i = 1; i <= 7; i++) {
+		if (honors[i]) {
+			cnt++;
+		}
+	}
+	for (int i = 1; i <= 9; i++) {
+		if (knitted[i]) {
+			cnt++;
+		}
+	}
+	shanten_num = std::max(0, 13 - cnt);
+}
+
+void Tehai_Pattern_Honors_And_Knitted::cal_hai_in_pattern(){
+	std::vector<int> hai_need;
+	const std::array<int, 3>& perm = ALL_PERM[perm_id];
+	for (int i = 1; i <= 9; i++) {
+		if (!knitted[i]) {
+			hai_need.push_back(perm[(i-1)%3] * 10 + i);
+		}
+	}
+	for (int i = 1; i <= 7; i++) {
+		if (!honors[i]) {
+			hai_need.push_back(30 + i);
+		}
+	}
+	const int num_need = 14 - (16 - hai_need.size()); // 全部で16枚ある牌のうち、14種必要. num_need = hai_need.size() - 2;
+	if (0 < num_need) {
+		int p = 0;
+		std::vector<int> empty;
+		do {
+			hai_in_pattern.push_back(empty);
+			for(int i = 0; i < num_need; i++) {
+				hai_in_pattern[p].push_back(hai_need[i]);
+			}
+			std::sort(hai_in_pattern[p].begin(), hai_in_pattern[p].end());
+			p++;
+		} while (boost::next_combination(hai_need.begin(), hai_need.begin() + num_need, hai_need.end()));
+	}
+}
+
+void Tehai_Pattern_Honors_And_Knitted::out_info(){
+	if (!out_console) return;
+
+	const std::array<int, 3>& perm = ALL_PERM[perm_id];
+	for (int i = 1; i <= 9; i++) {
+		if (knitted[i]) {
+			std::cout << perm[(i-1)%3] * 10 + i << " ";
+		}
+	}
+	for (int i = 1; i <= 7; i++) {
+		if (honors[i]) {
+			std::cout << 30 + i << " ";
+		}
+	}
+	std::cout << std::endl;
+
+	printf("-----hai_out---\n");
+	for(int j=0;j<remain.size();j++){
+		printf("%d ", remain[j]);
+	}
+	printf("\n");
+
+	printf("-----hai_in----\n");
+	for(int i=0;i<hai_in_pattern.size();i++){
+		for(int j=0;j<hai_in_pattern[i].size();j++){
+			printf("%d ", hai_in_pattern[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+
 Tehai_Pattern_Titoi::Tehai_Pattern_Titoi(){
 }
 

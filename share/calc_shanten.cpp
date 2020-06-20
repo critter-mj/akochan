@@ -211,6 +211,52 @@ void titoi_shanten(const int bakaze_hai, const int jikaze_hai, const Hai_Array& 
     tenpai_info.titoi_shanten_num = std::min(tmp, tenpai_info.titoi_shanten_num);
 }
 
+void honors_and_knitted_shanten(const int bakaze_hai, const int jikaze_hai, const Hai_Array& tehai, const Fuuro_Vector& fuuro, Tenpai_Info& tenpai_info) {
+	int honor_cnt = 0;
+	std::array<bool, 8> honors = {};
+	for (int hai = 31; hai < 38; hai++) {
+		if (0 < tehai[hai]) {
+			honor_cnt++;
+			honors[hai-30] = true;
+		}
+	}
+
+	for (int perm_id = 0; perm_id < 6; perm_id++) {
+		const std::array<int, 3>& perm = ALL_PERM[perm_id];
+		int knitted_cnt = 0;
+		std::array<bool, 10> knitted = {};
+		for (int i = 1; i <= 9; i++) {
+			if (0 < tehai[perm[(i-1)%3] * 10 + i]) {
+				knitted_cnt++;
+				knitted[i] = true;
+			}
+		}
+		if (honor_cnt + knitted_cnt == 14) {
+			// 入力がhonors_and_knittedアガリの場合。とりあえず何もしない。
+		} else if (honor_cnt + knitted_cnt == 13) {
+			tenpai_info.honors_and_knitted_shanten_num = 0;
+			for (int i = 1; i <= 7; i++) {
+				if (!honors[i]) {
+					tenpai_info.agari_vec.push_back(calc_agari_detail(
+						bakaze_hai, jikaze_hai, tehai, tehai, tehai, fuuro,
+						30 + i, MT_OTHER, HT_HONORS_AND_KNITTED
+					));
+				}
+			}
+			for (int i = 1; i <= 9; i++) {
+				if (!knitted[i]) {
+					tenpai_info.agari_vec.push_back(calc_agari_detail(
+						bakaze_hai, jikaze_hai, tehai, tehai, tehai, fuuro,
+						perm[(i-1)%3] * 10 + i, MT_OTHER, HT_HONORS_AND_KNITTED
+					));
+				}
+			}
+		}
+		int tmp = std::max(0, 14 - honor_cnt - knitted_cnt);
+		tenpai_info.titoi_shanten_num = std::min(tmp, tenpai_info.titoi_shanten_num);
+	}
+}
+
 void analyze_tehai(
 	const int bakaze_hai, const int jikaze_hai,
 	const Hai_Array using_array, const Hai_Array tehai, const Fuuro_Vector fuuro, Tenpai_Info& tenpai_info

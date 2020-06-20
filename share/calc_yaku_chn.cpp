@@ -373,3 +373,37 @@ int ankan_num_count(const Fuuro_Vector& fuuro) {
     }
     return ankan_num;
 }
+
+int knitted_tiles_count(const Hai_Array& tehai, const int machi_hai, const std::array<int, 3>& perm) {
+    int cnt = 0;
+    for (int i = 1; i <= 9; i++) {
+        const int c = (i - 1) % 3;
+        const int hai = perm[c]*10 + i;
+        if (0 < tehai[hai] || hai == machi_hai) {
+            cnt++;
+        }
+    }
+    return cnt;
+}
+
+int honors_and_knitted_tiles_check(const Hai_Array& tehai, const int machi_hai) {
+    int knitted_cnt = 0;
+    for (const auto& perm : ALL_PERM) {
+        knitted_cnt = std::max(knitted_cnt, knitted_tiles_count(tehai, machi_hai, perm));
+    }
+    int honor_cnt = 0;
+    for (int hai = 31; hai <= 37; hai++) {
+        if (0 < tehai[hai] || hai == machi_hai) {
+            honor_cnt++;
+        }
+    }
+    if (knitted_cnt + honor_cnt == 14) {
+        if (honor_cnt == 7) {
+            return 2;
+        } else {
+            return 1;
+        }
+    } else {
+        return 0;
+    }
+}

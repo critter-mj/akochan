@@ -102,6 +102,7 @@ public:
 
 	virtual void pattern_push_func(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kind, Tehai_Pattern_Source& tps);
 	virtual void pattern_titoi_push_func(Tehai_Pattern_Source& tps);
+	virtual void pattern_honors_and_knitted_push_func(const int perm_id, const std::array<bool, 8>& honors, const std::array<bool, 10>& knitted, Tehai_Pattern_Source& tps);
 
 	template <class Agari_Vector> void tenpai_check(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tate_cut, Hai_Array& tehai_tmp, Agari_Vector& agariv);
 	void cut_tatu(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tate_cut, Hai_Array& tehai_tmp, int mentu_num, int head_num, int kouho_num, int start, Tehai_Pattern_Source& tps);
@@ -116,6 +117,7 @@ public:
 	void titoi_cut_koritu(const Hai_Array& tehai_kcp, Hai_Array& tehai_tmp, int start, Tehai_Pattern_Source& tps);
 	void titoi_cut_head(const Hai_Array& tehai_kcp, Hai_Array& tehai_tmp, int start, Tehai_Pattern_Source& tps);
 	template <class Agari_Vector> void titoi_shanten(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tmp, Tehai_Pattern_Source& tps, Agari_Vector& agariv);
+	template <class Agari_Vector> void honors_and_knitted_shanten(const int my_pid, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tmp, Tehai_Pattern_Source& tps, Agari_Vector& agariv);
 
 	void analyze_tenpai(const int my_pid_new, const Game_State& game_state);
 
@@ -135,6 +137,7 @@ public:
 	//std::vector<Tehai_Pattern> pattern_vec[9];
 	std::vector<Tehai_Inout_Pattern> inout_pattern_vec[9];
 	std::vector<Tehai_Pattern_Titoi> pattern_titoi_vec[7];
+	std::vector<Tehai_Pattern_Honors_And_Knitted> pattern_honors_and_knitted_vec[7];
 
 	int get_pattern_flag() {return pattern_flag;}
 	int get_titoi_change_num_max() {return titoi_change_num_max;}
@@ -142,6 +145,7 @@ public:
 
 	void pattern_push_func(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kind, Tehai_Pattern_Source& tps);
 	void pattern_titoi_push_func(Tehai_Pattern_Source& tps);
+	void pattern_honors_and_knitted_push_func(const int perm_id, const std::array<bool, 8>& honors, const std::array<bool, 10>& knitted, Tehai_Pattern_Source& tps);
 };
 
 bool is_same_tehai_ta(const Hai_Array& tehai, const Tehai_Analyzer_Basic& tehai_analyzer);

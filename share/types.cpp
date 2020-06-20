@@ -194,6 +194,7 @@ Agari_Info_Detail::Agari_Info_Detail(const int hai_in, const Machi_Type machi_ty
 Tenpai_Info::Tenpai_Info() {
 	mentu_shanten_num = 8;
     titoi_shanten_num = 6; // 副露手では別の値にするべきかもしれないが、特に不都合はでないはず。
+    honors_and_knitted_shanten_num = 13;
     agari_vec.clear();
 }
 

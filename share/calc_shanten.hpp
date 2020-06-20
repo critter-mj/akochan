@@ -32,6 +32,8 @@ void cut_kotu(
 
 void titoi_shanten(const int bakaze_hai, const int jikaze_hai, const Hai_Array& tehai, const Fuuro_Vector& fuuro, Tenpai_Info& tenpai_info);
 
+void honors_and_knitted_shanten();
+
 void analyze_tehai(
 	const int bakaze_hai, const int jikaze_hai,
 	const Hai_Array using_array, const Hai_Array tehai, const Fuuro_Vector fuuro, Tenpai_Info& tenpai_info

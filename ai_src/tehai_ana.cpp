@@ -102,6 +102,9 @@ void Tehai_Analyzer::reset_tehai_analyzer() {
 	for(int i=0;i<7;i++){
 		pattern_titoi_vec[i].erase(pattern_titoi_vec[i].begin(),pattern_titoi_vec[i].end());
 	}
+	for (int i = 0; i < 7; i++) {
+		pattern_honors_and_knitted_vec[i].clear();
+	}
 }
 
 void Tehai_Analyzer::reset_tehai_analyzer_with(const Hai_Array& tehai_src, const Fuuro_Vector& fuuro){
@@ -327,6 +330,10 @@ void Tehai_Analyzer_Basic::pattern_push_func(const int my_pid_new, const Game_St
 void Tehai_Analyzer_Basic::pattern_titoi_push_func(Tehai_Pattern_Source& tps){
 }
 
+void Tehai_Analyzer_Basic::pattern_honors_and_knitted_push_func(const int perm_id, const std::array<bool, 8>& honors, const std::array<bool, 10>& knitted, Tehai_Pattern_Source& tps){
+
+}
+
 void Tehai_Analyzer::pattern_push_func(const int my_pid_new, const Game_State& game_state, const Hai_Array& tehai_kind, Tehai_Pattern_Source& tps) {
 	const Fuuro_Vector fuuro_kind = haikind(game_state.player_state[my_pid_new].fuuro);
 	const Hai_Array hai_visible_all = get_hai_visible_all(game_state);
@@ -375,6 +382,18 @@ void Tehai_Analyzer::pattern_titoi_push_func(Tehai_Pattern_Source& tps) {
 		//tehai_pattern_titoi.out_info();
 		if(tehai_pattern_titoi.hai_in_pattern.size()>0){
 			pattern_titoi_vec[tehai_pattern_titoi.shanten_num].push_back(tehai_pattern_titoi);
+		}
+	}
+}
+
+void Tehai_Analyzer::pattern_honors_and_knitted_push_func(const int perm_id, const std::array<bool, 8>& honors, const std::array<bool, 10>& knitted, Tehai_Pattern_Source& tps) {
+	Tehai_Pattern_Honors_And_Knitted tehai_pattern_honors_and_knitted(perm_id, honors, knitted, tps.koritu2_hai);
+	tehai_pattern_honors_and_knitted.cal_shanten();
+	if (tehai_pattern_honors_and_knitted.shanten_num <= 3) {
+		tehai_pattern_honors_and_knitted.cal_hai_in_pattern();
+		// tehai_pattern_honors_and_knitted.out_info();
+		if (0 < tehai_pattern_honors_and_knitted.hai_in_pattern.size()) {
+			pattern_honors_and_knitted_vec[tehai_pattern_honors_and_knitted.shanten_num].push_back(tehai_pattern_honors_and_knitted);
 		}
 	}
 }
@@ -703,7 +722,79 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::titoi_shanten(const int
 	if(get_pattern_flag()==1 && get_titoi_shanten_num() <= get_titoi_change_num_max() && get_titoi_shanten_num() <= 3){
 		titoi_cut_head(tehai_kcp, tehai_tmp, 0, tps);
 	}
+}
 
+template <class Agari_Vector> void Tehai_Analyzer_Basic::honors_and_knitted_shanten(const int my_pid, const Game_State& game_state, const Hai_Array& tehai_kcp, Hai_Array& tehai_tmp, Tehai_Pattern_Source& tps, Agari_Vector& agariv) {
+	int honor_cnt = 0;
+	std::array<bool, 8> honors = {};
+	for (int hai = 31; hai < 38; hai++) {
+		if (0 < tehai_kcp[hai]) {
+			honor_cnt++;
+			honors[hai-30] = true;
+		}
+	}
+
+	for (int perm_id = 0; perm_id < 6; perm_id++) {
+		const std::array<int, 3>& perm = ALL_PERM[perm_id];
+		int knitted_cnt = 0;
+		std::array<bool, 10> knitted = {};
+		for (int i = 1; i <= 9; i++) {
+			if (0 < tehai_kcp[perm[(i-1)%3] * 10 + i]) {
+				knitted_cnt++;
+				knitted[i] = true;
+			}
+		}
+		if (honor_cnt + knitted_cnt == 14) {
+			// 入力がhonors_and_knittedアガリの場合。とりあえず何もしない。
+		} else if (honor_cnt + knitted_cnt == 13) {
+			set_tenpai_flag(1);
+			for (int i = 1; i <= 7; i++) {
+				if (!honors[i]) {
+					agari_push_func(my_pid, game_state, tehai_kcp, tehai_kcp, tehai_kcp, 30 + i, MT_OTHER, HT_HONORS_AND_KNITTED, agariv);
+				}
+			}
+			for (int i = 1; i <= 9; i++) {
+				if (!knitted[i]) {
+					agari_push_func(my_pid, game_state, tehai_kcp, tehai_kcp, tehai_kcp, perm[(i-1)%3] * 10 + i, MT_OTHER, HT_HONORS_AND_KNITTED, agariv);
+				}
+			}
+		}
+		int tmp = std::max(0, 14 - honor_cnt - knitted_cnt);
+		// set_shanten ?
+
+		if (get_pattern_flag() == 1 && tmp <= 3) {
+			//honors_and_knitted_cut_koritu(tehai_kcp, tehai_tmp, perm_id, honors, knitted);
+			for (int i = 1; i <= 7; i++) {
+				if (honors[i]) {
+					tehai_tmp[30 + i] -= 1;
+				}
+			}
+			for (int i = 1; i <= 9; i++) {
+				if (knitted[i]) {
+					tehai_tmp[perm[(i-1)%3] * 10 + i] -= 1;
+				}
+			}
+			for (int hai = 0; hai < 38; hai++) {
+				for (int i = 0; i < tehai_tmp[hai]; i++) {
+					tps.koritu2_hai.push_back(hai);
+				}
+			}
+
+			pattern_honors_and_knitted_push_func(perm_id, honors, knitted, tps);
+			tps.koritu2_hai.clear();
+
+			for (int i = 1; i <= 7; i++) {
+				if (honors[i]) {
+					tehai_tmp[30 + i] += 1;
+				}
+			}
+			for (int i = 1; i <= 9; i++) {
+				if (knitted[i]) {
+					tehai_tmp[perm[(i-1)%3] * 10 + i] += 1;
+				}
+			}
+		}
+	}
 }
 
 template <class Agari_Vector> void Tehai_Analyzer_Basic::analyze_tehai(const int my_pid_new, const Game_State& game_state, Agari_Vector& agariv){

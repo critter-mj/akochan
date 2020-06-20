@@ -35,6 +35,19 @@ Agari_Info_Detail calc_agari_detail(
     if (hora_type == HT_TITOI) {
         tsumo_res.seven_pairs = true;
         ron_res = tsumo_res;
+    } else if (hora_type == HT_HONORS_AND_KNITTED) {
+        switch (honors_and_knitted_tiles_check(tehai, machi_hai)) {
+            case 2:
+                tsumo_res.greater_honors_and_knitted_tiles = true;
+                break;
+            case 1:
+                tsumo_res.lesser_honors_and_knitted_tiles = true;
+                break;
+            case 0:
+                assert_with_out(false, "agari_detail honors_and_knitted_tiles error");
+                break;
+        }
+        ron_res = tsumo_res;
     } else {
         tsumo_res.all_even_pungs = all_even_pungs_check(tehai, tehai_tate_cut, fuuro, tehai_tmp, machi_type);
         tsumo_res.all_pungs = tsumo_res.all_even_pungs ? false : all_pungs_check(tehai_tate_cut, fuuro, tehai_tmp, machi_type);
