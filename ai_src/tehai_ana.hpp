@@ -87,15 +87,15 @@ public:
 	template <class Agari_Vector> void agari_push_func_child(const Agari_Info agari, const int pid, const Game_State& game_state, Agari_Vector& agariv);
 	template <class Agari_Vector> void agari_push_func(
 		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-		const int mh, const Machi_Type mt, const bool ttf, Agari_Vector& agariv	
+		const int mh, const Machi_Type mt, const Hora_Type ht, Agari_Vector& agariv	
 	);
 	void agari_push_func(
 		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-		const int mh, const Machi_Type mt, const bool ttf, bool flag
+		const int mh, const Machi_Type mt, const Hora_Type ht, bool flag
 	);
 	void agari_push_func(
 		const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-		const int mh, const Machi_Type mt, const bool ttf, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv
+		const int mh, const Machi_Type mt, const Hora_Type ht, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv
 	);
 
 	bool rule_base_decision(const int my_pid);

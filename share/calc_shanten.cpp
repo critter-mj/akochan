@@ -32,7 +32,7 @@ void tenpai_check(
 				tenpai_info.agari_vec.push_back(calc_agari_detail(
 					bakaze_hai, jikaze_hai,
 					tehai, tehai_tate_cut, tehai_tmp, fuuro,
-    				hai, MT_TANKI, false
+    				hai, MT_TANKI, HT_DEFAULT
 				));
 			}
 		}
@@ -43,7 +43,7 @@ void tenpai_check(
 				tenpai_info.agari_vec.push_back(calc_agari_detail(
 					bakaze_hai, jikaze_hai,
 					tehai, tehai_tate_cut, tehai_tmp, fuuro,
-    				hai, MT_SHABO, false
+    				hai, MT_SHABO, HT_DEFAULT
 				));
 			}
 		}
@@ -55,7 +55,7 @@ void tenpai_check(
 						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
-							hai + 2, MT_PENCHAN, false
+							hai + 2, MT_PENCHAN, HT_DEFAULT
 						));
 					}
 				} else if (hai % 10 == 8) {
@@ -64,7 +64,7 @@ void tenpai_check(
 						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
-							hai - 1, MT_PENCHAN, false
+							hai - 1, MT_PENCHAN, HT_DEFAULT
 						));
 					}
 				} else {
@@ -73,7 +73,7 @@ void tenpai_check(
 						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
-							hai - 1, MT_RYANMEN, false
+							hai - 1, MT_RYANMEN, HT_DEFAULT
 						));
 					}
 					if (using_array[hai+2] != 4) {
@@ -81,7 +81,7 @@ void tenpai_check(
 						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
-							hai + 2, MT_RYANMEN, false
+							hai + 2, MT_RYANMEN, HT_DEFAULT
 						));
 					}
 				}
@@ -93,7 +93,7 @@ void tenpai_check(
 						tenpai_info.agari_vec.push_back(calc_agari_detail(
 							bakaze_hai, jikaze_hai,
 							tehai, tehai_tate_cut, tehai_tmp, fuuro,
-							hai + 1, MT_KANCHAN, false
+							hai + 1, MT_KANCHAN, HT_DEFAULT
 						));
 					}
 				}
@@ -201,7 +201,7 @@ void titoi_shanten(const int bakaze_hai, const int jikaze_hai, const Hai_Array& 
 				tenpai_info.agari_vec.push_back(calc_agari_detail(
     				bakaze_hai, jikaze_hai,
     				tehai, tehai, tehai, fuuro,
-    				hai, MT_TANKI, true
+    				hai, MT_TANKI, HT_TITOI
 				));
 			}
 		}

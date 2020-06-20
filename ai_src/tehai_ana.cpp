@@ -392,7 +392,7 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::tenpai_check(const int 
 			if(tehai_tmp[hai] && using_haikind_num(hai)!=4){
 				//printf("tanki:%d\n",hai);
 				set_tenpai_flag(1);
-				agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai, MT_TANKI, 0, agariv);
+				agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai, MT_TANKI, HT_DEFAULT, agariv);
 			}
 		}
 	}else if(rest==2){
@@ -400,7 +400,7 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::tenpai_check(const int 
 			if(tehai_tmp[hai]==2 && using_haikind_num(hai)!=4){
 				//printf("syabo:%d\n",hai);
 				set_tenpai_flag(1);
-				agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai, MT_SHABO, 0, agariv);
+				agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai, MT_SHABO, HT_DEFAULT, agariv);
 			}
 		}
 		for(int hai=0;hai<30;hai++){
@@ -409,23 +409,23 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::tenpai_check(const int 
 					//printf("penchan:%d\n",hai+2);
 					if(using_haikind_num(hai+2)!=4){
 						set_tenpai_flag(1);
-						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai+2, MT_PENCHAN, 0, agariv);
+						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai+2, MT_PENCHAN, HT_DEFAULT, agariv);
 					}
 				}else if(hai%10==8){
 					//printf("penchan:%d\n",hai-1);
 					if(using_haikind_num(hai-1)!=4){
 						set_tenpai_flag(1);
-						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai-1, MT_PENCHAN, 0, agariv);
+						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai-1, MT_PENCHAN, HT_DEFAULT, agariv);
 					}
 				}else{
 					//printf("ryanmen:%d:%d\n",hai-1,hai+2);
 					if(using_haikind_num(hai-1)!=4){
 						set_tenpai_flag(1);
-						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai-1, MT_RYANMEN, 0, agariv);
+						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai-1, MT_RYANMEN, HT_DEFAULT, agariv);
 					}
 					if(using_haikind_num(hai+2)!=4){
 						set_tenpai_flag(1);
-						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai+2, MT_RYANMEN, 0, agariv);
+						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai+2, MT_RYANMEN, HT_DEFAULT, agariv);
 					}
 				}
 			}
@@ -434,7 +434,7 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::tenpai_check(const int 
 					//printf("kanchan:%d\n",hai+1);
 					if(using_haikind_num(hai+1)!=4){
 						set_tenpai_flag(1);
-						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai+1, MT_KANCHAN, 0, agariv);
+						agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_tate_cut, tehai_tmp, hai+1, MT_KANCHAN, HT_DEFAULT, agariv);
 					}
 				}
 			}
@@ -690,7 +690,7 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::titoi_shanten(const int
 		for(int hai=0;hai<38;hai++){
 			if(tehai_kcp[hai]==1){
 				set_tenpai_flag(1);
-				agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_kcp, tehai_kcp, hai, MT_TANKI, 1, agariv);
+				agari_push_func(my_pid_new, game_state, tehai_kcp, tehai_kcp, tehai_kcp, hai, MT_TANKI, HT_TITOI, agariv);
 			}
 		}
 	}
@@ -798,19 +798,19 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::agari_push_func_child(c
 
 template <class Agari_Vector> void Tehai_Analyzer_Basic::agari_push_func(
 	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-	const int mh, const Machi_Type mt, const bool ttf, Agari_Vector& agariv
+	const int mh, const Machi_Type mt, const Hora_Type ht, Agari_Vector& agariv
 ) {
 	const Tehai_State2 empty_tehai_state;
 	Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
 	Fuuro_Vector fuuro_kind = haikind(fuuro);
-	Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf);
+	Agari_Info agari_tmp = calc_agari(31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ht);
 	
 	agari_push_func_child(agari_tmp, pid, game_state, agariv);
 }
 
 void Tehai_Analyzer_Basic::agari_push_func(
 	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-	const int mh, const Machi_Type mt, const bool ttf, bool flag
+	const int mh, const Machi_Type mt, const Hora_Type ht, bool flag
 ) {
 	assert(flag == false);
 	// agariのvectorをセットしない場合こちらの関数を呼ぶ。何もしない。
@@ -818,14 +818,14 @@ void Tehai_Analyzer_Basic::agari_push_func(
 
 void Tehai_Analyzer_Basic::agari_push_func(
 	const int pid, const Game_State& game_state, const Hai_Array& tkcp, const Hai_Array& ttc, const Hai_Array& tt,
-	const int mh, const Machi_Type mt, const bool ttf, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv
+	const int mh, const Machi_Type mt, const Hora_Type ht, boost::container::static_vector<Agari_Calc, MAX_AGARI_NUM_PER_THREAD>& agariv
 ) {
 	if (agariv.size() < MAX_AGARI_NUM_PER_THREAD) {
 		const Tehai_State2 empty_tehai_state;
 		Fuuro_Vector fuuro = tehai_state.get_fuuro(empty_tehai_state);
 		Fuuro_Vector fuuro_kind = haikind(fuuro);
 		Agari_Info_Detail agari_tmp = calc_agari_detail(
-			31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ttf
+			31 + game_state.bakaze, 31 + game_state.player_state[pid].jikaze, tkcp, ttc, tt, fuuro_kind, mh, mt, ht
 		);
 		agariv.push_back(agari_info_detail_to_agari_calc(agari_tmp));
 	} else {

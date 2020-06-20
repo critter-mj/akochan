@@ -3,7 +3,7 @@
 Agari_Info_Detail calc_agari_detail(
     const int bakaze_hai, const int jikaze_hai,
     const Hai_Array& tehai, const Hai_Array& tehai_tate_cut, const Hai_Array& tehai_tmp, const Fuuro_Vector& fuuro,
-    const int machi_hai, const Machi_Type machi_type, const bool titoi_flag
+    const int machi_hai, const Machi_Type machi_type, const Hora_Type hora_type
 ) {
     Hai_Array tehai_tate;
     for(int hai = 0; hai < 38; hai++) {
@@ -32,7 +32,7 @@ Agari_Info_Detail calc_agari_detail(
 
     tsumo_res.tile_hog_num = tile_hog_count(tehai, fuuro, machi_hai);
 
-    if (titoi_flag) {
+    if (hora_type == HT_TITOI) {
         tsumo_res.seven_pairs = true;
         ron_res = tsumo_res;
     } else {
@@ -313,9 +313,9 @@ Agari_Info_Detail calc_agari_detail(
 Agari_Info calc_agari(
     const int bakaze_hai, const int jikaze_hai,
     const Hai_Array& tehai, const Hai_Array& tehai_tate_cut, const Hai_Array& tehai_tmp, const Fuuro_Vector& fuuro,
-    const int machi_hai, const Machi_Type machi_type, const bool titoi_flag
+    const int machi_hai, const Machi_Type machi_type, const Hora_Type hora_type
 ) {
-    Agari_Info_Detail detail = calc_agari_detail(bakaze_hai, jikaze_hai, tehai, tehai_tate_cut, tehai_tmp, fuuro, machi_hai, machi_type, titoi_flag);
+    Agari_Info_Detail detail = calc_agari_detail(bakaze_hai, jikaze_hai, tehai, tehai_tate_cut, tehai_tmp, fuuro, machi_hai, machi_type, hora_type);
     Agari_Info agari_info;
     agari_info.hai = machi_hai;
     agari_info.machi_type = machi_type;

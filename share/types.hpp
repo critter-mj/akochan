@@ -37,6 +37,11 @@ enum Machi_Type {
     MT_OTHER = 5, // Knitted Straight, Greater Honors and Knitted Tiles のような特殊役
 };
 
+enum Hora_Type {
+    HT_DEFAULT = 0,
+    HT_TITOI = 1,
+};
+
 Color_Type hai_color(const int hai);
 Num_Type hai_yaochuu(const int hai);
 
