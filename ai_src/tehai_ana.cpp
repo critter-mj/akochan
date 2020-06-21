@@ -823,6 +823,7 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::analyze_tehai(const int
 
 	if(get_fuuro_num() == 0) {
 		titoi_shanten(my_pid_new, game_state, tehai_kcp, tehai_tmp, tps, agariv);
+		honors_and_knitted_shanten(my_pid_new, game_state, tehai_kcp, tehai_tmp, tps, agariv);
 	}
 }
 

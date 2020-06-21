@@ -283,6 +283,7 @@ void analyze_tehai(
 
 	if(fuuro.size() == 0) {
 		titoi_shanten(bakaze_hai, jikaze_hai, tehai, fuuro, tenpai_info);
+		honors_and_knitted_shanten(bakaze_hai, jikaze_hai, tehai, fuuro, tenpai_info);
 	}
 }
 

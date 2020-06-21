@@ -173,6 +173,19 @@ void Tehai_Calculator::set_inout_flag(Tehai_Analyzer ta_in){
 			}
 		}
 	}
+
+	for (int sn = 0; sn < 7; sn++) {
+		for (int ntp = 0; ntp < ta_in.pattern_honors_and_knitted_vec[sn].size(); ntp++) {
+			for (int nip = 0; nip < ta_in.pattern_honors_and_knitted_vec[sn][ntp].hai_in_pattern.size(); nip++) {
+				for (int nin = 0; nin < ta_in.pattern_honors_and_knitted_vec[sn][ntp].hai_in_pattern[nip].size(); nin++) {
+					in_flag[ta_in.pattern_honors_and_knitted_vec[sn][ntp].hai_in_pattern[nip][nin]] = 1;
+				}
+			}
+			for (int nout = 0; nout < ta_in.pattern_honors_and_knitted_vec[sn][ntp].remain.size(); nout++) {
+				out_flag[ta_in.pattern_honors_and_knitted_vec[sn][ntp].remain[nout]] = 1;
+			}
+		}
+	}
 }
 
 void Tehai_Calculator::merge_candidates_child(
