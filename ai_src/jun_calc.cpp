@@ -87,3 +87,53 @@ std::array<std::array<float, 4>, 4> calc_jun_prob(const int kyoku, const std::ar
 	const int oya_first = (12 + oya - kyoku) % 4;
 	return calc_jun_prob_end(ten, oya_first);
 }
+
+std::array<std::array<float, 4>, 4> calc_jun_prob_jpntmp(const int kyoku, const std::array<int,4>& ten, const int oya) {
+	const int oya_first = (12 + oya - kyoku) % 4;
+	if (kyoku < 8) {
+		std::array<std::array<float, 4>, 4> jun_prob = {};
+		std::array<std::array<float, 4>, 4> jun_prob_tmp = {};
+		std::array<int, 4> x;
+		for (int i = 0; i < 4; i++) {
+			x[i] = ten[(oya_first + i) % 4];
+			x[i] = 25000 + (x[i] - 25000) * 500;
+		}
+
+		const std::array<float, 24> pk = [&] {
+			return infer_game_result_prob_ako(x, kyoku);
+		}();
+
+		int jun[4];
+		for (int i = 0; i < 24; i++) {
+			for (int j = 0; j < 4; j++) {
+				jun[j] = j;
+			}
+			for(int m=0;m<3;m++){
+				int k = (i%factorial(4-m))/factorial(3-m);
+				int tmp = jun[k+m];
+				for(int n=0;n<k;n++){
+					jun[k-n+m] = jun[k-n+m-1];
+				}
+				jun[m] = tmp;
+			}
+			//printf("junc:%d %d %d %d %d %lf\n", i, jun[0], jun[1], jun[2], jun[3], pk[i]);
+
+			for (int j = 0; j < 4; j++) {
+				for (int k = 0; k < 4; k++) {
+					if (jun[k] == j) {
+						jun_prob_tmp[j][k] += pk[i];
+					}
+				}
+			}
+		}
+		for (int pid = 0; pid < 4; pid++) {
+			for (int i = 0; i < 4; i++) {
+				jun_prob[pid][i] = jun_prob_tmp[mod_pid(kyoku, oya, pid)][i];
+				//printf("%d %d %d %d %d %lf\n", kyoku, oya, pid, i, mod_pid(kyoku, oya, pid), jun_prob[pid][i]);
+			}
+		}
+		return jun_prob;
+	} else {
+		return calc_jun_prob_end(ten, oya_first);
+	}
+}

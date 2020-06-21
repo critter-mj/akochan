@@ -11,3 +11,4 @@ std::array<int, 16> score_list_to_4onehot(const std::array<int, 4>& score);
 bool chan_end_oya(const std::array<int, 4>& ten, const int oyaid);
 bool chan_end_oya_w4(const std::array<int, 4>& ten, const int oyaid);
 std::array<std::array<float, 4>, 4> calc_jun_prob(const int kyoku, const std::array<int,4>& ten, const int oya);
+std::array<std::array<float, 4>, 4> calc_jun_prob_jpntmp(const int kyoku, const std::array<int,4>& ten, const int oya);

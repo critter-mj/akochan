@@ -115,7 +115,7 @@ std::array<std::array<std::array<float, 100>, 4>, 4> cal_kyoku_end_pt_exp(const 
 				assert(oyaid - kyoku_mod + 12 >= 0);
 				const int kyoku_mod_next = (pid1 == oyaid) ? kyoku_mod : kyoku_mod + 1;
 				const int oyaid_next = (pid1 == oyaid) ? oyaid : (oyaid + 1) % 4;
-				const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next);
+				const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob_jpntmp(kyoku_mod_next, ten_tmp, oyaid_next);
 				for (int j = 0; j < 4; j++) {
 					kyoku_end_pt_exp[pid1][pid2][han] += jun_prob[my_pid][j] * tactics.jun_pt[j];
 				}
@@ -150,7 +150,7 @@ std::array<std::array<std::array<std::array<float, 2>, 2>, 2>, 2> cal_ryuukyoku_
 					assert(oyaid - kyoku_mod + 12 >= 0);
 					const int kyoku_mod_next = tenpai_flag[oyaid] ? kyoku_mod : kyoku_mod + 1;
 					const int oyaid_next = tenpai_flag[oyaid] ? oyaid : (oyaid + 1) % 4;
-					const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob(kyoku_mod_next, ten_tmp, oyaid_next);
+					const std::array<std::array<float, 4>, 4> jun_prob = calc_jun_prob_jpntmp(kyoku_mod_next, ten_tmp, oyaid_next);
 					for (int j = 0; j < 4; j++) {
 						ryuukyoku_pt_exp[t0][t1][t2][t3] += jun_prob[my_pid][j] * tactics.jun_pt[j];
 					}
