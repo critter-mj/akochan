@@ -34,11 +34,11 @@ Agari_Result::Agari_Result() {
     // 32 points
     three_kongs = false;
     // 24 points
-    seven_pairs = false; all_even_pungs = false; full_flush = false; pure_triple_chow = false; pure_shifted_pungs = false; upper_tiles = false; middle_tiles = false; lower_tiles = false; // Greater Honors and Knitted Tiles
+    seven_pairs = false; all_even_pungs = false; full_flush = false; pure_triple_chow = false; pure_shifted_pungs = false; upper_tiles = false; middle_tiles = false; lower_tiles = false; greater_honors_and_knitted_tiles = false;
     // 16 points
     pure_straight = false; three_suited_terminal_chows = false; pure_shifted_chows = false; all_fives = false; triple_pung = false; three_concealed_pungs = false;
     // 12 points
-    upper_four = false; lower_four = false; big_three_winds = false; // lesser_honors_and_knitted_tiles, knitted_straight;
+    upper_four = false; lower_four = false; big_three_winds = false; lesser_honors_and_knitted_tiles = false; //knitted_straight;
     // 8 points
     mixed_straight = false; reversible_tiles = false; mixed_triple_chow = false; mixed_shifted_pungs = false; two_concealed_kongs = false; //, chicken_hand, last_tile_draw, last_tile_claim, out_with_replacement_tile, robbing_the_kongs;
     // 6 points
@@ -70,6 +70,7 @@ int Agari_Result::calc_point() const {
     if (upper_tiles) { ret += 24; }
     if (middle_tiles) { ret += 24; }
     if (lower_tiles) { ret += 24; }
+    if (greater_honors_and_knitted_tiles) { ret += 24; }
     if (pure_straight) { ret += 16; }
     if (three_suited_terminal_chows) { ret += 16; }
     if (pure_shifted_chows) { ret += 16; }
@@ -79,6 +80,7 @@ int Agari_Result::calc_point() const {
     if (upper_four) { ret += 12; }
     if (lower_four) { ret += 12; }
     if (big_three_winds) { ret += 12; }
+    if (lesser_honors_and_knitted_tiles) { ret += 12; }
     if (mixed_straight) { ret += 8; }
     if (reversible_tiles) { ret += 8; }
     if (mixed_triple_chow) { ret += 8; }
@@ -128,6 +130,7 @@ json11::Json Agari_Result::to_json() const {
     if (upper_tiles) { bools.push_back("upper_tiles"); }
     if (middle_tiles) { bools.push_back("middle_tiles"); }
     if (lower_tiles) { bools.push_back("lower_tiles"); }
+    if (greater_honors_and_knitted_tiles) { bools.push_back("greater_honors_and_knitted_tiles"); }
     if (pure_straight) { bools.push_back("pure_straight"); }
     if (three_suited_terminal_chows) { bools.push_back("three_suited_terminal_chows"); }
     if (pure_shifted_chows) { bools.push_back("pure_shifted_chows"); }
@@ -137,6 +140,7 @@ json11::Json Agari_Result::to_json() const {
     if (upper_four) { bools.push_back("upper_four"); }
     if (lower_four) { bools.push_back("lower_four"); }
     if (big_three_winds) { bools.push_back("big_three_winds"); }
+    if (lesser_honors_and_knitted_tiles) { bools.push_back("lessor_honors_and_knitted_tiles"); }
     if (mixed_straight) { bools.push_back("mixed_straight"); }
     if (reversible_tiles) { bools.push_back("reversible_tiles"); }
     if (mixed_triple_chow) { bools.push_back("mixed_triple_chow"); }

@@ -10,3 +10,4 @@
 #include "analyze.hpp"
 #include "pseudo_game.hpp"
 #include "import.hpp"
+#include "unit_test.hpp"

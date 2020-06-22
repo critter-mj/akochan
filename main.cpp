@@ -343,7 +343,10 @@ int main(int argc,char* argv[]) {
             tcp_client.SendCommand(response.dump() + "\n");
         }
         return 0;
-    } else {
+    } else if (argc == 2 && strcmp(argv[1], "unit_test") == 0) {
+        //exec_unit_test();
+        ai_test();
+    } else {    
         usage();
     }
 

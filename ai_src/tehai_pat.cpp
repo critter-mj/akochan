@@ -58,6 +58,7 @@ void Tehai_Pattern_Honors_And_Knitted::cal_hai_in_pattern(){
 			hai_need.push_back(30 + i);
 		}
 	}
+	std::sort(hai_need.begin(), hai_need.end());
 	const int num_need = 14 - (16 - hai_need.size()); // 全部で16枚ある牌のうち、14種必要. num_need = hai_need.size() - 2;
 	if (0 < num_need) {
 		int p = 0;
@@ -74,7 +75,7 @@ void Tehai_Pattern_Honors_And_Knitted::cal_hai_in_pattern(){
 }
 
 void Tehai_Pattern_Honors_And_Knitted::out_info(){
-	if (!out_console) return;
+	//if (!out_console) return;
 
 	const std::array<int, 3>& perm = ALL_PERM[perm_id];
 	for (int i = 1; i <= 9; i++) {

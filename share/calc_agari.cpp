@@ -36,6 +36,7 @@ Agari_Info_Detail calc_agari_detail(
         tsumo_res.seven_pairs = true;
         ron_res = tsumo_res;
     } else if (hora_type == HT_HONORS_AND_KNITTED) {
+        tsumo_res.all_types = false;
         switch (honors_and_knitted_tiles_check(tehai, machi_hai)) {
             case 2:
                 tsumo_res.greater_honors_and_knitted_tiles = true;
