@@ -16,16 +16,30 @@ void test1() {
 
     tehai_analyzer.pattern_flag = 1;
 	tehai_analyzer.analyze_tenpai(my_pid, game_state);
+    std::cout << "shanten_num:" << tehai_analyzer.get_shanten_num() << std::endl;
 
     std::vector<Tehai_Pattern_Honors_And_Knitted>& vec = tehai_analyzer.pattern_honors_and_knitted_vec[1];
     vec[0].out_info();
 
-    /*
-    for (int i = 0; i < 7; i++) {
-        std::vector<Tehai_Pattern_Honors_And_Knitted>& vec = tehai_analyzer.pattern_honors_and_knitted_vec[i];
-        std::cout << i << " " << vec.size() << std::endl;
-        vec[0].out_info();
+    Tehai_Calculator tehai_calculator;
+	tehai_calculator.reset(my_pid, false);
+	tehai_calculator.fuuro_cand_hai = 0;
+	tehai_calculator.get_effective(game_state, tehai_analyzer);
+	tehai_calculator.tehai_all_num = tehai_analyzer.get_tehai_num() + tehai_analyzer.get_fuuro_num()*3;
+
+    std::cout << "tehai_all_num:" << tehai_calculator.tehai_all_num << std::endl;
+
+    for (int hai = 0; hai < 38; hai++) {
+        if (tehai_calculator.effective_flag[hai] == 1) {
+            std::cout << "effective:" << hai << std::endl;
+        }
     }
+    
+    /*
+	tehai_calculator.set_candidates3_single_thread(
+		game_state, tehai_analyzer, tehai_analyzer_af,
+		std::max({tehai_analyzer.mentu_change_num_max, tehai_analyzer.titoi_change_num_max, tehai_analyzer_af.mentu_change_num_max}), tactics
+	);
     */
 }
 

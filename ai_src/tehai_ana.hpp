@@ -64,10 +64,12 @@ public:
 	int get_mentu_shanten_num() const;
 	int get_titoi_shanten_num() const;
 	int get_agari_shanten_num() const;
+	int get_honors_and_knitted_shanten_num() const;
 
 	void set_mentu_shanten_num(const int num);
 	void set_titoi_shanten_num(const int num);
 	void set_agari_shanten_num(const int num);
+	void set_honors_and_knitted_shanten_num(const int num);
 
 	virtual int get_pattern_flag() {return 0;}
 	virtual int get_titoi_change_num_max() {return 0;}

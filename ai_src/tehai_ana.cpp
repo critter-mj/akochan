@@ -41,6 +41,7 @@ void Tehai_Analyzer_Basic::reset_tenpai(){
 	set_tenpai_flag(0);
 	set_mentu_shanten_num(8);
 	set_titoi_shanten_num(6);
+	set_honors_and_knitted_shanten_num(14);
 	set_agari_shanten_num(8);
 	//agariv.erase(agariv.begin(), agariv.end());
 	//riich_flag = 0;reset_withでリーチフラグを入れているのに、ここで0にするのは不味い。今まで0していたので弊害がないか注意。
@@ -226,6 +227,10 @@ int Tehai_Analyzer_Basic::get_agari_shanten_num() const {
 	return (num_and_flags & 0x0F000000) >> 24;
 }
 
+int Tehai_Analyzer_Basic::get_honors_and_knitted_shanten_num() const {
+	return (num_and_flags & 0xF0000000) >> 28;
+}
+
 void Tehai_Analyzer_Basic::set_mentu_shanten_num(const int num) {
 	num_and_flags = (num_and_flags & 0xFFF0FFFF) + (uint32_t(num) << 16);
 }
@@ -236,6 +241,10 @@ void Tehai_Analyzer_Basic::set_titoi_shanten_num(const int num) {
 
 void Tehai_Analyzer_Basic::set_agari_shanten_num(const int num) {
 	num_and_flags = (num_and_flags & 0xF0FFFFFF) + (uint32_t(num) << 24);
+}
+
+void Tehai_Analyzer_Basic::set_honors_and_knitted_shanten_num(const int num) {
+	num_and_flags = (num_and_flags & 0x0FFFFFFF) + (uint32_t(num) << 28);
 }
 
 int Tehai_Analyzer_Basic::count_hai(const int hai) const {
@@ -759,8 +768,10 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::honors_and_knitted_shan
 				}
 			}
 		}
-		int tmp = std::max(0, 14 - honor_cnt - knitted_cnt);
-		// set_shanten ?
+		int tmp = std::max(0, 13 - honor_cnt - knitted_cnt);
+		if (tmp < get_honors_and_knitted_shanten_num()) {
+			set_honors_and_knitted_shanten_num(tmp);
+		}
 
 		if (get_pattern_flag() == 1 && tmp <= 3) {
 			//honors_and_knitted_cut_koritu(tehai_kcp, tehai_tmp, perm_id, honors, knitted);
@@ -861,7 +872,7 @@ int Tehai_Analyzer_Basic::using_haikind_num(int hai) const {
 }
 
 int Tehai_Analyzer_Basic::get_shanten_num() const {
-	return std::min(get_mentu_shanten_num(), get_titoi_shanten_num());
+	return std::min(std::min(get_mentu_shanten_num(), get_titoi_shanten_num()), get_honors_and_knitted_shanten_num());
 }
 
 template <class Agari_Vector> void Tehai_Analyzer_Basic::agari_push_func_child(const Agari_Info agari, const int pid, const Game_State& game_state, Agari_Vector& agariv) {
