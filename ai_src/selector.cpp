@@ -513,8 +513,8 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 	
 	if (out_console) {
 		std::cout << "shanten:" << tehai_analyzer.get_shanten_num() << std::endl;
-		for (int i = 0; i < 9; i++) {
-			std::cout << i << " " << tehai_analyzer.inout_pattern_vec[i].size() << std::endl;
+		for (int i = 0; i < 7; i++) {
+			std::cout << i << " " << tehai_analyzer.inout_pattern_vec[i].size() << " " << tehai_analyzer.pattern_titoi_vec[i].size() << " " << tehai_analyzer.pattern_honors_and_knitted_vec[i].size() << std::endl;
 		}
 		std::cout << "candidates_num:" << tehai_calculator.candidates_size() << std::endl;
 	}

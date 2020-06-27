@@ -84,6 +84,8 @@ class Tehai_Calculator{
 		int in_num_end
 	);
 
+	void set_tsumo_node_honors_and_knitted(Tehai_Analyzer ta_in, int in_num_end);
+
 	void set_tsumo_edge(
 		Tehai_Change tehai_change_tmp, const int thread_num
 	);
