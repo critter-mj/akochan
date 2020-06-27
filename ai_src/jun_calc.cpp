@@ -98,6 +98,9 @@ std::array<std::array<float, 4>, 4> calc_jun_prob_jpntmp(const int kyoku, const 
 			x[i] = ten[(oya_first + i) % 4];
 			x[i] = 25000 + (x[i] - 25000) * 500;
 		}
+		if (is_tobi_any(x)) {
+			return calc_jun_prob_end(ten, oya_first);
+		}
 
 		const std::array<float, 24> pk = [&] {
 			return infer_game_result_prob_ako(x, kyoku);
