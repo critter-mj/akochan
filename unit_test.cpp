@@ -50,7 +50,40 @@ void check_lessor_honors_and_knitted_1(){
     std::cout << "check_lessor_honors_and_knitted_1 done" << std::endl;
 }
 
+void check_hora_points(){
+    std::array<int, 4> ten_move;
+
+    // ron
+    int hora_actor = 0;
+    int hora_target = 1;
+    int hora_point = 10;
+    int hora_base_point = 8;
+    ten_move = ten_move_hora(hora_actor, hora_target, hora_point);
+
+    assert_with_out(ten_move[0] == hora_point + hora_base_point*3, "ron actor");
+    assert_with_out(ten_move[1] == -(hora_point + hora_base_point), ",ron target");
+    assert_with_out(ten_move[2] == -hora_base_point, "ron none");
+    assert_with_out(ten_move[3] == -hora_base_point, "ron none");
+
+    // tsumo
+    hora_actor = 2;
+    hora_target = 2;
+    hora_point = 30;
+    hora_base_point = 8;
+    ten_move = ten_move_hora(hora_actor, hora_target, hora_point);
+
+    assert_with_out(ten_move[0] == -(hora_point + hora_base_point), "tsumo none"); 
+    assert_with_out(ten_move[1] == -(hora_point + hora_base_point), "tsumo none");
+    assert_with_out(ten_move[2] == (hora_point + hora_base_point) * 3, "tsumo actor");
+    assert_with_out(ten_move[3] == -(hora_point + hora_base_point), "tsumo none");
+    
+    std::cout << "check_hora_points done" << std::endl;
+}
+
+
 void exec_unit_test(){
     check_lessor_honors_and_knitted_0();
     check_lessor_honors_and_knitted_1();
+    check_hora_points();
 }
+

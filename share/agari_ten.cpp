@@ -1,5 +1,7 @@
 #include "agari_ten.hpp"
 
+static const int HORA_BASE_POINT = 8;
+
 int ron_agari(const int han, const int fu, const bool oya_flag){
 	if (han == 0) {
 		return 0;
@@ -350,14 +352,21 @@ std::array<int, 4> ten_move_hora(const int who, const int from_who, const int ha
 	if (who == from_who) {
 		for (int pid = 0; pid < 4; pid++) {
 			if (pid == who) { 
-				ten_move[pid] += han * 3;
+				ten_move[pid] += (han + HORA_BASE_POINT) * 3;
 			} else {
-				ten_move[pid] -= han;
+				ten_move[pid] -= (han + HORA_BASE_POINT);
 			}
 		}
 	} else {
-		ten_move[who] += han;
-		ten_move[from_who] -= han; 
+		for (int pid = 0; pid < 4; pid++) {
+			if (pid == who) { 
+				ten_move[pid] += (han + (HORA_BASE_POINT * 3));
+			} else if (pid == from_who){
+				ten_move[pid] -= (han + HORA_BASE_POINT);
+			} else {
+				ten_move[pid] -= HORA_BASE_POINT;
+			}
+		}
 	}
 	return ten_move;
 }
