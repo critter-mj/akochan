@@ -344,9 +344,10 @@ int main(int argc,char* argv[]) {
         }
         return 0;
     } else if (argc == 2 && strcmp(argv[1], "unit_test") == 0) {
-        //exec_unit_test();
+        exec_unit_test();
+    } else if (argc == 2 && strcmp(argv[1], "ai_test") == 0) {
         ai_test();
-    } else {    
+    } else {
         usage();
     }
 
