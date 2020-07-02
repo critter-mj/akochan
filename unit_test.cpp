@@ -58,25 +58,26 @@ void check_hora_points(){
     int hora_target = 1;
     int hora_point = 10;
     int hora_base_point = 8;
-    ten_move = ten_move_hora(0, 1, hora_point);
+    ten_move = ten_move_hora(hora_actor, hora_target, hora_point);
 
-    assert(ten_move[0] == hora_point + hora_base_point); // actor
-    assert(ten_move[1] == -(hora_point + hora_base_point)); // target
-    assert(ten_move[2] == -hora_base_point);
-    assert(ten_move[3] == -hora_base_point);
+    assert_with_out(ten_move[0] == hora_point + hora_base_point*3, "ron actor");
+    assert_with_out(ten_move[1] == -(hora_point + hora_base_point), ",ron target");
+    assert_with_out(ten_move[2] == -hora_base_point, "ron none");
+    assert_with_out(ten_move[3] == -hora_base_point, "ron none");
 
     // tsumo
     hora_actor = 2;
     hora_target = 2;
     hora_point = 30;
     hora_base_point = 8;
-    ten_move = ten_move_hora(0, 1, hora_point);
+    ten_move = ten_move_hora(hora_actor, hora_target, hora_point);
 
-    assert(ten_move[0] == -(hora_point + hora_base_point)); 
-    assert(ten_move[1] == -(hora_point + hora_base_point));
-    assert(ten_move[2] == (hora_point + hora_base_point) * 3); // actor & target
-    assert(ten_move[3] == -(hora_point + hora_base_point));
-
+    assert_with_out(ten_move[0] == -(hora_point + hora_base_point), "tsumo none"); 
+    assert_with_out(ten_move[1] == -(hora_point + hora_base_point), "tsumo none");
+    assert_with_out(ten_move[2] == (hora_point + hora_base_point) * 3, "tsumo actor");
+    assert_with_out(ten_move[3] == -(hora_point + hora_base_point), "tsumo none");
+    
+    std::cout << "check_hora_points done" << std::endl;
 }
 
 

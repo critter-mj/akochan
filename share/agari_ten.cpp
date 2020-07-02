@@ -360,7 +360,7 @@ std::array<int, 4> ten_move_hora(const int who, const int from_who, const int ha
 	} else {
 		for (int pid = 0; pid < 4; pid++) {
 			if (pid == who) { 
-				ten_move[pid] += (han + HORA_BASE_POINT * 3);
+				ten_move[pid] += (han + (HORA_BASE_POINT * 3));
 			} else if (pid == from_who){
 				ten_move[pid] -= (han + HORA_BASE_POINT);
 			} else {
