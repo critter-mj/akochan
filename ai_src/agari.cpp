@@ -71,14 +71,14 @@ std::array<float, 2> Agari_Basic::get_ten_exp(
 
     const int han_tsumo = agari_info.get_han_tsumo();
     if (8 <= han_tsumo) {
-        result[0] = kyoku_end_pt_exp[my_pid][my_pid][std::min(han_tsumo, 99)];
+        result[0] = kyoku_end_pt_exp[my_pid][my_pid][std::min((han_tsumo + HORA_BASE_POINT) * 3, 99)];
     }
     const int han_ron = agari_info.get_han_ron();
     if (8 <= han_ron) {
         float tmp = 0.0;
         for (int pid = 0;pid < 4; pid++) {
             if (pid != my_pid) {
-                tmp += kyoku_end_pt_exp[my_pid][pid][std::min(han_ron, 99)];
+                tmp += kyoku_end_pt_exp[my_pid][pid][std::min(han_ron + (HORA_BASE_POINT * 3), 99)];
             }
         }
         tmp = tmp / 3.0;

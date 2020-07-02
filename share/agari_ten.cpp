@@ -1,7 +1,5 @@
 #include "agari_ten.hpp"
 
-static const int HORA_BASE_POINT = 8;
-
 int ron_agari(const int han, const int fu, const bool oya_flag){
 	if (han == 0) {
 		return 0;
