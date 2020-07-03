@@ -96,7 +96,7 @@ std::array<std::array<float, 4>, 4> calc_jun_prob_jpntmp(const int kyoku, const 
 		std::array<int, 4> x;
 		for (int i = 0; i < 4; i++) {
 			x[i] = ten[(oya_first + i) % 4];
-			x[i] = 25000 + (x[i] - 25000) * 500;
+			x[i] = 25000 + (x[i] - 25000) * 100;
 		}
 		if (is_tobi_any(x)) {
 			return calc_jun_prob_end(ten, oya_first);
