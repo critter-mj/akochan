@@ -54,7 +54,7 @@ int main(int argc,char* argv[]) {
         }
         for (int seed = seed_init; seed < seed_end; seed++) {
             for (auto chicha : setup_match_json["chicha"].array_items()) {
-                std::srand(seed);
+                seed_mt19937(seed);
                 game_record.clear();
                 haiyama.clear();
                 game_settings.chicha = chicha.int_value();
@@ -210,7 +210,7 @@ int main(int argc,char* argv[]) {
             auto actor = receive["actor"].int_value();
 
             if ((actor == id && type == "tsumo") ||
-                (actor != id && type == "dahai")) {
+                (actor != id && (type == "dahai" || type == "kakan"))) {
                 auto best_moves = ai(game_record, id, false);
 
                 std::cout << json11::Json(best_moves).dump() << std::endl;
@@ -246,7 +246,7 @@ int main(int argc,char* argv[]) {
             auto actor = receive["actor"].int_value();
 
             if ((actor == id && type == "tsumo") ||
-                (actor != id && type == "dahai")) {
+                (actor != id && (type == "dahai" || type == "kakan"))) {
                 auto best_moves = ai_review(game_record, id);
                 std::cout << best_moves.dump() << std::endl;
             }

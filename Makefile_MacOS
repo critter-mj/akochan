@@ -1,9 +1,19 @@
-COMPILER = g++
-CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -DWINSTD
-WFLAGS = -pedantic -Wignored-qualifiers -Wreturn-type -Wmaybe-uninitialized -Wbool-compare -Wshadow -Wunused-but-set-variable -Wunused-variable
+LLVM_BASE = $(shell brew --prefix llvm)
+BOOST_BASE = $(shell brew --prefix boost)
+
+COMPILER = $(LLVM_BASE)/bin/clang++
+CFLAGS = -g -MMD -MP -std=c++11 \
+	-O3 -march=native -pipe \
+	-mllvm -polly \
+	-mllvm -polly-parallel \
+	-mllvm -polly-vectorizer=stripmine \
+	-mllvm -polly-position=early \
+	-mllvm -polly-dump-before-file=before-polly.ll \
+	-fopenmp -I$(BOOST_BASE)/include -I./
+WFLAGS = -pedantic -Wignored-qualifiers -Wreturn-type -Wunused-variable -Wno-c11-extensions
 
 OPTGTK = 
-LIBS = -lboost_system-mgw62-mt-x64-1_70 -lws2_32 -L./ -lai
+LIBS = -L$(LLVM_BASE)/lib -L$(BOOST_BASE)/lib -lboost_system -L./ -Wl,-rpath,./ -lai
 
 SRCDIR = .
 SHARE_DIR = share
@@ -24,19 +34,19 @@ HEADERS = $(SOURCES:.cpp=.hpp)
 SHARE_HEADERS = $(SHARE_SOURCES:.cpp=.hpp)
 
 TARGET = system.exe
-
+	
 $(TARGET):  $(OBJECTS) $(SHARE_OBJECTS)
 	$(COMPILER) $(OBJECTS) $(SHARE_OBJECTS) $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(OPTGTK) $(LIBS) -o $@
-
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(OPTGTK) -o $@
+	
 $(SHARE_OBJDIR)/%.o: $(SHARE_DIR)/%.cpp $(SHARE_DIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
-
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) -o $@
+	
 test:
 	echo $(SHARE_OBJECTS)
-
+	
 test1:
 	echo $(SHARE_DEPENDS)
 

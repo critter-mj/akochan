@@ -1,4 +1,11 @@
+#include <random>
 #include "mjai_manager.hpp"
+
+std::mt19937 gen;
+
+void seed_mt19937(int i) {
+    gen.seed(i);
+}
 
 Game_Settings::Game_Settings() {
     player_id = -1;
@@ -32,7 +39,9 @@ void prepare_haiyama(std::vector<int>& haiyama) {
     for (int i = 0;i < haiyama_size; i++) {
 		haiyama.push_back(i);
 	}
-	std::random_shuffle(haiyama.begin(), haiyama.end());
+
+    std::shuffle(haiyama.begin(), haiyama.end(), gen);
+
 	for (int i = 0;i < haiyama_size; i++) {
 		haiyama[i] = get_hai38(haiyama[i]);
 	}

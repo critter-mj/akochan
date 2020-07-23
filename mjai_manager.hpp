@@ -22,6 +22,8 @@ enum Game_Phase {
 
 Moves get_masked_log(Moves game_record, const int pid);
 
+void seed_mt19937(int i);
+
 void add_start_game(Moves& game_record);
 void prepare_haiyama(std::vector<int>& haiyama);
 std::array<std::array<int, 13>, 4> get_haipai(const std::vector<int>& haiyama, const int oya);
