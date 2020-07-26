@@ -1,15 +1,25 @@
-COMPILER = g++
-NPROCS = 4
-CFLAGS = -g -MMD -MP -std=c++11 -O3 -fopenmp -DWINSTD -DNPROCS=$(NPROCS)
-WFLAGS = -pedantic -Wignored-qualifiers -Wreturn-type -Wmaybe-uninitialized -Wbool-compare -Wshadow -Wunused-but-set-variable -Wunused-variable
-LIBS	= -lboost_system-mgw62-mt-x64-1_70 -lws2_32
+LLVM_BASE = $(shell brew --prefix llvm)
+BOOST_BASE = $(shell brew --prefix boost)
+
+COMPILER = $(LLVM_BASE)/bin/clang++
+NPROCS = $(shell sysctl -n hw.ncpu)
+CFLAGS = -g -MMD -MP -std=c++11 \
+	-O3 -march=native -pipe \
+	-mllvm -polly \
+	-mllvm -polly-parallel \
+	-mllvm -polly-vectorizer=stripmine \
+	-mllvm -polly-position=early \
+	-mllvm -polly-dump-before-file=before-polly.ll \
+	-fopenmp -I$(BOOST_BASE)/include -DNPROCS=$(NPROCS)
+WFLAGS = -pedantic -Wignored-qualifiers -Wreturn-type -Wunused-variable -Wno-c11-extensions
+LIBS = -L$(LLVM_BASE)/lib -L$(BOOST_BASE)/lib -lboost_system
 
 SRCDIR = .
 SHARE_DIR = ../share
 LEARN_DIR = ./learn
 
 SHARE_SOURCES = $(wildcard ./$(SHARE_DIR)/*.cpp)
-SOURCES = $(wildcard *.cpp)
+SOURCES = $(wildcard *.cpp) 
 LEARN_SOURCES = $(wildcard ./$(LEARN_DIR)/*.cpp)
 
 OBJDIR = ./obj
@@ -28,20 +38,22 @@ HEADERS = $(SOURCES:.cpp=.hpp)
 SHARE_HEADERS = $(SHARE_SOURCES:.cpp=.hpp)
 LEARN_HEADERS = $(LEARN_SOURCES:.cpp=.hpp)
 
-TARGET = ai.dll
+TARGET = libai.so
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) -o $@
 
 $(SHARE_OBJDIR)/%.o: $(SHARE_DIR)/%.cpp $(SHARE_DIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) -o $@
 
 $(LEARN_OBJDIR)/%.o: $(LEARN_DIR)/%.cpp $(LEARN_DIR)/%.hpp
-	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
+	$(COMPILER) $< -c $(CFLAGS) $(WFLAGS) -o $@
 
 $(TARGET): $(OBJECTS) $(SHARE_OBJECTS) $(LEARN_OBJECTS)
 	$(COMPILER) -shared $(OBJECTS) $(SHARE_OBJECTS) $(LEARN_OBJECTS) $(CFLAGS) $(WFLAGS) $(LIBS) -o $@
 	cp $(TARGET) ../
+
+all: clean $(TARGET) copy
 
 test:
 	echo $(SHARE_OBJECTS)
@@ -50,6 +62,6 @@ test1:
 	echo $(SHARE_DEPENDS)
 
 clean:
-	-rm -f $(OBJECTS) $(SHARE_OBJECTS) $(DEPENDS) $(SHARE_DEPENDS) $(TARGET) ai.dll
+	-rm -f $(OBJECTS) $(SHARE_OBJECTS) $(DEPENDS) $(SHARE_DEPENDS) $(TARGET) libai.so
 
 -include $(DEPENDS) $(SHARE_DEPENDS)

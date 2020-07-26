@@ -8,3 +8,7 @@ obj/*
 share/obj/*
 ai_src/obj/*
 !.gitkeep
+
+*.ll
+raw_log
+match_result*
