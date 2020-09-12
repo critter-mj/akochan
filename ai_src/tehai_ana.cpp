@@ -738,7 +738,7 @@ template <class Agari_Vector> void Tehai_Analyzer_Basic::titoi_shanten(const int
 
 	int tmp = 13 - 2*head_num - std::min(7-head_num,koritu_num);
 	if(tmp < get_titoi_shanten_num()){
-		set_titoi_shanten_num(tmp);
+		set_titoi_shanten_num(std::max(0,tmp));
 	}
 
 	if(get_pattern_flag()==1 && get_titoi_shanten_num() <= get_titoi_change_num_max() && get_titoi_shanten_num() <= 3){
