@@ -184,13 +184,14 @@ std::array<double, 2> Agari_Basic::get_ten_exp_direct(
 std::array<double, 4> Agari_Basic::get_ten_exp(
     const int my_pid, const Bit_Hai_Num& tehai_bit, const Tehai_State2& tehai_state,
     const Hai_Array& hai_visible_kind, const Game_State& game_state,
-    const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
+    const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp,
+    const int haitei_han
 ) const {
     std::array<double, 4> result;
     for (int i = 0; i < 4; i++) { result[i] = -200.0; }
 
-    if (get_ten_tsumo(my_pid, game_state) > 0) {
-        int agari_han = agari_info.get_han_tsumo();
+    if (get_ten_tsumo(my_pid, game_state) > 0 || haitei_han > 0) {
+        int agari_han = agari_info.get_han_tsumo() + haitei_han;
         std::array<double, 13> ura_prob = calc_ura_prob(tehai_bit, tehai_state, hai_visible_kind, game_state.dora_marker.size());
         if(agari_han>0){
             int fuidx = agari_info.get_fuidx_tsumo();

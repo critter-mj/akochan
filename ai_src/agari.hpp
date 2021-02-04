@@ -56,7 +56,8 @@ public:
     std::array<double, 4> get_ten_exp(
         const int my_pid, const Bit_Hai_Num& tehai_bit, const Tehai_State2& tehai_state,
         const Hai_Array& hai_visible_kind, const Game_State& game_state,
-        const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
+        const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp,
+        const int haitei_han = 0
     ) const;
 };
 

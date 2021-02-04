@@ -629,15 +629,18 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 							const std::array<int, 3>& agari_loc = tehai_calculator_work.get_const_agari_loc(cn, gn);
 							for (int an = agari_loc[1]; an < agari_loc[2]; an++) {
 								const Agari_Calc& agari = tehai_calculator_work.agari_graph_work[agari_loc[0]][an];
-								if(haikind(current_hai) == agari.agari_info.get_hai() && agari.agari_info.get_han_tsumo() > 0){
-									tsumo_agari_choice.action_type = AT_TSUMO_AGARI;
-									const std::array<double, 4> ten_exp = agari.get_ten_exp(
-										my_pid, tehai_calculator.get_const_ta_cgn(cn, gn).tehai_bit, tehai_calculator.get_const_ta_cgn(cn, gn).tehai_state,
-										hai_visible_kind, game_state, kyoku_end_pt_exp
-									);
-									const double agari_exp = is_aka_hai(current_hai) ? ten_exp[2] : ten_exp[0];
-									if (agari_exp > tsumo_agari_choice.pt_exp_total) {
-										tsumo_agari_choice.pt_exp_total = agari_exp;
+								if(haikind(current_hai) == agari.agari_info.get_hai()) {
+									const int haitei_han = (count_tsumo_num_all(game_record) == 70 ? 1 : 0);
+									if (agari.agari_info.get_han_tsumo() + haitei_han > 0) {
+										tsumo_agari_choice.action_type = AT_TSUMO_AGARI;
+										const std::array<double, 4> ten_exp = agari.get_ten_exp(
+											my_pid, tehai_calculator.get_const_ta_cgn(cn, gn).tehai_bit, tehai_calculator.get_const_ta_cgn(cn, gn).tehai_state,
+											hai_visible_kind, game_state, kyoku_end_pt_exp, haitei_han
+										);
+										const double agari_exp = is_aka_hai(current_hai) ? ten_exp[2] : ten_exp[0];
+										if (agari_exp > tsumo_agari_choice.pt_exp_total) {
+											tsumo_agari_choice.pt_exp_total = agari_exp;
+										}
 									}
 								}
 							}
