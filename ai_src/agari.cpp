@@ -149,16 +149,15 @@ std::array<double, 13> Agari_Basic::calc_ura_prob(
 }
 
 std::array<double, 2> Agari_Basic::get_ten_exp_direct(
-    const int my_pid, const int target, const int chankan_han, const Bit_Hai_Num& tehai_bit, const Tehai_State2& tehai_state,
+    const int my_pid, const int target, const int incident_han, const Bit_Hai_Num& tehai_bit, const Tehai_State2& tehai_state,
     const Hai_Array& hai_visible_kind, const Game_State& game_state,
     const std::array<std::array<std::array<std::array<float, 12>, 14>, 4>, 4>& kyoku_end_pt_exp
 ) const {
     std::array<double, 2> result;
     for (int i = 0; i < 2; i++) { result[i] = -200.0; }
-    if (get_ten_tsumo(my_pid, game_state) > 0) {
-        const int agari_han = (my_pid == target) ? agari_info.get_han_tsumo() : (agari_info.get_han_ron() + chankan_han);
+    if (get_ten_tsumo(my_pid, game_state) > 0 || incident_han > 0) {
+        const int agari_han = (my_pid == target) ? agari_info.get_han_tsumo() : (agari_info.get_han_ron() + incident_han);
         std::array<double, 13> ura_prob = calc_ura_prob(tehai_bit, tehai_state, hai_visible_kind, game_state.dora_marker.size());
-
         if (agari_han > 0) {
             const int fuidx = my_pid == target ? agari_info.get_fuidx_tsumo() : agari_info.get_fuidx_ron();
 

@@ -728,18 +728,21 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 					if (furiten_flags[agari.agari_info.get_hai()]) {
 						doujun_furiten_flag = true;
 					}
-					if (haikind(current_hai) == agari.agari_info.get_hai() && agari.agari_info.get_han_ron()){
-						fuuro_choice_tmp.fuuro_action_type = AT_RON_AGARI;
-						fuuro_choice_tmp.fuuro_hai = current_hai;
-						const std::array<double, 2> ten_exp = agari.get_ten_exp_direct(
-							my_pid, current_action["actor"].int_value(), current_action["type"] == "kakan" ? 1 : 0,
-							tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_bit, tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_state,
-							hai_visible_kind, game_state, kyoku_end_pt_exp
-						);
-						const double agari_exp = is_aka_hai(current_hai) ? ten_exp[1] : ten_exp[0];
-						if(agari_exp > ron_pt_exp){
-							ron_pt_exp = agari_exp;
-							fuuro_choice_tmp.pt_exp_total = ron_pt_exp;
+					if (haikind(current_hai) == agari.agari_info.get_hai()) {
+						const int incident_han = (count_tsumo_num_all(game_record) == 70 ? 1 : 0) + (current_action["type"] == "kakan" ? 1 : 0);
+						if (agari.agari_info.get_han_ron() || 0 < incident_han) {
+							fuuro_choice_tmp.fuuro_action_type = AT_RON_AGARI;
+							fuuro_choice_tmp.fuuro_hai = current_hai;
+							const std::array<double, 2> ten_exp = agari.get_ten_exp_direct(
+								my_pid, current_action["actor"].int_value(), incident_han,
+								tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_bit, tehai_calculator.get_const_ta_cgn(cn_fuuro_neg, gn_fuuro_neg).tehai_state,
+								hai_visible_kind, game_state, kyoku_end_pt_exp
+							);
+							const double agari_exp = is_aka_hai(current_hai) ? ten_exp[1] : ten_exp[0];
+							if(agari_exp > ron_pt_exp){
+								ron_pt_exp = agari_exp;
+								fuuro_choice_tmp.pt_exp_total = ron_pt_exp;
+							}
 						}
 					}
 				}
