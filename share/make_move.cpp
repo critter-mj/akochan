@@ -1030,6 +1030,23 @@ std::vector<Moves> get_legal_reach_dahai_move(const Moves& game_record) {
     return result;
 }
 
+std::vector<Moves> get_legal_tsumo_agari_move(const Moves& game_record) {
+    std::vector<Moves> result;
+    const json11::Json& action_json = game_record[game_record.size() - 1];
+    if (action_json["type"].string_value() != "tsumo") {
+        return result;
+    }
+    Game_State game_state = get_game_state(game_record);
+    const int actor = action_json["actor"].int_value();
+    json11::Json tsumo_agari_move = make_hora(actor, actor, hai_str_to_int(action_json["pai"].string_value()));
+    if (is_legal_hora(game_record, game_state, tsumo_agari_move)) {
+        Moves moves;
+        moves.push_back(tsumo_agari_move);
+        result.push_back(moves);
+    }
+    return result;
+}
+
 std::vector<Moves> get_legal_ron_move(const Moves& game_record) {
     std::vector<Moves> result;
     const json11::Json& action_json = game_record[game_record.size() - 1];
@@ -1091,6 +1108,11 @@ std::array<std::vector<Moves>, 4> get_all_legal_moves(const Moves& game_record) 
     }
 
     moves_vec = get_legal_reach_dahai_move(game_record);
+    for (int i = 0; i < moves_vec.size(); i++) {
+        all_legal_moves[moves_vec[i][0]["actor"].int_value()].push_back(moves_vec[i]);
+    }
+
+    moves_vec = get_legal_tsumo_agari_move(game_record);
     for (int i = 0; i < moves_vec.size(); i++) {
         all_legal_moves[moves_vec[i][0]["actor"].int_value()].push_back(moves_vec[i]);
     }
