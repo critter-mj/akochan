@@ -136,7 +136,7 @@ void cut_syuntu(
     const int start, const Fuuro_Vector& fuuro, Tenpai_Info& tenpai_info
 ) {
 	for (int hai = start; hai < 30; hai++) {
-		if (tehai_tmp[hai] && tehai_tmp[hai+1] && tehai_tmp[hai+2]) {
+		if (tehai_tmp[hai] >= 1 && tehai_tmp[hai+1] >= 1 && tehai_tmp[hai+2] >= 1) {
 			tehai_tmp[hai] = tehai_tmp[hai]-1;
 			tehai_tmp[hai+1] = tehai_tmp[hai+1]-1;
 			tehai_tmp[hai+2] = tehai_tmp[hai+2]-1;
