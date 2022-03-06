@@ -1,5 +1,5 @@
-LLVM_BASE = $(shell brew --prefix llvm)
-BOOST_BASE = $(shell brew --prefix boost)
+LLVM_BASE := $(shell brew --prefix llvm)
+BOOST_BASE := $(shell brew --prefix boost)
 
 COMPILER = $(LLVM_BASE)/bin/clang++
 CFLAGS = -g -MMD -MP -std=c++11 \

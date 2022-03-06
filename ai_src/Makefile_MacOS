@@ -1,8 +1,8 @@
-LLVM_BASE = $(shell brew --prefix llvm)
-BOOST_BASE = $(shell brew --prefix boost)
+LLVM_BASE := $(shell brew --prefix llvm)
+BOOST_BASE := $(shell brew --prefix boost)
 
 COMPILER = $(LLVM_BASE)/bin/clang++
-NPROCS = $(shell sysctl -n hw.ncpu)
+NPROCS := $(shell sysctl -n hw.ncpu)
 CFLAGS = -g -MMD -MP -std=c++11 \
 	-O3 -march=native -pipe \
 	-mllvm -polly \
