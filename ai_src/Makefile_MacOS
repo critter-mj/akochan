@@ -1,10 +1,17 @@
 LLVM_BASE := $(shell brew --prefix llvm)
 BOOST_BASE := $(shell brew --prefix boost)
+CPU_BRAND := $(shell sysctl -n machdep.cpu.brand_string)
+
+ifneq (,$(findstring Apple,$(CPU_BRAND)))
+	CPU_FLAGS := -mcpu=apple-m1
+else
+	CPU_FLAGS := -march=native
+endif
 
 COMPILER = $(LLVM_BASE)/bin/clang++
 NPROCS := $(shell sysctl -n hw.ncpu)
 CFLAGS = -g -MMD -MP -std=c++11 \
-	-O3 -march=native -pipe \
+	-O3 $(CPU_FLAGS) -pipe \
 	-mllvm -polly \
 	-mllvm -polly-parallel \
 	-mllvm -polly-vectorizer=stripmine \
