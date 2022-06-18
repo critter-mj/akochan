@@ -939,7 +939,7 @@ void Selector::set_selector(const Moves& game_record, const int my_pid, const Ta
 
 			fuuro_choice.push_back(pass_choice);
 
-			if (count_tsumo_num_all(game_record) < 70) { // ハイテイ牌をフーロしないための処理		
+			if (current_action["type"] == "dahai" && count_tsumo_num_all(game_record) < 70) { // ハイテイ牌をフーロしないための処理		
 				const std::array<int, 3>& fuuro_edge_loc = tehai_calculator_work.get_const_fuuro_edge_loc(cn_fuuro_neg, gn_fuuro_neg);
 				for (int acn = fuuro_edge_loc[1]; acn < fuuro_edge_loc[2]; acn++) {
 					const Tehai_Action& ac_tmp = tehai_calculator_work.cand_graph_sub_fuuro_work[fuuro_edge_loc[0]][acn];
