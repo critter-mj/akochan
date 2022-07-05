@@ -413,8 +413,8 @@ bool is_valid_chi_and_dahai(const Moves& moves) {
     const int consumed1 = hai_str_to_int(moves[0]["consumed"][1].string_value());
     const int dahai = hai_str_to_int(moves[1]["pai"].string_value());
     if (haikind(hai) == haikind(dahai)) { return false; }
-    if (haikind(hai) < haikind(consumed0) && haikind(hai) < haikind(consumed1) && haikind(dahai) == haikind(hai) + 2) { return false; }
-    if (haikind(hai) > haikind(consumed0) && haikind(hai) > haikind(consumed1) && haikind(dahai) == haikind(hai) - 2) { return false; }
+    if (haikind(hai) < haikind(consumed0) && haikind(hai) < haikind(consumed1) && haikind(dahai) == haikind(hai) + 3) { return false; }
+    if (haikind(hai) > haikind(consumed0) && haikind(hai) > haikind(consumed1) && haikind(dahai) == haikind(hai) - 3) { return false; }
     return true;
 }
 
